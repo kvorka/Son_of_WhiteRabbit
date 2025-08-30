@@ -4,8 +4,9 @@ submodule (physicalobject) buoyancy
   module procedure buoy_rr_jml_sub
     integer        :: ijm, ij
     real(kind=dbl) :: fac, fac1, fac2
-      
-    fac = this%Ra * ( 1 / this%rad_grid%rr(ir)**2 / this%g )
+    
+    !!TODO: now only Newtonian profile
+    fac = this%Ra * ( 1 / this%rad_grid%rr(ir)**2 / ( 1 - this%r_ud**2 ) )
     
     do ij = 1, this%jmax
       fac1 = -sqrt( (ij  ) / (2*ij+one) ) * fac

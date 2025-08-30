@@ -11,8 +11,8 @@ module physicalobject
   
   type, abstract, public :: T_physicalObject
     character(len=5)               :: thermal_bnd, mechanic_bnd
-    integer                        :: nd, jmax, jms, jms2, jmv, jmt, n_iter, poc
-    real(kind=dbl)                 :: g, t, dt, cf, ab, r_ud, Pr, Ra, Ek
+    integer                        :: nd, jmax, jms, jmv, n_iter, poc
+    real(kind=dbl)                 :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
     integer,           allocatable :: j_indx(:)
     complex(kind=dbl), allocatable :: rsph1(:,:), rsph2(:,:), rtorr(:,:), rtemp(:,:)
     
