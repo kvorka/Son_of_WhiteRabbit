@@ -32,13 +32,13 @@ submodule (ocean) init_state
         im = 0
           call random_number( realp )
           
-          this%sol%temp(is,jm(ij,im)) = cmplx( realp, zero, kind=dbl ) / 1e4
+          this%sol%temp(is,jm(ij,im)) = cmplx( realp, zero, kind=dbl ) / 1e3
         
         do im = 1, ij
           call random_number( realp )
           call random_number( imagp )
           
-          this%sol%temp(is,jm(ij,im)) = cmplx( realp, imagp, kind=dbl ) / 1e4
+          this%sol%temp(is,jm(ij,im)) = cmplx( realp, imagp, kind=dbl ) / 1e3
         end do
       end do
     end do

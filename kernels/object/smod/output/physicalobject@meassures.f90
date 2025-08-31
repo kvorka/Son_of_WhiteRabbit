@@ -5,7 +5,7 @@ submodule (physicalobject) meassures
     
     select case (this%thermal_bnd)
       case ('basic')
-        nuss_fn = c2r_fn( this%dT_dr_r_fn(this%nd,1) ) / ( this%r_ud * s4pi )
+        nuss_fn = c2r_fn( -this%dT_dr_r_fn(this%nd,1) ) / ( this%r_ud * s4pi )
       
       case ('fluxd')
         nuss_fn = c2r_fn( this%temp_r_fn(1,1) ) / s4pi
