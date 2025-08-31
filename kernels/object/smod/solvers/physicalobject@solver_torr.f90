@@ -1,27 +1,5 @@
-submodule (physicalobject) equations_torr
+submodule (physicalobject) solver_torr
   implicit none ; contains
-  
-  module procedure init_eq_torr_sub
-    
-    call this%sol%init_storr_sub()
-    call this%mat%init_mtorr_sub()
-    
-    allocate( this%rtorr(this%nd+1,this%jms) )
-      this%rtorr = czero
-    
-  end procedure init_eq_torr_sub
-  
-  module procedure prepare_mat_torr_sub
-    integer :: ij
-    
-    !$omp parallel do
-    do ij = 1, this%jmax
-      call this%mat%torr(ij)%fill_sub( this%mat_torr_fn(j_in=ij, a_in=this%cf  ), &
-                                     & this%mat_torr_fn(j_in=ij, a_in=this%cf-1)  )
-    end do
-    !$omp end parallel do
-    
-  end procedure prepare_mat_torr_sub
   
   module procedure solve_torr_sub
     integer :: ij, ijm, ir, is
@@ -51,4 +29,4 @@ submodule (physicalobject) equations_torr
     
   end procedure solve_torr_sub
   
-end submodule equations_torr
+end submodule solver_torr

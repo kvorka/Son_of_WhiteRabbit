@@ -48,10 +48,10 @@ module solution
       integer,           intent(in) :: ir, ijm
     end function temp_fn
     
-    module pure subroutine temp_jm_sub(this, ir, temp1)
+    module pure subroutine temp_jm_sub(this, ir, temp_jm)
       class(T_solution), intent(in)  :: this
       integer,           intent(in)  :: ir
-      complex(kind=dbl), intent(out) :: temp1(:)
+      complex(kind=dbl), intent(out) :: temp_jm(*)
     end subroutine temp_jm_sub
     
     module pure complex(kind=dbl) function velocity_fn(this, ir, il, ijm)
@@ -59,10 +59,10 @@ module solution
       integer,           intent(in) :: ir, il, ijm
     end function velocity_fn
     
-    module pure subroutine velocity_jml_sub(this, ir, velocity1)
+    module pure subroutine velocity_jml_sub(this, ir, velocity_jml)
       class(T_solution), intent(in)  :: this
       integer,           intent(in)  :: ir
-      complex(kind=dbl), intent(out) :: velocity1(:)
+      complex(kind=dbl), intent(out) :: velocity_jml(*)
     end subroutine velocity_jml_sub
   end interface
   

@@ -1,6 +1,18 @@
 submodule (physicalobject) toroidal_visc_matrix
   implicit none ; contains
   
+  module procedure prepare_mat_torr_sub
+    integer :: ij
+    
+    !$omp parallel do
+    do ij = 1, this%jmax
+      call this%mat%torr(ij)%fill_sub( this%mat_torr_fn(j_in=ij, a_in=this%cf  ), &
+                                     & this%mat_torr_fn(j_in=ij, a_in=this%cf-1)  )
+    end do
+    !$omp end parallel do
+    
+  end procedure prepare_mat_torr_sub
+  
   module procedure mat_torr_fn
     integer        :: ir, is
     real(kind=dbl) :: j

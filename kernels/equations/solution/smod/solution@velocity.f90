@@ -25,17 +25,19 @@ submodule (solution) velocity
   module procedure velocity_jml_sub
     integer :: ijm, ijml, isp, ist
     
-    call zero_carray_sub( this%jmv, velocity1 )
-    
     isp = 6*(ir-1)+1
     ist = 3*(ir-1)+1
     
-    do concurrent ( ijm = 2:this%jms )
+    !ijm = 1
+      !ijml = 1
+        velocity_jml(1) = czero
+    
+    do ijm = 2, this%jms
       ijml = 3*(ijm-1)-1
       
-      velocity1(ijml  ) = this%mech(isp  ,ijm)
-      velocity1(ijml+1) = this%torr(ist  ,ijm)
-      velocity1(ijml+2) = this%mech(isp+1,ijm)
+      velocity_jml(ijml  ) = this%mech(isp  ,ijm)
+      velocity_jml(ijml+1) = this%torr(ist  ,ijm)
+      velocity_jml(ijml+2) = this%mech(isp+1,ijm)
     end do
     
   end procedure velocity_jml_sub

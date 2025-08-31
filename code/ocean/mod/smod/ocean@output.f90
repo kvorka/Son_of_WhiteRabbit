@@ -3,8 +3,10 @@ submodule (ocean) output
   
   module procedure vypis_ocean_sub
     
-    write(11,*) this%t, this%dt, this%nuss_fn(), this%reynolds_fn(choice='convective')
-    write(12,*) this%t, this%dt, this%laws_temp_fn()
+    write(11,*) this%t, this%nuss_fn(), this%reynolds_fn(choice='convective')
+    
+    write(12,*) this%t, c2r_fn( this%dT_dr_r_fn(this%nd,1) ) / &
+                      & c2r_fn( this%dT_dr_r_fn(1,1)       ) / this%r_ud**2
     
     call this%vypis_sub(8, 'data/data_ocean_temp' , 'temperature')
     call this%vypis_sub(8, 'data/data_ocean_veloc', 'velocity'   )

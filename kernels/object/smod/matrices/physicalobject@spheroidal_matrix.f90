@@ -1,6 +1,18 @@
 submodule (physicalobject) spheroidal_matrix
   implicit none ; contains
   
+  module procedure prepare_mat_mech_sub
+    integer :: ij
+    
+    !$omp parallel do
+    do ij = 1, this%jmax
+      call this%mat%mech(ij)%fill_sub( this%mat_mech_fn(j_in=ij, a_in=this%cf  ), &
+                                     & this%mat_mech_fn(j_in=ij, a_in=this%cf-1)  )
+    end do
+    !$omp end parallel do
+    
+  end procedure prepare_mat_mech_sub
+  
   module procedure mat_mech_fn
     integer        :: ir, is
     real(kind=dbl) :: j

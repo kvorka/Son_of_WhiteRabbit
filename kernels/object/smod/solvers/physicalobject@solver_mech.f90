@@ -1,27 +1,5 @@
-submodule (physicalobject) equations_mech
+submodule (physicalobject) solver_mech
   implicit none ; contains
-  
-  module procedure init_eq_mech_sub
-    
-    call this%sol%init_smech_sub()
-    call this%mat%init_mmech_sub()
-
-    allocate( this%rsph1(this%nd+1,this%jms) ) ; this%rsph1 = czero
-    allocate( this%rsph2(this%nd+1,this%jms) ) ; this%rsph2 = czero
-    
-  end procedure init_eq_mech_sub
-  
-  module procedure prepare_mat_mech_sub
-    integer :: ij
-    
-    !$omp parallel do
-    do ij = 1, this%jmax
-      call this%mat%mech(ij)%fill_sub( this%mat_mech_fn(j_in=ij, a_in=this%cf  ), &
-                                     & this%mat_mech_fn(j_in=ij, a_in=this%cf-1)  )
-    end do
-    !$omp end parallel do
-    
-  end procedure prepare_mat_mech_sub
   
   module procedure solve_mech_sub
     integer :: ij, ijm, ir, is
@@ -56,4 +34,4 @@ submodule (physicalobject) equations_mech
       
   end procedure solve_mech_sub
   
-end submodule equations_mech
+end submodule solver_mech

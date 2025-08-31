@@ -1,8 +1,8 @@
-submodule (ocean) init_temp_bbnd
+submodule (ocean) init_bnd
   implicit none; contains
   
   module procedure init_temp_bbnd_ocean_sub
-    integer           :: j, m, error
+    integer           :: ij, im, error
     complex(kind=dbl) :: flux
     
     if ( init_through_file_bnd_ocean ) then
@@ -11,10 +11,10 @@ submodule (ocean) init_temp_bbnd
           
           open(unit=35, file='code/ocean/heat_flux.cmplx', status='old', action='read')
             do
-              read(35,*,iostat=error) j, m, flux
+              read(35,*,iostat=error) ij, im, flux
               
               if ( error == 0 ) then
-                this%rtemp(1,jm(j,m)) = flux
+                this%rtemp(1,jm(ij,im)) = flux
               else
                 exit
               end if
@@ -29,4 +29,4 @@ submodule (ocean) init_temp_bbnd
     
   end procedure init_temp_bbnd_ocean_sub
   
-end submodule init_temp_bbnd
+end submodule init_bnd

@@ -37,9 +37,9 @@ $fcompile -c kernels/math/math/math.f90
   $fcompile -c kernels/math/math/smod/math@nulify.f90 &
 wait
 
-  $fcompile -c kernels/math/sph/sph_indexing.f90 &
-  $fcompile -c kernels/math/sph/sph_norms.f90 &
-  $fcompile -c kernels/math/sph/sph_unitvec_op.f90 &
+$fcompile -c kernels/math/sph/sph_indexing.f90 &
+$fcompile -c kernels/math/sph/sph_norms.f90 &
+$fcompile -c kernels/math/sph/sph_ezvv.f90 &
 wait
 
 $fcompile -c kernels/math/fft/fourier_transform.f90
@@ -135,31 +135,28 @@ wait
 $fcompile -c kernels/object/physicalobject.f90
   $fcompile -c kernels/object/smod/physicalobject@init.f90 &
   
+  $fcompile -c kernels/object/smod/equations/physicalobject@equations_mech.f90 &
+  $fcompile -c kernels/object/smod/equations/physicalobject@equations_torr.f90 &
+  $fcompile -c kernels/object/smod/equations/physicalobject@equations_temp.f90 &
   $fcompile -c kernels/object/smod/matrices/physicalobject@spheroidal_matrix.f90 &
   $fcompile -c kernels/object/smod/matrices/physicalobject@toroidal_matrix.f90 &
   $fcompile -c kernels/object/smod/matrices/physicalobject@thermal_matrix.f90 &
-  
-  $fcompile -c kernels/object/smod/solvers/physicalobject@equations_mech.f90 &
-  $fcompile -c kernels/object/smod/solvers/physicalobject@equations_torr.f90 &
-  $fcompile -c kernels/object/smod/solvers/physicalobject@equations_temp.f90 &
-  
-  $fcompile -c kernels/object/smod/variables/physicalobject@temperature.f90 &
-  $fcompile -c kernels/object/smod/variables/physicalobject@velocity.f90 &
-  
   $fcompile -c kernels/object/smod/forces/physicalobject@buoyancy.f90 &
   $fcompile -c kernels/object/smod/forces/physicalobject@coriolis.f90 &
   $fcompile -c kernels/object/smod/forces/physicalobject@globrot.f90 &
-  
+  $fcompile -c kernels/object/smod/solvers/physicalobject@solver_mech.f90 &
+  $fcompile -c kernels/object/smod/solvers/physicalobject@solver_torr.f90 &
+  $fcompile -c kernels/object/smod/solvers/physicalobject@solver_temp.f90 &
+  $fcompile -c kernels/object/smod/variables/physicalobject@temperature.f90 &
+  $fcompile -c kernels/object/smod/variables/physicalobject@velocity.f90 &
   $fcompile -c kernels/object/smod/output/physicalobject@meassures.f90 &
   $fcompile -c kernels/object/smod/output/physicalobject@output.f90 &
-  
-  $fcompile -c kernels/object/smod/balances/physicalobject@balance_eqs.f90 &
 wait
 
 $fcompile -c code/ocean/mod/ocean_constants.f90
 $fcompile -c code/ocean/mod/ocean.f90
   $fcompile -c code/ocean/mod/smod/ocean@init.f90 &
-  $fcompile -c code/ocean/mod/smod/ocean@init_temp_bbnd.f90 &
+  $fcompile -c code/ocean/mod/smod/ocean@init_bnd.f90 &
   $fcompile -c code/ocean/mod/smod/ocean@init_state.f90 &
   $fcompile -c code/ocean/mod/smod/ocean@nonlin.f90 &
   $fcompile -c code/ocean/mod/smod/ocean@timescheme.f90 &

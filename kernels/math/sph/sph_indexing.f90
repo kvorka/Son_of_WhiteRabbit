@@ -16,11 +16,4 @@ module sph_indexing
     
   end function jml
   
-  pure integer function jml2(ij, im, il)
-    integer, intent(in) :: ij, im, il
-    
-    jml2 = 5*(ij*(ij+1)/2+im)+il-1
-    
-  end function jml2
-  
 end module sph_indexing

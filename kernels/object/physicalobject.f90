@@ -49,7 +49,6 @@ module physicalobject
     procedure, pass :: vypis_sub
     procedure, pass :: reynolds_fn, temperature_fn, nuss_fn
     procedure, pass :: reynolds_poloidal_fn, reynolds_torroidal_fn
-    procedure, pass :: laws_temp_fn
     
   end type T_physicalObject
   
@@ -78,25 +77,25 @@ module physicalobject
     module pure subroutine dT_dr_r_ijm_sub(this, ir, dT_dr_r)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: dT_dr_r(:)
+      complex(kind=dbl),       intent(out) :: dT_dr_r(*)
     end subroutine dT_dr_r_ijm_sub
     
     module pure subroutine temp_rr_ijm_sub(this, ir, temp_rr_ijm)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: temp_rr_ijm(:)
+      complex(kind=dbl),       intent(out) :: temp_rr_ijm(*)
     end subroutine temp_rr_ijm_sub
     
     module pure subroutine dT_dr_rr_ijm_sub(this, ir, T, dT)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: T(:), dT(:)
+      complex(kind=dbl),       intent(out) :: T(*), dT(*)
     end subroutine dT_dr_rr_ijm_sub
     
     module pure subroutine gradT_rr_ijml_sub(this, ir, T, gradT, sgn)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir, sgn
-      complex(kind=dbl),       intent(out) :: T(:), gradT(:)
+      complex(kind=dbl),       intent(out) :: T(*), gradT(*)
     end subroutine gradT_rr_ijml_sub
     
     !Interfaces :: Variables velocity
@@ -108,19 +107,19 @@ module physicalobject
     module pure subroutine v_rr_ijml_sub(this, ir, v_rr_ijml)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: v_rr_ijml(:)
+      complex(kind=dbl),       intent(out) :: v_rr_ijml(*)
     end subroutine v_rr_ijml_sub
     
     module pure subroutine dv_dr_rr_ijml_sub(this, ir, v, dv)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: dv(:), v(:)
+      complex(kind=dbl),       intent(out) :: dv(*), v(*)
     end subroutine dv_dr_rr_ijml_sub
     
     module pure subroutine curlv_rr_ijml_sub(this, ir, v, curlv)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: v(:), curlv(:)
+      complex(kind=dbl),       intent(out) :: v(*), curlv(*)
     end subroutine curlv_rr_ijml_sub
     
     !Interfaces :: output
@@ -133,15 +132,15 @@ module physicalobject
     !Interfaces :: to be continued
     module pure subroutine coriolis_rr_jml_sub(this, v, coriolis)
       class(T_physicalObject), intent(in)    :: this
-      complex(kind=dbl),       intent(in)    :: v(:)
-      complex(kind=dbl),       intent(inout) :: coriolis(:,:)
+      complex(kind=dbl),       intent(in)    :: v(*)
+      complex(kind=dbl),       intent(inout) :: coriolis(*)
     end subroutine coriolis_rr_jml_sub
     
     module pure subroutine buoy_rr_jml_sub(this, ir, T, force)
       class(T_physicalObject), intent(in)    :: this
       integer,                 intent(in)    :: ir
-      complex(kind=dbl),       intent(in)    :: T(:)
-      complex(kind=dbl),       intent(inout) :: force(:,:)
+      complex(kind=dbl),       intent(in)    :: T(*)
+      complex(kind=dbl),       intent(inout) :: force(2,*)
     end subroutine buoy_rr_jml_sub
     
     module subroutine global_rotation_sub(this)

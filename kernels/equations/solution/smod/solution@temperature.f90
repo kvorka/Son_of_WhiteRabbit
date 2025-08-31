@@ -12,8 +12,9 @@ submodule (solution) temperature
     
     is = 3*(ir-1)+1
     
-    do concurrent ( ijm = 1:this%jms )
-      temp1(ijm) = this%temp(is,ijm)
+    !$omp simd
+    do ijm = 1, this%jms
+      temp_jm(ijm) = this%temp(is,ijm)
     end do
     
   end procedure temp_jm_sub

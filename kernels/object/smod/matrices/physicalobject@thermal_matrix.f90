@@ -1,6 +1,17 @@
 submodule (physicalobject) thermal_matrix
   implicit none ; contains
   
+  module procedure prepare_mat_temp_sub
+    integer :: ij
+    
+    !$omp parallel do
+    do ij = 0, this%jmax
+      call this%mat%temp(ij)%fill_sub( this%mat_temp_fn(j_in=ij, a_in=this%cf),  this%mat_temp_fn(j_in=ij, a_in=this%cf-1) )
+    end do
+    !$omp end parallel do
+    
+  end procedure prepare_mat_temp_sub
+  
   module procedure mat_temp_fn
     integer        :: ir, is
     real(kind=dbl) :: j, dT_dr

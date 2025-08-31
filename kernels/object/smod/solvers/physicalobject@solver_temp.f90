@@ -1,25 +1,5 @@
-submodule (physicalobject) equations_temp
+submodule (physicalobject) solver_temp
   implicit none ; contains
-  
-  module procedure init_eq_temp_sub
-    
-    call this%sol%init_stemp_sub()
-    call this%mat%init_mtemp_sub()
-    
-    allocate( this%rtemp(this%nd+1,this%jms) ) ; this%rtemp = czero
-    
-  end procedure init_eq_temp_sub
-  
-  module procedure prepare_mat_temp_sub
-    integer :: ij
-    
-    !$omp parallel do
-    do ij = 0, this%jmax
-      call this%mat%temp(ij)%fill_sub( this%mat_temp_fn(j_in=ij, a_in=this%cf),  this%mat_temp_fn(j_in=ij, a_in=this%cf-1) )
-    end do
-    !$omp end parallel do
-    
-  end procedure prepare_mat_temp_sub
   
   module procedure solve_temp_sub
     integer :: ij, ir, is, ijm
@@ -49,4 +29,4 @@ submodule (physicalobject) equations_temp
     
   end procedure solve_temp_sub
   
-end submodule equations_temp
+end submodule solver_temp
