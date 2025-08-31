@@ -33,8 +33,8 @@ submodule (solution) velocity
     do concurrent ( ijm = 2:this%jms )
       ijml = 3*(ijm-1)-1
       
-      velocity1(ijml  ) = this%mech(isp,ijm)
-      velocity1(ijml+1) = this%torr(ist,ijm)
+      velocity1(ijml  ) = this%mech(isp  ,ijm)
+      velocity1(ijml+1) = this%torr(ist  ,ijm)
       velocity1(ijml+2) = this%mech(isp+1,ijm)
     end do
     

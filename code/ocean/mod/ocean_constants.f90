@@ -5,7 +5,7 @@ module ocean_constants
   !Vseobecne nastavenie konstant
   integer, parameter :: nd_ocean = 73
   integer, parameter :: jmax_ocean = 125
-  integer, parameter :: n_iter_ocean = 200
+  integer, parameter :: n_iter_ocean = 400
   
   !Nastavenie gridu a okrahovych podmienok
   character(len=*), parameter :: grid_type_ocean    = 'chebv'

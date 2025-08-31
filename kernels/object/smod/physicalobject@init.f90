@@ -32,12 +32,12 @@ submodule (physicalobject) init
   
   module procedure deallocate_objects_sub
     
-    if ( allocated(this%j_indx)  ) deallocate( this%j_indx )
+    deallocate( this%j_indx )
     
-    if ( allocated(this%rsph1) ) deallocate( this%rsph1 )
-    if ( allocated(this%rsph2) ) deallocate( this%rsph2 )
-    if ( allocated(this%rtorr) ) deallocate( this%rtorr )
-    if ( allocated(this%rtemp) ) deallocate( this%rtemp )
+    deallocate( this%rsph1 )
+    deallocate( this%rsph2 )
+    deallocate( this%rtorr )
+    deallocate( this%rtemp )
     
     call this%sol%deallocate_sub()
     call this%mat%deallocate_sub()

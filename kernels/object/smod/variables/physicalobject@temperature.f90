@@ -118,7 +118,6 @@ submodule (physicalobject) temperature
       call this%sol%temp_jm_sub( ir  ,     T )
       call this%sol%temp_jm_sub( ir+1, temp3 )
       
-      
       do concurrent ( ijm = 1:this%jms )
         dT(ijm) = fac1 * dT(ijm) + fac2 * T(ijm) + fac3 * temp3(ijm)
       end do
