@@ -1,7 +1,7 @@
 #!/bin/bash
 ###########################################################################################
 ####                              POSSIBLE CODE SETTINGS                               ####
-####       test_speed, ocean_convection, ice_ocean, ocean_tides, ice_deformation       ####
+####                            test_speed, ocean_convection                           ####
 ###########################################################################################
 code_type="ocean_convection"
 
@@ -199,3 +199,5 @@ esac
 ####                                    CLEANING                                       ####
 ###########################################################################################
 rm *.smod *.mod *.o
+
+## Benchmarked: 1.9.2025
