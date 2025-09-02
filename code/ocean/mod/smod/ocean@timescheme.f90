@@ -34,8 +34,6 @@ submodule (ocean) timescheme
     call this%solve_torr_sub()
     call this%solve_mech_sub()
     
-    if (this%mechanic_bnd == 'frees') call this%global_rotation_sub()
-    
   end procedure time_scheme_ocean_sub
   
 end submodule timescheme

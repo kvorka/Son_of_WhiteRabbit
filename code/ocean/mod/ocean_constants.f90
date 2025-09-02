@@ -7,16 +7,12 @@ module ocean_constants
   integer, parameter :: jmax_ocean = 125
   integer, parameter :: n_iter_ocean = 400
   
-  !Nastavenie gridu a okrahovych podmienok
-  character(len=*), parameter :: grid_type_ocean    = 'chebv'
-  character(len=*), parameter :: thermal_bnd_ocean  = 'basic'
-  character(len=*), parameter :: mechanic_bnd_ocean = 'noslp'
-  
   !Nastavovanie konstant pre konvektivny vypocet
-  real(kind=dbl), parameter :: r_ud_ocean = 0.60_dbl
-  real(kind=dbl), parameter :: Pr_ocean   = 1._dbl
-  real(kind=dbl), parameter :: Ra_ocean   = 8.0d6
-  real(kind=dbl), parameter :: Ek_ocean   = 1.0d-4
+  character(len=*), parameter :: therm_bnd_ocean = 'basic'
+  real(kind=dbl),   parameter :: r_ud_ocean      = 0.60_dbl
+  real(kind=dbl),   parameter :: Pr_ocean        = 1._dbl
+  real(kind=dbl),   parameter :: Ra_ocean        = 8.0d6
+  real(kind=dbl),   parameter :: Ek_ocean        = 1.0d-4
   
   !Nastavovanie pociatocneho stavu
   logical, parameter :: init_through_file_ocean = .false.

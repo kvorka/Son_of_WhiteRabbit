@@ -3,14 +3,14 @@ submodule (solution) temperature
   
   module procedure temp_fn
     
-    temp_fn = this%temp(3*(ir-1)+1,ijm)
+    temp_fn = this%temp(2*(ir-1)+1,ijm)
     
   end procedure temp_fn
   
   module procedure temp_jm_sub
     integer :: ijm, is
     
-    is = 3*(ir-1)+1
+    is = 2*(ir-1)+1
     
     !$omp simd
     do ijm = 1, this%jms

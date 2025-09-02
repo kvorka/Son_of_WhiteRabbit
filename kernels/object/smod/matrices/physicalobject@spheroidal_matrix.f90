@@ -25,24 +25,11 @@ submodule (physicalobject) spheroidal_matrix
     
     ir = 1
       is = 1
-        select case (this%mechanic_bnd)
-          case('frees')
-            matica(14,is) = +sqrt((j+1)*(j-1)/(  (2*j+1)*(2*j-1)))
-            matica(16,is) = -sqrt((3  )      /(2*(2*j-1)*(2*j+3)))
-            matica(17,is) = -sqrt((j  )*(j+2)/(  (2*j+1)*(2*j+3)))
-            
-            matica(11,is+1) = +sqrt((j  )/(2*j+1)) * grid%c(ir,-1)
-            matica(12,is+1) = -sqrt((j+1)/(2*j+1)) * grid%c(ir,-1)
-            matica(17,is+1) = +sqrt((j  )/(2*j+1)) * grid%c(ir,+1)
-            matica(18,is+1) = -sqrt((j+1)/(2*j+1)) * grid%c(ir,+1)
-          
-          case('noslp')
-            matica(12,is) = grid%c(ir,-1)
-            matica(18,is) = grid%c(ir,+1)
+        matica(12,is) = grid%c(ir,-1)
+        matica(18,is) = grid%c(ir,+1)
         
-            matica(12,is+1) = grid%c(ir,-1)
-            matica(18,is+1) = grid%c(ir,+1)   
-        end select
+        matica(12,is+1) = grid%c(ir,-1)
+        matica(18,is+1) = grid%c(ir,+1)
   
     do ir = 1, this%nd
       is = 6*(ir-1)+1
@@ -111,24 +98,11 @@ submodule (physicalobject) spheroidal_matrix
     
     ir = this%nd
       is = 6*this%nd+1
-        select case (this%mechanic_bnd)
-          case('frees')
-            matica( 8,is) = +sqrt((j+1)*(j-1)/(  (2*j+1)*(2*j-1)))
-            matica(10,is) = -sqrt((3  )      /(2*(2*j-1)*(2*j+3)))
-            matica(11,is) = -sqrt((j  )*(j+2)/(  (2*j+1)*(2*j+3)))
-            
-            matica( 5,is+1) = +sqrt((j  )/(2*j+1)) * grid%c(ir,-1)
-            matica( 6,is+1) = -sqrt((j+1)/(2*j+1)) * grid%c(ir,-1)
-            matica(11,is+1) = +sqrt((j  )/(2*j+1)) * grid%c(ir,+1)
-            matica(12,is+1) = -sqrt((j+1)/(2*j+1)) * grid%c(ir,+1)
-            
-          case('noslp')
-            matica( 6,is) = grid%c(ir,-1)
-            matica(12,is) = grid%c(ir,+1)
-            
-            matica( 6,is+1) = grid%c(ir,-1)
-            matica(12,is+1) = grid%c(ir,+1)
-        end select
+        matica( 6,is) = grid%c(ir,-1)
+        matica(12,is) = grid%c(ir,+1)
+        
+        matica( 6,is+1) = grid%c(ir,-1)
+        matica(12,is+1) = grid%c(ir,+1)
     
     end associate
     

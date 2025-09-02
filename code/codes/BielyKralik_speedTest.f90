@@ -6,17 +6,12 @@ program BielyKralik_speedTest
   type(T_ocean)  :: oceanmodel
   real(kind=dbl) :: start, end
   
-  !Inicializuj vypocet
-  call oceanmodel%init_sub()
+  call oceanmodel%init_sub( speed = .True. )
   
-  !Casova slucka
   start = omp_get_wtime()
-    call oceanmodel%iter_sub()
+    call oceanmodel%speed_sub()
   end = omp_get_wtime()
 
   write(*,*) (end-start) / oceanmodel%n_iter
-  
-  !Cistenie
-  call oceanmodel%deallocate_sub()
   
 end program BielyKralik_speedTest

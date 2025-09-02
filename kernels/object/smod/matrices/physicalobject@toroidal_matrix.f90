@@ -25,15 +25,8 @@ submodule (physicalobject) toroidal_visc_matrix
     
     ir = 1
       is = 1
-        select case (this%mechanic_bnd)
-          case('frees')
-            matica(7,is) = +sqrt((j-1)/(2*(2*j+1)))
-            matica(8,is) = -sqrt((j+2)/(2*(2*j+1)))
-          
-          case('noslp')
-            matica(6,is) = grid%c(ir,-1)
-            matica(9,is) = grid%c(ir,+1)
-        end select
+        matica(6,is) = grid%c(ir,-1)
+        matica(9,is) = grid%c(ir,+1)
   
     do ir = 1, this%nd
       is = 3*(ir-1)+1
@@ -65,15 +58,8 @@ submodule (physicalobject) toroidal_visc_matrix
     
     ir = this%nd
       is = 3*this%nd+1
-        select case (this%mechanic_bnd)
-          case('frees')
-            matica(4,is) = +sqrt((j-1)/(2*(2*j+1)))
-            matica(5,is) = -sqrt((j+2)/(2*(2*j+1)))
-            
-          case('noslp')
-            matica(3,is) = grid%c(ir,-1)
-            matica(6,is) = grid%c(ir,+1)
-        end select
+        matica(3,is) = grid%c(ir,-1)
+        matica(6,is) = grid%c(ir,+1)
     
     end associate
   

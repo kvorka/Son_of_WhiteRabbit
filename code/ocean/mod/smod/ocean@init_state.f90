@@ -26,7 +26,7 @@ submodule (ocean) init_state
     
     !! Add a random perturbation to the conductive state
     do ir = 1, this%nd+1
-      is  = 3*(ir-1)+1
+      is  = 2*(ir-1)+1
       
       do ij = 1, this%jmax
         im = 0
@@ -84,7 +84,7 @@ submodule (ocean) init_state
     deallocate(velc)
     
     do ir = 1, this%nd+1
-      this%sol%temp(3*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, temp   )
+      this%sol%temp(2*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, temp   )
       this%sol%mech(6*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, spher1 )
       this%sol%torr(3*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, torr   )
       this%sol%mech(6*(ir-1)+2,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, spher2 )

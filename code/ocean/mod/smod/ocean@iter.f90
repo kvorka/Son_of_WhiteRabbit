@@ -13,4 +13,13 @@ submodule (ocean) iter
     
   end procedure iter_ocean_sub
   
+  module procedure speed_ocean_sub
+    integer :: k, ijm
+    
+    do k = 1, this%n_iter
+      call this%time_scheme_sub()
+    end do
+    
+  end procedure speed_ocean_sub
+  
 end submodule iter

@@ -143,7 +143,6 @@ $fcompile -c kernels/object/physicalobject.f90
   $fcompile -c kernels/object/smod/matrices/physicalobject@thermal_matrix.f90 &
   $fcompile -c kernels/object/smod/forces/physicalobject@buoyancy.f90 &
   $fcompile -c kernels/object/smod/forces/physicalobject@coriolis.f90 &
-  $fcompile -c kernels/object/smod/forces/physicalobject@globrot.f90 &
   $fcompile -c kernels/object/smod/solvers/physicalobject@solver_mech.f90 &
   $fcompile -c kernels/object/smod/solvers/physicalobject@solver_torr.f90 &
   $fcompile -c kernels/object/smod/solvers/physicalobject@solver_temp.f90 &
@@ -172,14 +171,9 @@ rm -r -f data || true
 case $code_type in
 
     test_speed)
-        mkdir data
-        
-        mkdir data/data_ocean_temp
-        mkdir data/data_ocean_veloc
-        mkdir data/data_ocean_fluxu
-        mkdir data/data_ocean_fluxd
         
         $fcompile code/codes/BielyKralik_speedTest.f90 *.o -o Test_speed
+        
     ;;
     
     ocean_convection)

@@ -10,7 +10,7 @@ module physicalobject
   implicit none
   
   type, abstract, public :: T_physicalObject
-    character(len=5)               :: thermal_bnd, mechanic_bnd
+    character(len=5)               :: thermal_bnd
     integer                        :: nd, jmax, jms, jmv, n_iter, poc
     real(kind=dbl)                 :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
     integer,           allocatable :: j_indx(:)
@@ -41,7 +41,6 @@ module physicalobject
     procedure, pass :: solve_temp_sub, solve_torr_sub, solve_mech_sub
     
     !Forces
-    procedure, pass :: global_rotation_sub
     procedure, pass :: coriolis_rr_jml_sub
     procedure, pass :: buoy_rr_jml_sub
     
@@ -143,14 +142,10 @@ module physicalobject
       complex(kind=dbl),       intent(inout) :: force(2,*)
     end subroutine buoy_rr_jml_sub
     
-    module subroutine global_rotation_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine global_rotation_sub
-    
-    module pure function mat_temp_fn(this, j_in, a_in) result(matica)
+    module pure function mat_temp_fn(this, j, a) result(matica)
       class(T_physicalObject), intent(in) :: this
-      integer,                 intent(in) :: j_in
-      real(kind=dbl),          intent(in) :: a_in
+      integer,                 intent(in) :: j
+      real(kind=dbl),          intent(in) :: a
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_temp_fn
     

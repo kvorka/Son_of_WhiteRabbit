@@ -17,13 +17,15 @@ module ocean
     procedure, public, pass :: fullnl_sub         => fullnl_ocean_sub
     procedure, public, pass :: time_scheme_sub    => time_scheme_ocean_sub
     procedure, public, pass :: iter_sub           => iter_ocean_sub
+    procedure, public, pass :: speed_sub          => speed_ocean_sub
     procedure, public, pass :: vypis_ocean_sub    => vypis_ocean_sub
     
   end type T_ocean
   
   interface
-    module subroutine init_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
+    module subroutine init_ocean_sub(this, speed)
+      class(T_ocean), intent(inout)          :: this
+      logical,        intent(in),   optional :: speed
     end subroutine init_ocean_sub
     
     module subroutine deallocate_ocean_sub(this)
@@ -45,6 +47,10 @@ module ocean
     module subroutine iter_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine iter_ocean_sub
+    
+    module subroutine speed_ocean_sub(this)
+      class(T_ocean), intent(inout) :: this
+    end subroutine speed_ocean_sub
     
     module subroutine vypis_ocean_sub(this)
       class(T_ocean), intent(inout) :: this

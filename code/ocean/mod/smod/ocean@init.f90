@@ -13,11 +13,12 @@ submodule (ocean) init
     this%Ra = Ra_ocean
     this%Ek = Ek_ocean
     
-    this%mechanic_bnd = mechanic_bnd_ocean
-    this%thermal_bnd  = thermal_bnd_ocean
+    this%thermal_bnd  = therm_bnd_ocean
     
-    open(unit=11, file='data/Nuss.dat', status='new', action='write')
-    open(unit=12, file='data/Laws.dat', status='new', action='write')
+    if ( .not. present(speed) ) then
+      open(unit=11, file='data/Nuss.dat', status='new', action='write')
+      open(unit=12, file='data/Laws.dat', status='new', action='write')
+    end if
     
     !! Initialize the equations
     call this%init_eq_temp_sub()
