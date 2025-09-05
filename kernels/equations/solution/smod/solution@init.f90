@@ -18,22 +18,4 @@ submodule (solution) init
     
   end procedure deallocate_solution_sub
   
-  module procedure init_stemp_sub
-    
-    allocate( this%temp(2*this%nd+1, this%jms) ); this%temp = czero
-    
-  end procedure init_stemp_sub
-  
-  module procedure init_storr_sub
-      
-    allocate( this%torr(2*this%nd+1, this%jms) ); this%torr = czero
-    
-  end procedure init_storr_sub
-  
-  module procedure init_smech_sub
-    
-    allocate( this%mech(5*this%nd+2,this%jms) ); this%mech = czero
-    
-  end procedure init_smech_sub
-  
 end submodule init

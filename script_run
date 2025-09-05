@@ -3,37 +3,37 @@
 ####                              POSSIBLE CODE SETTINGS                               ####
 ####                            test_speed, ocean_convection                           ####
 ###########################################################################################
-code_type="test_speed"
+code_type="ocean_convection"
 
 ###########################################################################################
 ####                               INSTRUCTIONS SET UP                                 ####
 ####                                avx, avx2, avx512                                  ####
 ###########################################################################################
-instructions="avx512"
+instructions="avx2"
 
 ###########################################################################################
 ####                                 COMPILER SET UP                                   ####
 ###########################################################################################
-#fcompile="gfortran-12 -Ofast \
-#                      -march=native \
-#                      -mprefer-vector-width=512 \
-#                      -fno-bounds-check \
-#                      -flto=auto \
-#                      -fwhole-program \
-#                      -fopenmp \
-#                      -D$instructions \
-#                      -cpp"
+fcompile="gfortran-12 -Ofast \
+                      -march=native \
+                      -mprefer-vector-width=512 \
+                      -fno-bounds-check \
+                      -flto=auto \
+                      -fwhole-program \
+                      -fopenmp \
+                      -D$instructions \
+                      -cpp"
 
-fcompile="ifx -fast \
-              -Ofast \
-              -ipo \
-              -ffast-math \
-              -funroll-loops \
-              -xHost \
-              -qopt-zmm-usage=high \
-              -qopenmp \
-              -D$instructions \
-              -cpp"
+#fcompile="ifx -fast \
+#              -Ofast \
+#              -ipo \
+#              -ffast-math \
+#              -funroll-loops \
+#              -xHost \
+#              -qopt-zmm-usage=high \
+#              -qopenmp \
+#              -D$instructions \
+#              -cpp"
 
 ###########################################################################################
 ####                    COMPILATION OF THE BASELINE, DIRS SET UP                       ####
@@ -130,6 +130,9 @@ wait
 
 $fcompile -c kernels/equations/solution/solution.f90
   $fcompile -c kernels/equations/solution/smod/solution@init.f90 &
+  $fcompile -c kernels/equations/solution/smod/solution@inittemp.f90 &
+  $fcompile -c kernels/equations/solution/smod/solution@inittorr.f90 &
+  $fcompile -c kernels/equations/solution/smod/solution@initmech.f90 &
   $fcompile -c kernels/equations/solution/smod/solution@temperature.f90 &
   $fcompile -c kernels/equations/solution/smod/solution@velocity.f90 &
 wait
