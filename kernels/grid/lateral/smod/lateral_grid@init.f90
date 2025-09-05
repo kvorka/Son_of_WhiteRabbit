@@ -10,11 +10,11 @@ submodule (lateral_grid) init
     end if
     
     !Prepare indexing object
-    call this%reindexing%init_sub( jmax )
+    call this%rxd%init_sub( jmax )
     
     !FFT
     nF = 3*(jmax+3)
-    call this%fourtrans%init_sub( nF )
+    call this%fft%init_sub( nF )
     
     !Sums of associated Legendre polynomials
     nL = (3*(jmax+2)/2+1)/2+16+1-mod((3*(jmax+2)/2+1)/2+1,16)
@@ -24,7 +24,7 @@ submodule (lateral_grid) init
   
   module procedure deallocate_harmonics_sub
     
-    call this%fourtrans%deallocate_sub()
+    call this%fft%deallocate_sub()
     call this%lgp%deallocate_sub()
     
   end procedure deallocate_harmonics_sub

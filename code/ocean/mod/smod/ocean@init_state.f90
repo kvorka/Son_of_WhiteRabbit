@@ -17,6 +17,7 @@ submodule (ocean) init_state
     
     !! Solve for conductive state at degree zero
     call this%prepare_mat_temp_sub()
+    
     call this%solve_temp_sub()
     
     !! Set the time-stepping to the initial choice
@@ -115,7 +116,6 @@ submodule (ocean) init_state
     call this%prepare_mat_mech_sub()
     
       call this%time_scheme_sub()
-      call this%vypis_ocean_sub()
     
     !! Set the time-step to the initial choice
     this%ab = ab_help

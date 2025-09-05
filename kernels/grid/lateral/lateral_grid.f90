@@ -13,8 +13,8 @@ module lateral_grid
   
   type, public :: T_lateralGrid
     type(T_legep),  public :: lgp
-    type(T_fft),    public :: fourtrans
-    type(T_sphsvt), public :: reindexing
+    type(T_fft),    public :: fft
+    type(T_sphsvt), public :: rxd
     
     contains
     
@@ -22,7 +22,7 @@ module lateral_grid
     procedure :: deallocate_sub => deallocate_harmonics_sub
     
     procedure :: transform_sub
-    procedure :: vcvv_sub, vcvxv_sub, vcvgv_sub, vcvv_vcvgv_sub
+    procedure :: vcvv_sub, vcvv_vcvgv_sub, vcvv_vcvxv_sub
     
   end type T_lateralGrid
   
@@ -57,25 +57,18 @@ module lateral_grid
       complex(kind=dbl),    intent(out) :: cjm(*)
     end subroutine vcvv_sub
     
-    module subroutine vcvxv_sub(this, cajml, cbjml, cjml)
-      class(T_lateralGrid), intent(in)  :: this
-      complex(kind=dbl),    intent(in)  :: cajml(*), cbjml(*)
-      complex(kind=dbl),    intent(out) :: cjml(*)
-    end subroutine vcvxv_sub
-    
-    module subroutine vcvgv_sub(this, ri, dv_r, v, cjm)
-      class(T_lateralGrid), intent(in)  :: this
-      real(kind=dbl),       intent(in)  :: ri
-      complex(kind=dbl),    intent(in)  :: v(*), dv_r(*)
-      complex(kind=dbl),    intent(out) :: cjm(*)
-    end subroutine vcvgv_sub
-    
     module subroutine vcvv_vcvgv_sub(this, ri, q, dv_r, v, cjm)
       class(T_lateralGrid), intent(in)  :: this
       real(kind=dbl),       intent(in)  :: ri
       complex(kind=dbl),    intent(in)  :: dv_r(*), q(*), v(*)
       complex(kind=dbl),    intent(out) :: cjm(*)
     end subroutine vcvv_vcvgv_sub
+    
+    module subroutine vcvv_vcvxv_sub(this, q, curlv, v, cjm)
+      class(T_lateralGrid), intent(in)  :: this
+      complex(kind=dbl),    intent(in)  :: curlv(*), q(*), v(*)
+      complex(kind=dbl),    intent(out) :: cjm(*)
+    end subroutine vcvv_vcvxv_sub
   end interface
   
 end module lateral_grid

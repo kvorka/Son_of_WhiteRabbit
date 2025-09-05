@@ -6,8 +6,8 @@ submodule (physicalobject) thermal_matrix
     
     !$omp parallel do
     do ij = 0, this%jmax
-      call this%mat%temp(ij)%fill_sub( this%mat_temp_fn(ij,this%cf  ), &
-                                     & this%mat_temp_fn(ij,this%cf-1)  )
+      call this%mat%temp(ij)%fill_sub( this%mat_temp_fn( ij, this%cf   ), &
+                                     & this%mat_temp_fn( ij, this%cf-1 )  )
     end do
     !$omp end parallel do
     

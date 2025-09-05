@@ -8,20 +8,20 @@ submodule (physicalobject) solver_torr
     do ijm = 2, this%jms
       ij = this%j_indx(ijm)
       
-      do concurrent ( ir=2:this%nd )
-        this%rtorr(ir,ijm) = this%rtorr(ir,ijm) + this%mat%torr(ij)%multipl_fn(3*(ir-1)+1,this%sol%torr(:,ijm))
+      do ir = 2, this%nd
+        this%rtorr(ir,ijm) = this%rtorr(ir,ijm) + this%mat%torr(ij)%multipl_fn(2*(ir-1)+1,this%sol%torr(:,ijm))
       end do
       
-      do concurrent ( ir=1:this%nd )
-        is = 3*(ir-1) + 1
+      !$omp simd private (is)
+      do ir = 1, this%nd
+        is = 2*(ir-1) + 1
         
         this%sol%torr(is  ,ijm) = this%rtorr(ir,ijm)
         this%sol%torr(is+1,ijm) = czero
-        this%sol%torr(is+2,ijm) = czero
       end do
       
       ir = this%nd+1
-        this%sol%torr(3*this%nd+1,ijm) = this%rtorr(ir,ijm)
+        this%sol%torr(2*this%nd+1,ijm) = this%rtorr(ir,ijm)
         
       call this%mat%torr(ij)%luSolve_sub( this%sol%torr(:,ijm) )
     end do

@@ -7,8 +7,8 @@ submodule (solution) velocity
     velocity_fn = czero
     
     if ( ijm >= 2 ) then
-      isp = 6*(ir-1)+1
-      ist = 3*(ir-1)+1
+      isp = 5*(ir-1)+1
+      ist = 2*(ir-1)+1
       
       select case (il)
         case (-1)
@@ -25,8 +25,8 @@ submodule (solution) velocity
   module procedure velocity_jml_sub
     integer :: ijm, ijml, isp, ist
     
-    isp = 6*(ir-1)+1
-    ist = 3*(ir-1)+1
+    isp = 5*(ir-1)+1
+    ist = 2*(ir-1)+1
     
     !ijm = 1
       !ijml = 1

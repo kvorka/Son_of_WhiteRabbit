@@ -3,26 +3,37 @@
 ####                              POSSIBLE CODE SETTINGS                               ####
 ####                            test_speed, ocean_convection                           ####
 ###########################################################################################
-code_type="ocean_convection"
+code_type="test_speed"
 
 ###########################################################################################
 ####                               INSTRUCTIONS SET UP                                 ####
 ####                                avx, avx2, avx512                                  ####
 ###########################################################################################
-instructions="avx2"
+instructions="avx512"
 
 ###########################################################################################
 ####                                 COMPILER SET UP                                   ####
 ###########################################################################################
-fcompile="gfortran-12 -Ofast \
-                      -march=native \
-                      -mprefer-vector-width=512 \
-                      -fno-bounds-check \
-                      -flto=auto \
-                      -fwhole-program \
-                      -fopenmp \
-                      -D$instructions \
-                      -cpp"
+#fcompile="gfortran-12 -Ofast \
+#                      -march=native \
+#                      -mprefer-vector-width=512 \
+#                      -fno-bounds-check \
+#                      -flto=auto \
+#                      -fwhole-program \
+#                      -fopenmp \
+#                      -D$instructions \
+#                      -cpp"
+
+fcompile="ifx -fast \
+              -Ofast \
+              -ipo \
+              -ffast-math \
+              -funroll-loops \
+              -xHost \
+              -qopt-zmm-usage=high \
+              -qopenmp \
+              -D$instructions \
+              -cpp"
 
 ###########################################################################################
 ####                    COMPILATION OF THE BASELINE, DIRS SET UP                       ####
@@ -104,19 +115,17 @@ $fcompile -c kernels/grid/radial/radial_grid.f90
 wait
 
 $fcompile -c kernels/grid/lateral/mod/grid_ops.f90
-  $fcompile -c kernels/grid/lateral/mod/smod/grid_ops@vcvxv.f90 &
   $fcompile -c kernels/grid/lateral/mod/smod/grid_ops@vcvv.f90 &
   $fcompile -c kernels/grid/lateral/mod/smod/grid_ops@vcvv_vcvgv.f90 &
-  $fcompile -c kernels/grid/lateral/mod/smod/grid_ops@vcvgv.f90 &
+  $fcompile -c kernels/grid/lateral/mod/smod/grid_ops@vcvv_vcvxv.f90 &
 wait
 
 $fcompile -c kernels/grid/lateral/lateral_grid.f90
   $fcompile -c kernels/grid/lateral/smod/lateral_grid@init.f90 &
   $fcompile -c kernels/grid/lateral/smod/lateral_grid@transform.f90 &
   $fcompile -c kernels/grid/lateral/smod/lateral_grid@vcvv.f90 &
-  $fcompile -c kernels/grid/lateral/smod/lateral_grid@vcvxv.f90 &
-  $fcompile -c kernels/grid/lateral/smod/lateral_grid@vcvgv.f90 &
   $fcompile -c kernels/grid/lateral/smod/lateral_grid@vcvv_vcvgv.f90 &
+  $fcompile -c kernels/grid/lateral/smod/lateral_grid@vcvv_vcvxv.f90 &
 wait
 
 $fcompile -c kernels/equations/solution/solution.f90

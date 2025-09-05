@@ -10,12 +10,12 @@ submodule (matrix) lu_decomp
     
     k = this%ld
       do i = 1, this%ld
-        do concurrent ( l = this%ld+2-i-k:this%ldu-k )
+        do l = this%ld+2-i-k, this%ldu-k
           this%U(l,i) = this%U(l+k,i)
         end do
         
         k = k-1
-          do concurrent ( l = this%ldu-k:this%ldu )
+          do l = this%ldu-k, this%ldu
             this%U(l,i) = zero
           end do
       end do
@@ -33,7 +33,7 @@ submodule (matrix) lu_decomp
       
       this%I(j) = i
         if (i /= j) then
-          do concurrent ( l = 1:this%ldu )
+          do l = 1, this%ldu
             pom         = this%U(l,j)
             this%U(l,j) = this%U(l,i)
             this%U(l,i) = pom

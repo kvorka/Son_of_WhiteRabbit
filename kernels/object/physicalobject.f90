@@ -31,7 +31,7 @@ module physicalobject
     procedure, pass :: temp_rr_ijm_sub, dT_dr_rr_ijm_sub, gradT_rr_ijml_sub
     
     !Variables mechanical part of solution
-    procedure, pass :: v_rr_fn, v_rr_ijml_sub
+    procedure, pass :: v_rr_ijml_sub
     procedure, pass :: dv_dr_rr_ijml_sub, curlv_rr_ijml_sub
     
     !Matrices, equations, solvers
@@ -98,11 +98,6 @@ module physicalobject
     end subroutine gradT_rr_ijml_sub
     
     !Interfaces :: Variables velocity
-    module pure complex(kind=dbl) function v_rr_fn(this, ir, il, ijm)
-      class(T_physicalObject), intent(in) :: this
-      integer,                 intent(in) :: ir, il, ijm
-    end function v_rr_fn
-    
     module pure subroutine v_rr_ijml_sub(this, ir, v_rr_ijml)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
@@ -149,17 +144,17 @@ module physicalobject
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_temp_fn
     
-    module pure function mat_torr_fn(this, j_in, a_in) result(matica)
+    module pure function mat_torr_fn(this, j, a) result(matica)
       class(T_physicalObject), intent(in) :: this
-      integer,                 intent(in) :: j_in
-      real(kind=dbl),          intent(in) :: a_in
+      integer,                 intent(in) :: j
+      real(kind=dbl),          intent(in) :: a
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_torr_fn
     
-    module pure function mat_mech_fn(this, j_in, a_in) result(matica)
+    module pure function mat_mech_fn(this, j, a) result(matica)
       class(T_physicalObject), intent(in) :: this
-      integer,                 intent(in) :: j_in
-      real(kind=dbl),          intent(in) :: a_in
+      integer,                 intent(in) :: j
+      real(kind=dbl),          intent(in) :: a
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_mech_fn
     

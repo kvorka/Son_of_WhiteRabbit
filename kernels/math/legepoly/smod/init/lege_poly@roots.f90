@@ -92,10 +92,10 @@ submodule (lege_poly) roots
         end if
       end do
       
-      this%rw(i,1) = root
-      this%rw(i,2) = sqrt( 1 - root**2 )
-      this%rw(i,3) = root**2
-      this%rw(i,4) = qpi * (1-root**2) / ( this%nLege * lege_fn(2*this%nLege-1, root) )**2
+      this%rw(i,1) = real( root, kind=dbl )
+      this%rw(i,2) = real( sqrt( 1 - root**2 ), kind=dbl )
+      this%rw(i,3) = real( root**2, kind=dbl )
+      this%rw(i,4) = real( qpi * (1-root**2) / ( this%nLege * lege_fn(2*this%nLege-1, root) )**2, kind=dbl )
     end do
     !$omp end parallel do
     

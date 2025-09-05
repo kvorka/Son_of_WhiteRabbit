@@ -5,8 +5,8 @@ submodule (solution) init
     
     this%nd   = nd
     this%jmax = jmax
-    this%jms  =     jmax * (jmax+1) / 2 + jmax   + 1
-    this%jmv  = 3*( jmax * (jmax+1) / 2 + jmax ) + 1
+    this%jms  =       jmax * (jmax+1) / 2 + jmax   + 1
+    this%jmv  = 3 * ( jmax * (jmax+1) / 2 + jmax ) + 1
     
   end procedure init_solution_sub
   
@@ -26,13 +26,13 @@ submodule (solution) init
   
   module procedure init_storr_sub
       
-    allocate( this%torr(3*this%nd+1, this%jms) ); this%torr = czero
+    allocate( this%torr(2*this%nd+1, this%jms) ); this%torr = czero
     
   end procedure init_storr_sub
   
   module procedure init_smech_sub
     
-    allocate( this%mech(6*this%nd+2,this%jms) ); this%mech = czero
+    allocate( this%mech(5*this%nd+2,this%jms) ); this%mech = czero
     
   end procedure init_smech_sub
   

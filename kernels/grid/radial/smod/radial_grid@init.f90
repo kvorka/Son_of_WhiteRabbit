@@ -2,8 +2,7 @@ submodule (radial_grid) init
   implicit none ; contains
   
   module procedure init_grid_sub
-    integer        :: i
-    real(kind=dbl) :: dr
+    integer :: i
     
     this%nd = nr
     

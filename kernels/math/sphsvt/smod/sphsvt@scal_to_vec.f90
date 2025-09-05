@@ -2,10 +2,11 @@ submodule (sphsvt) scal_to_vec
   implicit none; contains
   
   module procedure scal2vecscal_mj_to_jm_sub
-    integer           :: i, j, m, mj, mj1, mj2, ijm
+    integer           :: j, m, mj, mj1, mj2, ijm
     complex(kind=dbl) :: cr12
     
-    do concurrent ( mj = 1:this%jms2 )
+    !$omp simd
+    do mj = 1, this%jms2
       cr12               = ( +cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding+1,mj) = ( -cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding  ,mj) = cr12
@@ -60,10 +61,11 @@ submodule (sphsvt) scal_to_vec
   end procedure scal2vecscal_mj_to_jm_sub
   
   module procedure scal2vec_mj_to_jml_sub
-    integer           :: i, j, m, mj, mj1, mj2, ijm, ijml
+    integer           :: j, m, mj, mj1, mj2, ijm, ijml
     complex(kind=dbl) :: cr12
     
-    do concurrent ( mj = 1:this%jms2 )
+    !$omp simd
+    do mj = 1, this%jms2
       cr12               = ( +cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding+1,mj) = ( -cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding  ,mj) = cr12

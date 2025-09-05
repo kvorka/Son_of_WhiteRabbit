@@ -8,7 +8,7 @@ submodule (lege_poly) coeffs
       
     do im = 0, this%jmax+1
       do ij = im, this%jmax+1
-        this%emj(im*(this%jmax+2)-im*(im+1)/2+ij+1) = sqrt((ij**2-im**2)/(4*ij**2-qone))
+        this%emj(im*(this%jmax+2)-im*(im+1)/2+ij+1) = real( sqrt((ij**2-im**2)/(4*ij**2-qone)), kind=dbl )
       end do
     end do
     
@@ -20,9 +20,9 @@ submodule (lege_poly) coeffs
         ima = ima+1
         
         if ( im == 0 ) then
-          this%fmj(1,ima) = qone / sqrt(4*pi)
+          this%fmj(1,ima) = real( qone / sqrt(4*pi), kind=dbl )
         else
-          this%fmj(1,ima) = -sqrt( (2*im+qone) / (2*im) )
+          this%fmj(1,ima) = real( -sqrt( (2*im+qone) / (2*im) ), kind=dbl )
         end if
       
       if ( im < this%jmax ) then

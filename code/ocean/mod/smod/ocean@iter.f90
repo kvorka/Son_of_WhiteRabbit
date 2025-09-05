@@ -2,7 +2,7 @@ submodule (ocean) iter
   implicit none; contains
   
   module procedure iter_ocean_sub
-    integer :: k, ijm
+    integer :: k
     
     do k = 1, this%n_iter
       this%t = this%t + this%dt
@@ -14,7 +14,7 @@ submodule (ocean) iter
   end procedure iter_ocean_sub
   
   module procedure speed_ocean_sub
-    integer :: k, ijm
+    integer :: k
     
     do k = 1, this%n_iter
       call this%time_scheme_sub()

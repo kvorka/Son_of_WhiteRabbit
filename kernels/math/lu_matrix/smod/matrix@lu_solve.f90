@@ -14,14 +14,14 @@ submodule (matrix) lu_solve
         b(j) = dum
       end if
       
-      do concurrent ( i = j+1:min(this%n,this%ld+j) )
+      do i = j+1, min(this%n,this%ld+j)
         b(i) = b(i) - this%L(i-j,j) * dum
       end do
     end do
     
     do i = this%n, 1, -1
       dum = b(i)
-        do concurrent ( j = 2:min(this%ldu,this%n-i+1) )
+        do j = 2, min(this%ldu,this%n-i+1)
           dum = dum - this%U(j,i) * b(i+j-1)
         end do
       

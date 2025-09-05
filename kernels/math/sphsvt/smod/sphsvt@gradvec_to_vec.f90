@@ -2,7 +2,7 @@ submodule (sphsvt) gradvec_to_vec
   implicit none; contains
   
   module procedure gradvec2vec_jmlk_to_jml_sub
-    integer                        :: j, m, l, lmj, ijml, i1
+    integer                        :: j, m, l, lmj, ijml
     real(kind=dbl)                 :: cg, fac1, fac2, fac3, fac4
     complex(kind=dbl), allocatable :: sum1(:), sum2(:), sum3(:)
     

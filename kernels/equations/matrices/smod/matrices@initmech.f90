@@ -7,9 +7,9 @@ submodule (Matrices) initmech
     allocate( this%mech(1:this%jmax) )
     
     do j = 1, this%jmax
-      call this%mech(j)%init_sub(6*this%nd+2, 11, 11)
+      call this%mech(j)%init_sub(5*this%nd+2, 9, 9)
     end do
-      
+    
   end procedure init_mmech_sub
   
 end submodule initmech

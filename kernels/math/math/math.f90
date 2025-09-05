@@ -79,15 +79,15 @@ module math
   end interface
   
   interface
-    type(c_ptr) function malloc(alignmt, n) bind(C, name='aligned_alloc')
-      import         :: c_ptr
-      integer, value :: alignmt, n
-    end function malloc
+    type(c_ptr) function fortmalloc(alignmt, n) bind(C, name='aligned_alloc')
+      import                     :: c_ptr, c_int
+      integer(kind=c_int), value :: alignmt, n
+    end function fortmalloc
     
-    subroutine free(ptr) bind(C, name="free")
+    subroutine fortfree(ptr) bind(C, name="free")
       import             :: c_ptr
       type(c_ptr), value :: ptr
-    end subroutine free
+    end subroutine fortfree
   end interface
   
 end module math

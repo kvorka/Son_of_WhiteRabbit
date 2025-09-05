@@ -18,7 +18,8 @@ submodule (ocean) nonlin
       call this%lat_grid%vcvv_vcvgv_sub(this%rad_grid%rr(ir), gradT, dv, v, nlm)
       
       fac = 1 / this%Pr
-        do concurrent ( ijm = 1:this%jms )
+        !$omp simd
+        do ijm = 1, this%jms
           nlm(2,ijm) = nlm(2,ijm) * fac
           nlm(3,ijm) = nlm(3,ijm) * fac
           nlm(4,ijm) = nlm(4,ijm) * fac
@@ -27,7 +28,8 @@ submodule (ocean) nonlin
       call this%coriolis_rr_jml_sub(v, coriolis)
       call this%buoy_rr_jml_sub(ir, T, buoy)
       
-      do concurrent ( ijm = 1:this%jms )
+      !$omp simd
+      do ijm = 1, this%jms
         this%ntemp(ijm,ir) = nlm(1,ijm)
         this%nsph1(ijm,ir) = nlm(2,ijm)+buoy(1,ijm)+coriolis(1,ijm)
         this%ntorr(ijm,ir) = nlm(3,ijm)+            coriolis(2,ijm)
