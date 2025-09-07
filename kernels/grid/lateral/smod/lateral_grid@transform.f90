@@ -17,14 +17,14 @@ submodule (lateral_grid) transform
     call this%lgp%index_bwd_sub( nb, cc, rcc )
     
     !Allocating memory
-    call alloc_aligned1d_sub( 2*(2*(nb+1)+nb+nb*this%fft%n)*16, c_work, work )
+    call alloc_aligned1d_sub( (4*(nb+1)+nb+2*nb*this%fft%n)*16, c_work, work )
       
-      pmm   => work(                                       1 :                                       16 )
-      pmj   => work(                                    16+1 :   2*                                  16 )
-      pmj1  => work(   2*                               16+1 :   3*                                  16 )
-      pmj2  => work(   3*                               16+1 :   4*                                  16 )
-      swork => work(   4*                               16+1 :   4*(nb+1)*                           16 )
-      sumN  => work(   4*(nb+1)*                        16+1 : ( 4*(nb+1)+     nb*this%fft%n )*16 )
+      pmm   => work(                                 1 :                                 16 )
+      pmj   => work(                              16+1 :   2*                            16 )
+      pmj1  => work(   2*                         16+1 :   3*                            16 )
+      pmj2  => work(   3*                         16+1 :   4*                            16 )
+      swork => work(   4*                         16+1 :   4*(nb+1)*                     16 )
+      sumN  => work(   4*(nb+1)*                  16+1 : ( 4*(nb+1)+     nb*this%fft%n )*16 )
       sumS  => work( ( 4*(nb+1)+  nb*this%fft%n )*16+1 : ( 4*(nb+1)   +2*nb*this%fft%n )*16 )
       grid  => work( ( 4*(nb+1)+2*nb*this%fft%n )*16+1 : ( 4*(nb+1)+nb+2*nb*this%fft%n )*16 )
     

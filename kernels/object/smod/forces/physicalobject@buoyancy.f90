@@ -12,7 +12,6 @@ submodule (physicalobject) buoyancy
       fac1 = -sqrt( (ij  ) / (2*ij+one) ) * fac
       fac2 = +sqrt( (ij+1) / (2*ij+one) ) * fac
       
-      !$omp simd
       do ijm = ij*(ij+1)/2+1, ij*(ij+1)/2+ij+1
         force(1,ijm) = fac1 * T(ijm)
         force(2,ijm) = fac2 * T(ijm)

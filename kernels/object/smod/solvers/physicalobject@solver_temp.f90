@@ -12,7 +12,6 @@ submodule (physicalobject) solver_temp
         this%rtemp(ir,ijm) = this%rtemp(ir,ijm) + this%mat%temp(ij)%multipl_fn(2*(ir-1)+1, this%sol%temp(:,ijm))
       end do
       
-      !$omp simd private (is)
       do ir = 1, this%nd
         is = 2*(ir-1)+1
         

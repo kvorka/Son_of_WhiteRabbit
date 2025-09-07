@@ -4,7 +4,6 @@ submodule (sphsvt) vec_to_vec
   module procedure vec2vec_jml_to_jml_sub
     integer :: ijm
     
-    !$omp simd
     do ijm = 1, this%jmv
       cab(cabpadding,ijm) = cjml(ijm)
     end do

@@ -12,7 +12,6 @@ submodule (physicalobject) solver_torr
         this%rtorr(ir,ijm) = this%rtorr(ir,ijm) + this%mat%torr(ij)%multipl_fn(2*(ir-1)+1,this%sol%torr(:,ijm))
       end do
       
-      !$omp simd private (is)
       do ir = 1, this%nd
         is = 2*(ir-1) + 1
         

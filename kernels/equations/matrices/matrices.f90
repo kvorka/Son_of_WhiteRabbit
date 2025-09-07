@@ -18,7 +18,7 @@ module matrices
   end type T_matrices
   
   interface
-    module pure subroutine init_matrices_sub(this, nd, jmax)
+    module subroutine init_matrices_sub(this, nd, jmax)
       class(T_matrices), intent(inout) :: this
       integer,           intent(in)    :: nd, jmax
     end subroutine init_matrices_sub
@@ -27,15 +27,15 @@ module matrices
       class(T_matrices), intent(inout) :: this
     end subroutine deallocate_matrices_sub
 
-    module pure subroutine init_mtemp_sub(this)
+    module subroutine init_mtemp_sub(this)
       class(T_matrices), intent(inout) :: this
     end subroutine init_mtemp_sub
     
-    module pure subroutine init_mtorr_sub(this)
+    module subroutine init_mtorr_sub(this)
       class(T_matrices), intent(inout) :: this
     end subroutine init_mtorr_sub
     
-    module pure subroutine init_mmech_sub(this)
+    module subroutine init_mmech_sub(this)
       class(T_matrices), intent(inout) :: this
     end subroutine init_mmech_sub
   end interface

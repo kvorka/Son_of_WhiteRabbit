@@ -68,7 +68,6 @@ submodule (physicalobject) meassures
         call this%v_rr_ijml_sub( ir, velocity )
         
         do j = 1, this%jmax
-          !$omp simd
           do m = 0, j
             velocity( 3*(j*(j+1)/2+m) ) = czero
           end do
@@ -96,7 +95,6 @@ submodule (physicalobject) meassures
         call this%v_rr_ijml_sub( ir, velocity )
         
         do j = 1, this%jmax
-          !$omp simd
           do m = 0, j
             velocity( 3*(j*(j+1)/2+m)-1 ) = czero
             velocity( 3*(j*(j+1)/2+m)+1 ) = czero

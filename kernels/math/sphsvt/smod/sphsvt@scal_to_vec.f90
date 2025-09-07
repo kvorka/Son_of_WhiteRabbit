@@ -5,7 +5,6 @@ submodule (sphsvt) scal_to_vec
     integer           :: j, m, mj, mj1, mj2, ijm
     complex(kind=dbl) :: cr12
     
-    !$omp simd
     do mj = 1, this%jms2
       cr12               = ( +cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding+1,mj) = ( -cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
@@ -64,7 +63,6 @@ submodule (sphsvt) scal_to_vec
     integer           :: j, m, mj, mj1, mj2, ijm, ijml
     complex(kind=dbl) :: cr12
     
-    !$omp simd
     do mj = 1, this%jms2
       cr12               = ( +cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding+1,mj) = ( -cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1

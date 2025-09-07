@@ -9,7 +9,6 @@ submodule (lege_poly) c2r
         ma = 1
         mj = 1
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = cab(i,mj+1)%re * this%emj(mj+1)
           rcab(2,i,1,ma) = cab(i,mj+1)%im * this%emj(mj+1)
@@ -21,7 +20,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+2
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = this%emj(mj) * cab(i,mj-1)%re + this%emj(mj+1) * cab(i,mj+1)%re
           rcab(2,i,1,ma) = this%emj(mj) * cab(i,mj-1)%im + this%emj(mj+1) * cab(i,mj+1)%im
@@ -35,7 +33,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+2
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = this%emj(mj) * cab(i,mj-1)%re
           rcab(2,i,1,ma) = this%emj(mj) * cab(i,mj-1)%im
@@ -47,7 +44,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+1
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = this%emj(mj+1) * cab(i,mj)%re
           rcab(2,i,1,ma) = this%emj(mj+1) * cab(i,mj)%im
@@ -59,7 +55,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+1
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = cab(i,mj+1)%re * this%emj(mj+m+1)
           rcab(2,i,1,ma) = cab(i,mj+1)%im * this%emj(mj+m+1)
@@ -71,7 +66,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+2
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = this%emj(mj+m) * cab(i,mj-1)%re + this%emj(mj+m+1) * cab(i,mj+1)%re
           rcab(2,i,1,ma) = this%emj(mj+m) * cab(i,mj-1)%im + this%emj(mj+m+1) * cab(i,mj+1)%im
@@ -85,7 +79,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+2
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = this%emj(mj+m) * cab(i,mj-1)%re
           rcab(2,i,1,ma) = this%emj(mj+m) * cab(i,mj-1)%im
@@ -97,7 +90,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+1
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,1,ma) = this%emj(mj+m+1) * cab(i,mj)%re
           rcab(2,i,1,ma) = this%emj(mj+m+1) * cab(i,mj)%im
@@ -110,7 +102,6 @@ submodule (lege_poly) c2r
         ma = ma+1
         mj = mj+1
         
-        !$omp simd
         do i = 1, ncab
           rcab(1,i,2,ma) = cab(i,mj)%re
           rcab(2,i,2,ma) = cab(i,mj)%im

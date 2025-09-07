@@ -15,45 +15,45 @@ module sphsvt
   end type T_sphsvt
   
   interface
-    module pure subroutine init_sphsvt_sub(this, jmax)
+    module subroutine init_sphsvt_sub(this, jmax)
       class(T_sphsvt), intent(inout) :: this
       integer,         intent(in)    :: jmax
     end subroutine init_sphsvt_sub
     
-    module pure subroutine allocate_scalars_sub(this, ns, cscal)
+    module subroutine allocate_scalars_sub(this, ns, cscal)
       class(T_sphsvt),                intent(in)  :: this
       integer,                        intent(in)  :: ns
       complex(kind=dbl), allocatable, intent(out) :: cscal(:)
     end subroutine allocate_scalars_sub
     
-    module pure subroutine allocate_vectors_sub(this, nv, cvec)
+    module subroutine allocate_vectors_sub(this, nv, cvec)
       class(T_sphsvt),                intent(in)  :: this
       integer,                        intent(in)  :: nv
       complex(kind=dbl), allocatable, intent(out) :: cvec(:)
     end subroutine allocate_vectors_sub
     
-    module pure subroutine vec2vec_jml_to_jml_sub(this, cjml, cab, ncab, cabpadding)
+    module subroutine vec2vec_jml_to_jml_sub(this, cjml, cab, ncab, cabpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncab, cabpadding
       complex(kind=dbl), intent(in)    :: cjml(*)
       complex(kind=dbl), intent(inout) :: cab(ncab,*)
     end subroutine vec2vec_jml_to_jml_sub
     
-    module pure subroutine scal2scal_jm_to_mj_sub(this, cjm, cab, ncab, cabpadding)
+    module subroutine scal2scal_jm_to_mj_sub(this, cjm, cab, ncab, cabpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncab, cabpadding
       complex(kind=dbl), intent(in)    :: cjm(*)
       complex(kind=dbl), intent(inout) :: cab(ncab,*)
     end subroutine scal2scal_jm_to_mj_sub
     
-    module pure subroutine vec2scal_jml_to_mj_sub(this, cab, ncab, cc, ncc, ccpadding)
+    module subroutine vec2scal_jml_to_mj_sub(this, cab, ncab, cc, ncc, ccpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncab, ncc, ccpadding
       complex(kind=dbl), intent(in)    :: cab(ncab,*)
       complex(kind=dbl), intent(inout) :: cc(ncc,*)
     end subroutine vec2scal_jml_to_mj_sub
     
-    module pure subroutine gradvec2vec_jmlk_to_jml_sub(this, ri, v, dv_r, cab, ncab, cabpadding)
+    module subroutine gradvec2vec_jmlk_to_jml_sub(this, ri, v, dv_r, cab, ncab, cabpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: cabpadding, ncab
       real(kind=dbl),    intent(in)    :: ri
@@ -61,21 +61,21 @@ module sphsvt
       complex(kind=dbl), intent(inout) :: cab(ncab,*)
     end subroutine gradvec2vec_jmlk_to_jml_sub
     
-    module pure subroutine scal2scal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm, ncjm, cjmpadding)
+    module subroutine scal2scal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm, ncjm, cjmpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncr, ncjm, crpadding, cjmpadding
       complex(kind=dbl), intent(in)    :: cr(ncr,*)
       complex(kind=dbl), intent(inout) :: cjm(ncjm,*)
     end subroutine scal2scal_mj_to_jm_sub
     
-    module pure subroutine scal2vecscal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm, ncjm, cjmpadding)
+    module subroutine scal2vecscal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm, ncjm, cjmpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncr, crpadding, ncjm, cjmpadding
       complex(kind=dbl), intent(inout) :: cr(ncr,*)
       complex(kind=dbl), intent(inout) :: cjm(ncjm,*)
     end subroutine scal2vecscal_mj_to_jm_sub
     
-    module pure subroutine scal2vec_mj_to_jml_sub(this, cr, ncr, crpadding, cjml, ncjml, cjmlpadding)
+    module subroutine scal2vec_mj_to_jml_sub(this, cr, ncr, crpadding, cjml, ncjml, cjmlpadding)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncr, crpadding, ncjml, cjmlpadding
       complex(kind=dbl), intent(inout) :: cr(ncr,*)

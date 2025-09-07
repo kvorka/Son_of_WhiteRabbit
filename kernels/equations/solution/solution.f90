@@ -21,45 +21,45 @@ module solution
   end type T_solution
   
   interface
-    module pure subroutine init_solution_sub(this, nd, jmax)
+    module subroutine init_solution_sub(this, nd, jmax)
       class(T_solution), intent(inout) :: this
       integer,           intent(in)    :: nd, jmax
     end subroutine init_solution_sub
     
-    module pure subroutine deallocate_solution_sub(this)
+    module subroutine deallocate_solution_sub(this)
       class(T_solution), intent(inout) :: this
     end subroutine deallocate_solution_sub
     
     !! Interfaces :: temperature
-    module pure subroutine init_stemp_sub(this)
+    module subroutine init_stemp_sub(this)
       class(T_solution), intent(inout) :: this
     end subroutine init_stemp_sub
     
-    module pure subroutine init_storr_sub(this)
+    module subroutine init_storr_sub(this)
       class(T_solution), intent(inout) :: this
     end subroutine init_storr_sub
     
-    module pure subroutine init_smech_sub(this)
+    module subroutine init_smech_sub(this)
       class(T_solution), intent(inout) :: this
     end subroutine init_smech_sub
     
-    module pure complex(kind=dbl) function temp_fn(this, ir, ijm)
+    module complex(kind=dbl) function temp_fn(this, ir, ijm)
       class(T_solution), intent(in) :: this
       integer,           intent(in) :: ir, ijm
     end function temp_fn
     
-    module pure subroutine temp_jm_sub(this, ir, temp_jm)
+    module subroutine temp_jm_sub(this, ir, temp_jm)
       class(T_solution), intent(in)  :: this
       integer,           intent(in)  :: ir
       complex(kind=dbl), intent(out) :: temp_jm(*)
     end subroutine temp_jm_sub
     
-    module pure complex(kind=dbl) function velocity_fn(this, ir, il, ijm)
+    module complex(kind=dbl) function velocity_fn(this, ir, il, ijm)
       class(T_solution), intent(in) :: this
       integer,           intent(in) :: ir, il, ijm
     end function velocity_fn
     
-    module pure subroutine velocity_jml_sub(this, ir, velocity_jml)
+    module subroutine velocity_jml_sub(this, ir, velocity_jml)
       class(T_solution), intent(in)  :: this
       integer,           intent(in)  :: ir
       complex(kind=dbl), intent(out) :: velocity_jml(*)

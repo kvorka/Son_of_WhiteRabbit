@@ -18,26 +18,22 @@ submodule (sphsvt) vec_to_scal
           lmj = 3*(l*(l+1)/2+m+1)+j-l
           
           cg = cleb1_fn(j,m,1,0,l,m)
-            !$omp simd
             do i1 = 1, ncab
               sum3(i1) = sum3(i1) + cab(i1,lmj-3) * cg
             end do
           
           cg = cleb1_fn(j,m,1,-1,l,m-1) * (-1)**(j+l)
-            !$omp simd
             do i1 = 1, ncab
               sum1(i1) = sum1(i1) + conjg( cab(i1,lmj) ) * cg
             end do
           
           cg = cleb1_fn(j,m,1,+1,l,m+1)
-            !$omp simd
             do i1 = 1, ncab
               sum2(i1) = sum2(i1) + cab(i1,lmj) * cg
             end do
         end do
         
         mj = m*this%jmax3-m*(m+1)/2+j+1
-          !$omp simd
           do i1 = 1, ncab
             indx = 3*(i1-1)+ccpadding
               cc(indx  ,mj) =         ( +sum1(i1) - sum2(i1) ) * sq2_1
@@ -57,14 +53,12 @@ submodule (sphsvt) vec_to_scal
           
           !every time
             cg = cleb1_fn(j,m,1,-1,l,m-1)
-              !$omp simd
               do i1 = 1, ncab
                 sum1(i1) = sum1(i1) + cab(i1,lmj) * cg
               end do
           
           if ( l > m-1 ) then
             cg = cleb1_fn(j,m,1,0,l,m)
-              !$omp simd
               do i1 = 1, ncab
                 sum3(i1) = sum3(i1) + cab(i1,lmj+3) * cg
               end do
@@ -72,7 +66,6 @@ submodule (sphsvt) vec_to_scal
           
           if ( l > m ) then
             cg = cleb1_fn(j,m,1,+1,l,m+1)
-              !$omp simd
               do i1 = 1, ncab
                 sum2(i1) = sum2(i1) + cab(i1,lmj+6) * cg
               end do
@@ -80,7 +73,6 @@ submodule (sphsvt) vec_to_scal
         end do
         
         mj = m*this%jmax3-m*(m+1)/2+j+1
-          !$omp simd
           do i1 = 1, ncab
             indx = 3*(i1-1)+ccpadding
               cc(indx  ,mj) =         ( +sum1(i1) - sum2(i1) ) * sq2_1

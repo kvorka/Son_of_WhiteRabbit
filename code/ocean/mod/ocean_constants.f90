@@ -3,7 +3,7 @@ module ocean_constants
   implicit none
   
   !Vseobecne nastavenie konstant
-  integer, parameter :: nd_ocean = 73
+  integer, parameter :: nd_ocean = 81
   integer, parameter :: jmax_ocean = 125
   integer, parameter :: n_iter_ocean = 200
   

@@ -13,7 +13,6 @@ submodule (physicalobject) solver_mech
         this%rsph2(ir,ijm) = this%rsph2(ir,ijm) + this%mat%mech(ij)%multipl_fn(5*(ir-1)+2,this%sol%mech(:,ijm))
       end do
       
-      !$omp simd private (is)
       do ir = 1, this%nd
         is = 5*(ir-1)+1
         

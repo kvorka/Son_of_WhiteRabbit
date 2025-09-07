@@ -2,7 +2,7 @@ module sph_norms
   use math
   implicit none; public; contains
   
-  pure function scalnorm2_fn(np, cajm) result(sp)
+  function scalnorm2_fn(np, cajm) result(sp)
     integer,           intent(in) :: np
     complex(kind=dbl), intent(in) :: cajm(*)
     integer                       :: j, m, indx
@@ -25,7 +25,7 @@ module sph_norms
     
   end function scalnorm2_fn
   
-  pure function vectnorm2_fn(np, cajml) result(vp)
+  function vectnorm2_fn(np, cajml) result(vp)
     integer,           intent(in) :: np
     complex(kind=dbl), intent(in) :: cajml(*)
     integer                       :: j, m, indx

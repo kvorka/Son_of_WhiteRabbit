@@ -2,7 +2,7 @@ module sph_unitvec_op
   use math
   implicit none; public; contains
   
-  pure subroutine ezvv_sub(np, fac, cajml, cjml)
+  subroutine ezvv_sub(np, fac, cajml, cjml)
     integer,           intent(in)  :: np
     real(kind=dbl),    intent(in)  :: fac
     complex(kind=dbl), intent(in)  :: cajml(*)

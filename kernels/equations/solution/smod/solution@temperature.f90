@@ -12,7 +12,6 @@ submodule (solution) temperature
     
     is = 2*(ir-1)+1
     
-    !$omp simd
     do ijm = 1, this%jms
       temp_jm(ijm) = this%temp(is,ijm)
     end do

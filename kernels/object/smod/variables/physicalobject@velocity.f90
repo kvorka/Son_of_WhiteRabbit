@@ -22,7 +22,6 @@ submodule (physicalobject) velocity
       call this%sol%velocity_jml_sub( ir  , v  )
       call this%sol%velocity_jml_sub( ir+1, v3 )
       
-      !$omp simd
       do ijml = 1, this%jmv
         dv(ijml) = fac1 * dv(ijml) + fac2 * v(ijml) + fac3 * v3(ijml)
       end do

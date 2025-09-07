@@ -82,40 +82,40 @@ module lege_poly
   end interface
   
   interface
-    module pure subroutine mmset_sub(ma, cff, cosx, sinx, pmm, pmj2, pmj1, pmj)
+    module subroutine mmset_sub(ma, cff, cosx, sinx, pmm, pmj2, pmj1, pmj)
       integer,        intent(in)    :: ma
       real(kind=dbl), intent(in)    :: cff, cosx(16), sinx(16)
       real(kind=dbl), intent(inout) :: pmm(16)
       real(kind=dbl), intent(out)   :: pmj2(16), pmj1(16), pmj(16)
     end subroutine mmset_sub
     
-    module pure subroutine mjrec_sub(cff, cosx2, pmj2, pmj1, pmj)
+    module subroutine mjrec_sub(cff, cosx2, pmj2, pmj1, pmj)
       real(kind=dbl), intent(in)    :: cff(16), cosx2(16)
       real(kind=dbl), intent(inout) :: pmj2(16), pmj1(16), pmj(16)
     end subroutine mjrec_sub
     
-    module pure subroutine bwd_sum_sub(n, pmj, cc, swork)
+    module subroutine bwd_sum_sub(n, pmj, cc, swork)
       integer,        intent(in)  :: n
       real(kind=dbl), intent(in)  :: pmj(16)
       real(kind=dbl), intent(in)  :: cc(n)
       real(kind=dbl), intent(out) :: swork(16,n)
     end subroutine bwd_sum_sub
     
-    module pure subroutine bwd_shuffle_sub(n, cosx, swork, sumN, sumS)
+    module subroutine bwd_shuffle_sub(n, cosx, swork, sumN, sumS)
       integer,        intent(in)    :: n
       real(kind=dbl), intent(in)    :: cosx(16)
       real(kind=dbl), intent(inout) :: swork(16,2,n,*)
       real(kind=dbl), intent(out)   :: sumN(16,n,*), sumS(16,n,*)
     end subroutine bwd_shuffle_sub
     
-    module pure subroutine fwd_sum_sub(n, pmj, swork, cr)
+    module subroutine fwd_sum_sub(n, pmj, swork, cr)
       integer,        intent(in)    :: n
       real(kind=dbl), intent(in)    :: pmj(16)
       real(kind=dbl), intent(in)    :: swork(16,n)
       real(kind=dbl), intent(inout) :: cr(n)
     end subroutine fwd_sum_sub
     
-    module pure subroutine fwd_shuffle_sub(n, w, cosx, sumN, sumS, swork)
+    module subroutine fwd_shuffle_sub(n, w, cosx, sumN, sumS, swork)
       integer,        intent(in)  :: n
       real(kind=dbl), intent(in)  :: w(16), cosx(16), sumN(16,n,*), sumS(16,n,*)
       real(kind=dbl), intent(out) :: swork(16,2,n,*)

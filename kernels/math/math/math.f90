@@ -67,12 +67,12 @@ module math
       real(kind=dbl), pointer, intent(inout) :: f_arr(:,:)
     end subroutine free_aligned2d_sub
     
-    module pure subroutine zero_rarray_sub(length, arr)
+    module subroutine zero_rarray_sub(length, arr)
       integer,        intent(in)  :: length
       real(kind=dbl), intent(out) :: arr(*)
     end subroutine zero_rarray_sub
     
-    module pure subroutine zero_carray_sub(length, arr)
+    module subroutine zero_carray_sub(length, arr)
       integer,           intent(in)  :: length
       complex(kind=dbl), intent(out) :: arr(*)
     end subroutine zero_carray_sub

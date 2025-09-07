@@ -63,54 +63,54 @@ module physicalobject
     end subroutine deallocate_objects_sub
     
     !Interfaces :: Variables temperature
-    module pure complex(kind=dbl) function temp_r_fn(this, ir, ijm)
+    module complex(kind=dbl) function temp_r_fn(this, ir, ijm)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: ir, ijm
     end function temp_r_fn
     
-    module pure complex(kind=dbl) function dT_dr_r_fn(this, ir, ijm)
+    module complex(kind=dbl) function dT_dr_r_fn(this, ir, ijm)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: ir, ijm
     end function dT_dr_r_fn
     
-    module pure subroutine dT_dr_r_ijm_sub(this, ir, dT_dr_r)
+    module subroutine dT_dr_r_ijm_sub(this, ir, dT_dr_r)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       complex(kind=dbl),       intent(out) :: dT_dr_r(*)
     end subroutine dT_dr_r_ijm_sub
     
-    module pure subroutine temp_rr_ijm_sub(this, ir, temp_rr_ijm)
+    module subroutine temp_rr_ijm_sub(this, ir, temp_rr_ijm)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       complex(kind=dbl),       intent(out) :: temp_rr_ijm(*)
     end subroutine temp_rr_ijm_sub
     
-    module pure subroutine dT_dr_rr_ijm_sub(this, ir, T, dT)
+    module subroutine dT_dr_rr_ijm_sub(this, ir, T, dT)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       complex(kind=dbl),       intent(out) :: T(*), dT(*)
     end subroutine dT_dr_rr_ijm_sub
     
-    module pure subroutine gradT_rr_ijml_sub(this, ir, T, gradT, sgn)
+    module subroutine gradT_rr_ijml_sub(this, ir, T, gradT, sgn)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir, sgn
       complex(kind=dbl),       intent(out) :: T(*), gradT(*)
     end subroutine gradT_rr_ijml_sub
     
     !Interfaces :: Variables velocity
-    module pure subroutine v_rr_ijml_sub(this, ir, v_rr_ijml)
+    module subroutine v_rr_ijml_sub(this, ir, v_rr_ijml)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       complex(kind=dbl),       intent(out) :: v_rr_ijml(*)
     end subroutine v_rr_ijml_sub
     
-    module pure subroutine dv_dr_rr_ijml_sub(this, ir, v, dv)
+    module subroutine dv_dr_rr_ijml_sub(this, ir, v, dv)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       complex(kind=dbl),       intent(out) :: dv(*), v(*)
     end subroutine dv_dr_rr_ijml_sub
     
-    module pure subroutine curlv_rr_ijml_sub(this, ir, v, curlv)
+    module subroutine curlv_rr_ijml_sub(this, ir, v, curlv)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       complex(kind=dbl),       intent(out) :: v(*), curlv(*)
@@ -124,34 +124,34 @@ module physicalobject
     end subroutine vypis_sub
     
     !Interfaces :: to be continued
-    module pure subroutine coriolis_rr_jml_sub(this, v, coriolis)
+    module subroutine coriolis_rr_jml_sub(this, v, coriolis)
       class(T_physicalObject), intent(in)    :: this
       complex(kind=dbl),       intent(in)    :: v(*)
       complex(kind=dbl),       intent(inout) :: coriolis(*)
     end subroutine coriolis_rr_jml_sub
     
-    module pure subroutine buoy_rr_jml_sub(this, ir, T, force)
+    module subroutine buoy_rr_jml_sub(this, ir, T, force)
       class(T_physicalObject), intent(in)    :: this
       integer,                 intent(in)    :: ir
       complex(kind=dbl),       intent(in)    :: T(*)
       complex(kind=dbl),       intent(inout) :: force(2,*)
     end subroutine buoy_rr_jml_sub
     
-    module pure function mat_temp_fn(this, j, a) result(matica)
+    module function mat_temp_fn(this, j, a) result(matica)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: j
       real(kind=dbl),          intent(in) :: a
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_temp_fn
     
-    module pure function mat_torr_fn(this, j, a) result(matica)
+    module function mat_torr_fn(this, j, a) result(matica)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: j
       real(kind=dbl),          intent(in) :: a
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_torr_fn
     
-    module pure function mat_mech_fn(this, j, a) result(matica)
+    module function mat_mech_fn(this, j, a) result(matica)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: j
       real(kind=dbl),          intent(in) :: a
@@ -194,7 +194,7 @@ module physicalobject
       class(T_physicalObject), intent(inout) :: this
     end subroutine solve_mech_sub
     
-    module pure real(kind=dbl) function nuss_fn(this)
+    module real(kind=dbl) function nuss_fn(this)
       class(T_physicalObject), intent(in) :: this
     end function nuss_fn
     

@@ -19,26 +19,26 @@ module matrix
   end type T_matrix
   
   interface
-    module pure subroutine init_matrix_sub(this, n, ld, lu)
+    module subroutine init_matrix_sub(this, n, ld, lu)
       class(T_matrix), intent(inout) :: this
       integer,         intent(in)    :: n, ld, lu
     end subroutine init_matrix_sub
     
-    module pure subroutine deallocate_matrix_sub(this)
+    module subroutine deallocate_matrix_sub(this)
       class(T_matrix), intent(inout) :: this
     end subroutine deallocate_matrix_sub
     
-    module pure subroutine lu_decomposition_sub(this, matrixU, matrixM)
+    module subroutine lu_decomposition_sub(this, matrixU, matrixM)
       class(T_matrix), intent(inout) :: this
       real(kind=dbl),  intent(in)    :: matrixU(this%ldu,this%n), matrixM(this%ldu,this%n)
     end subroutine lu_decomposition_sub
     
-    module pure subroutine lu_solve_sub(this, b)
+    module subroutine lu_solve_sub(this, b)
       class(T_matrix),   intent(in)    :: this
       complex(kind=dbl), intent(inout) :: b(this%n)
     end subroutine lu_solve_sub
     
-    module pure complex(kind=dbl) function matrix_multiple_fn(this, i, vector)
+    module complex(kind=dbl) function matrix_multiple_fn(this, i, vector)
       class(T_matrix),   intent(in) :: this
       integer,           intent(in) :: i
       complex(kind=dbl), intent(in) :: vector(this%n)
