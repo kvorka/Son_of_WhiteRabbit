@@ -33,7 +33,7 @@ submodule (physicalobject) toroidal_visc_matrix
         
         matica(1,is) = a * this%rad_grid%dd(ir,-2) * fac
         matica(3,is) = a * this%rad_grid%dd(ir,-1) * fac
-        matica(4,is) = -1 / ( this%Pr * this%dt ) - a * j*(j+1) * fac
+        matica(4,is) = -1 / ( this%Pr * this%dt ) - a * this%hdiff * j*(j+1) * fac
         matica(5,is) = a * this%rad_grid%dd(ir,+1) * fac
         matica(7,is) = a * this%rad_grid%dd(ir,+2) * fac
       end if

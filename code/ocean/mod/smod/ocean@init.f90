@@ -8,6 +8,7 @@ submodule (ocean) init
     this%n_iter = n_iter_ocean
     this%cf     = 0.6_dbl
     this%ab     = 1.5_dbl
+    this%hdiff  = 10._dbl
     
     this%Pr = Pr_ocean
     this%Ra = Ra_ocean

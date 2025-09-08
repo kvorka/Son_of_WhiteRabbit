@@ -15,10 +15,10 @@ submodule (physicalobject) spheroidal_matrix
   
   module procedure mat_mech_fn
     integer        :: ir, is
-    real(kind=dbl) :: fac, facj1, facj2, facpr1, facpr2, facvr1, facvr2
+    real(kind=dbl) :: facrr, facj1, facj2, facpr1, facpr2, facvr1, facvr2
     
-    allocate( matica(19,5*this%nd+2) )
-      call zero_rarray_sub( 19*(5*this%nd+2), matica )
+    allocate( matica(18,5*this%nd+2) )
+      call zero_rarray_sub( 18*(5*this%nd+2), matica )
     
     facj1 = -sqrt( ( j   ) / ( 2*j+one ) )
     facj2 = +sqrt( ( j+1 ) / ( 2*j+one ) )
@@ -34,54 +34,53 @@ submodule (physicalobject) spheroidal_matrix
     do ir = 1, this%nd
       is  = 5*(ir-1)+1
       
-      facvr1 = ( j-1 ) / this%rad_grid%r(ir)
-      facvr2 = ( j+2 ) / this%rad_grid%r(ir)
+      facr   = 1 / this%rad_grid%r(ir)**2
+      facrr  = 1 / this%rad_grid%rr(ir)**2
+      
+      facvr1 = - facj1 * ( j-1 ) / this%rad_grid%r(ir)
+      facvr2 = + facj2 * ( j+2 ) / this%rad_grid%r(ir)
       
       if ( ir > 1 ) then
-        fac  = 1 / this%rad_grid%rr(ir)**2
-        
         facpr1 = +facj1 * ( j+1 ) / this%rad_grid%rr(ir)
         facpr2 = -facj2 * ( j   ) / this%rad_grid%rr(ir)
         
         matica( 2,is) = a * ( facj1 * this%rad_grid%dd(ir,-2)                                    )
-        matica( 3,is) = a * ( fac   * this%rad_grid%dd(ir,-2)                                    )
+        matica( 3,is) = a * ( facrr * this%rad_grid%dd(ir,-2)                                    )
         matica( 7,is) = a * ( facj1 * this%rad_grid%dd(ir,-1) + facpr1 * this%rad_grid%cc(ir,-1) )
-        matica( 8,is) = a * ( fac   * this%rad_grid%dd(ir,-1)                                    )
-        matica(10,is) = -1 / ( this%Pr * this%dt ) - a * (j-1)*j * fac
+        matica( 8,is) = a * ( facrr * this%rad_grid%dd(ir,-1)                                    )
+        matica(10,is) = -1 / ( this%Pr * this%dt ) - a * this%hdiff * (j-1)*j * fac
         matica(12,is) = a * ( facj1 * this%rad_grid%dd(ir,+1) + facpr1 * this%rad_grid%cc(ir,+1) )
-        matica(13,is) = a * ( fac   * this%rad_grid%dd(ir,+1)                                    )
+        matica(13,is) = a * ( facrr * this%rad_grid%dd(ir,+1)                                    )
         matica(17,is) = a * ( facj1 * this%rad_grid%dd(ir,+2)                                    )
-        matica(18,is) = a * ( fac   * this%rad_grid%dd(ir,+2)                                    )
+        matica(18,is) = a * ( facrr * this%rad_grid%dd(ir,+2)                                    )
         
         matica( 1,is+1) = a * ( facj2 * this%rad_grid%dd(ir,-2)                                    )
-        matica( 3,is+1) = a * ( fac   * this%rad_grid%dd(ir,-2)                                    )
+        matica( 3,is+1) = a * ( facrr * this%rad_grid%dd(ir,-2)                                    )
         matica( 6,is+1) = a * ( facj2 * this%rad_grid%dd(ir,-1) + facpr2 * this%rad_grid%cc(ir,-1) )
-        matica( 8,is+1) = a * ( fac   * this%rad_grid%dd(ir,-1)                                    )
-        matica(10,is+1) = -1 / ( this%Pr * this%dt ) - a * (j+1)*(j+2) * fac
+        matica( 8,is+1) = a * ( facrr * this%rad_grid%dd(ir,-1)                                    )
+        matica(10,is+1) = -1 / ( this%Pr * this%dt ) - a * this%hdiff * (j+1)*(j+2) * fac
         matica(11,is+1) = a * ( facj2 * this%rad_grid%dd(ir,+1) + facpr2 * this%rad_grid%cc(ir,+1) )
-        matica(13,is+1) = a * ( fac   * this%rad_grid%dd(ir,+1)                                    )
+        matica(13,is+1) = a * ( facrr * this%rad_grid%dd(ir,+1)                                    )
         matica(16,is+1) = a * ( facj2 * this%rad_grid%dd(ir,+2)                                    )
-        matica(18,is+1) = a * ( fac   * this%rad_grid%dd(ir,+2)                                    )
+        matica(18,is+1) = a * ( facrr * this%rad_grid%dd(ir,+2)                                    )
       end if
       
-      matica( 3,is+2) = facj1 * ( this%rad_grid%d(ir,-2)                                   )
-      matica( 4,is+2) = facj2 * ( this%rad_grid%d(ir,-2)                                   )
-      matica( 8,is+2) = facj1 * ( this%rad_grid%d(ir,-1) - facvr1 * this%rad_grid%c(ir,-1) )
-      matica( 9,is+2) = facj2 * ( this%rad_grid%d(ir,-1) + facvr2 * this%rad_grid%c(ir,-1) )
-      matica(13,is+2) = facj1 * ( this%rad_grid%d(ir,+1) - facvr1 * this%rad_grid%c(ir,+1) )
-      matica(14,is+2) = facj2 * ( this%rad_grid%d(ir,+1) + facvr2 * this%rad_grid%c(ir,+1) )
-      matica(18,is+2) = facj1 * ( this%rad_grid%d(ir,+2)                                   )
-      matica(19,is+2) = facj2 * ( this%rad_grid%d(ir,+2)                                   )
+      matica( 8,is+2) = facvr1 * this%rad_grid%c(ir,-1)
+      matica( 9,is+2) = facvr2 * this%rad_grid%c(ir,-1)
+      matica(11,is+2) = facj1 * facr
+      matica(12,is+2) = facj2 * facr
+      matica(13,is+2) = facvr1 * this%rad_grid%c(ir,+1)
+      matica(14,is+2) = facvr2 * this%rad_grid%c(ir,+1)
       
       matica( 2,is+3) = -this%rad_grid%d(ir,-2)
       matica( 7,is+3) = -this%rad_grid%d(ir,-1)
-      matica(10,is+3) = 1 / this%rad_grid%r(ir)**2
+      matica(10,is+3) = facr
       matica(12,is+3) = -this%rad_grid%d(ir,+1)
       matica(17,is+3) = -this%rad_grid%d(ir,+2)
       
       matica( 2,is+4) = -this%rad_grid%d(ir,-2)
       matica( 7,is+4) = -this%rad_grid%d(ir,-1)
-      matica(10,is+4) = 1 / this%rad_grid%r(ir)**2
+      matica(10,is+4) = facr
       matica(12,is+4) = -this%rad_grid%d(ir,+1)
       matica(17,is+4) = -this%rad_grid%d(ir,+2)
     end do
