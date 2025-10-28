@@ -3,7 +3,7 @@
 ####                              POSSIBLE CODE SETTINGS                               ####
 ####                            test_speed, ocean_convection                           ####
 ###########################################################################################
-code_type="ocean_convection"
+code_type="test_speed"
 
 ###########################################################################################
 ####                               INSTRUCTIONS SET UP                                 ####
@@ -153,6 +153,7 @@ $fcompile -c kernels/object/physicalobject.f90
   $fcompile -c kernels/object/smod/matrices/physicalobject@spheroidal_matrix.f90 &
   $fcompile -c kernels/object/smod/matrices/physicalobject@toroidal_matrix.f90 &
   $fcompile -c kernels/object/smod/matrices/physicalobject@thermal_matrix.f90 &
+  $fcompile -c kernels/object/smod/diffusion/physicalobject@diffusion.f90 &
   $fcompile -c kernels/object/smod/forces/physicalobject@buoyancy.f90 &
   $fcompile -c kernels/object/smod/forces/physicalobject@coriolis.f90 &
   $fcompile -c kernels/object/smod/solvers/physicalobject@solver_mech.f90 &

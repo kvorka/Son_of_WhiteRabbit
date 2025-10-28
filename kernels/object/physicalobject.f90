@@ -10,9 +10,9 @@ module physicalobject
   implicit none
   
   type, abstract, public :: T_physicalObject
-    character(len=5)               :: thermal_bnd
+    character(len=5)               :: thermal_bnd, diffusion_type
     integer                        :: nd, jmax, jms, jmv, n_iter, poc
-    real(kind=dbl)                 :: t, dt, cf, ab, hdiff, r_ud, Pr, Ra, Ek
+    real(kind=dbl)                 :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
     integer,           allocatable :: j_indx(:)
     complex(kind=dbl), allocatable :: rsph1(:,:), rsph2(:,:), rtorr(:,:), rtemp(:,:)
     
@@ -41,6 +41,7 @@ module physicalobject
     procedure, pass :: solve_temp_sub, solve_torr_sub, solve_mech_sub
     
     !Forces
+    procedure, pass :: hdiff_fn
     procedure, pass :: coriolis_rr_jml_sub
     procedure, pass :: buoy_rr_jml_sub
     
@@ -124,6 +125,11 @@ module physicalobject
     end subroutine vypis_sub
     
     !Interfaces :: to be continued
+    module real(kind=dbl) function hdiff_fn(this, j)
+      class(T_physicalObject), intent(in) :: this
+      integer,                 intent(in) :: j
+    end function hdiff_fn
+    
     module subroutine coriolis_rr_jml_sub(this, v, coriolis)
       class(T_physicalObject), intent(in)    :: this
       complex(kind=dbl),       intent(in)    :: v(*)

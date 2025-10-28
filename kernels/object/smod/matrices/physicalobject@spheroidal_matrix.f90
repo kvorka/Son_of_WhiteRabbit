@@ -15,7 +15,7 @@ submodule (physicalobject) spheroidal_matrix
   
   module procedure mat_mech_fn
     integer        :: ir, is
-    real(kind=dbl) :: facrr, facj1, facj2, facpr1, facpr2, facvr1, facvr2
+    real(kind=dbl) :: facrr, facr, facj1, facj2, facpr1, facpr2, facvr1, facvr2
     
     allocate( matica(18,5*this%nd+2) )
       call zero_rarray_sub( 18*(5*this%nd+2), matica )
@@ -48,7 +48,7 @@ submodule (physicalobject) spheroidal_matrix
         matica( 3,is) = a * ( facrr * this%rad_grid%dd(ir,-2)                                    )
         matica( 7,is) = a * ( facj1 * this%rad_grid%dd(ir,-1) + facpr1 * this%rad_grid%cc(ir,-1) )
         matica( 8,is) = a * ( facrr * this%rad_grid%dd(ir,-1)                                    )
-        matica(10,is) = -1 / ( this%Pr * this%dt ) - a * this%hdiff * (j-1)*j * fac
+        matica(10,is) = -1 / ( this%Pr * this%dt ) - a * this%hdiff_fn(j) * (j-1)*j * facrr
         matica(12,is) = a * ( facj1 * this%rad_grid%dd(ir,+1) + facpr1 * this%rad_grid%cc(ir,+1) )
         matica(13,is) = a * ( facrr * this%rad_grid%dd(ir,+1)                                    )
         matica(17,is) = a * ( facj1 * this%rad_grid%dd(ir,+2)                                    )
@@ -58,7 +58,7 @@ submodule (physicalobject) spheroidal_matrix
         matica( 3,is+1) = a * ( facrr * this%rad_grid%dd(ir,-2)                                    )
         matica( 6,is+1) = a * ( facj2 * this%rad_grid%dd(ir,-1) + facpr2 * this%rad_grid%cc(ir,-1) )
         matica( 8,is+1) = a * ( facrr * this%rad_grid%dd(ir,-1)                                    )
-        matica(10,is+1) = -1 / ( this%Pr * this%dt ) - a * this%hdiff * (j+1)*(j+2) * fac
+        matica(10,is+1) = -1 / ( this%Pr * this%dt ) - a * this%hdiff_fn(j) * (j+1)*(j+2) * facrr
         matica(11,is+1) = a * ( facj2 * this%rad_grid%dd(ir,+1) + facpr2 * this%rad_grid%cc(ir,+1) )
         matica(13,is+1) = a * ( facrr * this%rad_grid%dd(ir,+1)                                    )
         matica(16,is+1) = a * ( facj2 * this%rad_grid%dd(ir,+2)                                    )

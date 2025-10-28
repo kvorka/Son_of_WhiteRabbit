@@ -8,13 +8,13 @@ submodule (ocean) init
     this%n_iter = n_iter_ocean
     this%cf     = 0.6_dbl
     this%ab     = 1.5_dbl
-    this%hdiff  = 10._dbl
     
     this%Pr = Pr_ocean
     this%Ra = Ra_ocean
     this%Ek = Ek_ocean
     
-    this%thermal_bnd  = therm_bnd_ocean
+    this%diffusion_type = diffusion_ocean
+    this%thermal_bnd    = therm_bnd_ocean
     
     if ( .not. present(speed) ) then
       open(unit=11, file='data/Nuss.dat', status='new', action='write')
