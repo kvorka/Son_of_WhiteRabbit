@@ -16,7 +16,7 @@ submodule (ocean) iter
   module procedure speed_ocean_sub
     integer :: k
     
-    do !k = 1, this%n_iter
+    do k = 1, this%n_iter
       call this%time_scheme_sub()
     end do
     

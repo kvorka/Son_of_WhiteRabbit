@@ -15,8 +15,8 @@ module solution
     procedure :: init_storr_sub
     procedure :: init_smech_sub
 
-    procedure :: temp_fn, temp_jm_sub
-    procedure :: velocity_fn, velocity_jml_sub
+    procedure :: temp_fn, temp_jm_sub, temp3_jm_sub
+    procedure :: velocity_fn, velocity_jml_sub, velocity3_jml_sub
     
   end type T_solution
   
@@ -54,6 +54,12 @@ module solution
       complex(kind=dbl), intent(out) :: temp_jm(*)
     end subroutine temp_jm_sub
     
+    module subroutine temp3_jm_sub(this, ir, temp1, temp2, temp3)
+      class(T_solution), intent(in)  :: this
+      integer,           intent(in)  :: ir
+      complex(kind=dbl), intent(out) :: temp1(*), temp2(*), temp3(*)
+    end subroutine temp3_jm_sub
+    
     module complex(kind=dbl) function velocity_fn(this, ir, il, ijm)
       class(T_solution), intent(in) :: this
       integer,           intent(in) :: ir, il, ijm
@@ -64,6 +70,12 @@ module solution
       integer,           intent(in)  :: ir
       complex(kind=dbl), intent(out) :: velocity_jml(*)
     end subroutine velocity_jml_sub
+    
+    module subroutine velocity3_jml_sub(this, ir, velocity1, velocity2, velocity3)
+      class(T_solution), intent(in)  :: this
+      integer,           intent(in)  :: ir
+      complex(kind=dbl), intent(out) :: velocity1(*), velocity2(*), velocity3(*)
+    end subroutine velocity3_jml_sub
   end interface
   
 end module solution

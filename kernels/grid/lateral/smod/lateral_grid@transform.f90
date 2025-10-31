@@ -3,16 +3,16 @@ submodule (lateral_grid) transform
   
   module procedure transform_sub
     integer                             :: itheta
-    type(c_ptr)                         :: c_work
+    type(c_ptr)                         :: c_work, c_rcc, c_rcr
     real(kind=dbl), pointer, contiguous :: work(:)
     real(kind=dbl), pointer, contiguous :: pmm(:), pmj2(:), pmj1(:), pmj(:)
     real(kind=dbl), pointer, contiguous :: cosx(:), sinx(:), cosx2(:), wght(:)
     real(kind=dbl), pointer, contiguous :: sumN(:), sumS(:), swork(:), grid(:)
-    real(kind=dbl), allocatable         :: rcr(:), rcc(:)
+    real(kind=dbl), pointer, contiguous :: rcr(:), rcc(:)
     
     !Prepare input and output arrays
-    call this%lgp%alloc_rscal_sub( nb, rcc )
-    call this%lgp%alloc_rscal_sub( nf, rcr )
+    call this%lgp%alloc_rscal_sub( nb, c_rcc, rcc )
+    call this%lgp%alloc_rscal_sub( nf, c_rcr, rcr )
     
     call this%lgp%index_bwd_sub( nb, cc, rcc )
     
@@ -56,8 +56,8 @@ submodule (lateral_grid) transform
     
     !Cleaning
     call free_aligned1d_sub( c_work, work )
-    
-    deallocate( rcc, rcr )
+    call free_aligned1d_sub( c_rcc, rcc )
+    call free_aligned1d_sub( c_rcr, rcr )
     
   end procedure transform_sub
   

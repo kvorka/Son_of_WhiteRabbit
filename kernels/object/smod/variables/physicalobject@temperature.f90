@@ -108,15 +108,13 @@ submodule (physicalobject) temperature
     real(kind=dbl)                 :: fac1, fac2, fac3
     complex(kind=dbl), allocatable :: temp3(:)
     
-    fac1 = this%rad_grid%drr(ir,-1)
-    fac2 = this%rad_grid%drr(ir, 0)
-    fac3 = this%rad_grid%drr(ir,+1)
-    
     allocate( temp3(this%jms) )
       
-      call this%sol%temp_jm_sub( ir-1,    dT )
-      call this%sol%temp_jm_sub( ir  ,     T )
-      call this%sol%temp_jm_sub( ir+1, temp3 )
+      call this%sol%temp3_jm_sub( ir-1, dT, T, temp3 )
+      
+      fac1 = this%rad_grid%drr(ir,-1)
+      fac2 = this%rad_grid%drr(ir, 0)
+      fac3 = this%rad_grid%drr(ir,+1)
       
       do ijm = 1, this%jms
         dT(ijm) = fac1 * dT(ijm) + fac2 * T(ijm) + fac3 * temp3(ijm)

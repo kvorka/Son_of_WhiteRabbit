@@ -9,6 +9,7 @@ submodule (lege_poly) r2c
         ma = 1
         mj = 1
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj) = cmplx( rcab(1,i,2,ma), rcab(2,i,2,ma), kind=dbl )
         end do
@@ -17,6 +18,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+2
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj-1) = this%emj(mj)   * cmplx( rcab(1,i,1,ma  ), rcab(2,i,1,ma  ), kind=dbl ) + &
                       & this%emj(mj-1) * cmplx( rcab(1,i,1,ma-1), rcab(2,i,1,ma-1), kind=dbl )
@@ -29,6 +31,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+2
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj-1) = this%emj(mj)   * cmplx( rcab(1,i,1,ma  ), rcab(2,i,1,ma  ), kind=dbl ) + &
                       & this%emj(mj-1) * cmplx( rcab(1,i,1,ma-1), rcab(2,i,1,ma-1), kind=dbl )
@@ -39,6 +42,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+1
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj) = this%emj(mj+1) * cmplx( rcab(1,i,1,ma  ), rcab(2,i,1,ma  ), kind=dbl ) + &
                     & this%emj(mj)   * cmplx( rcab(1,i,1,ma-1), rcab(2,i,1,ma-1), kind=dbl )
@@ -50,6 +54,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+1
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj) = cmplx( rcab(1,i,2,ma), rcab(2,i,2,ma), kind=dbl )
         end do
@@ -58,6 +63,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+2
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj-1) = this%emj(mj+m)   * cmplx( rcab(1,i,1,ma  ), rcab(2,i,1,ma  ), kind=dbl ) + &
                       & this%emj(mj+m-1) * cmplx( rcab(1,i,1,ma-1), rcab(2,i,1,ma-1), kind=dbl )
@@ -70,6 +76,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+2
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj-1) = this%emj(mj+m)   * cmplx( rcab(1,i,1,ma  ), rcab(2,i,1,ma  ), kind=dbl ) + &
                       & this%emj(mj+m-1) * cmplx( rcab(1,i,1,ma-1), rcab(2,i,1,ma-1), kind=dbl )
@@ -80,6 +87,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+1
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj) = this%emj(mj+m+1) * cmplx( rcab(1,i,1,ma  ), rcab(2,i,1,ma  ), kind=dbl ) + &
                     & this%emj(mj+m)   * cmplx( rcab(1,i,1,ma-1), rcab(2,i,1,ma-1), kind=dbl )
@@ -92,6 +100,7 @@ submodule (lege_poly) r2c
         ma = ma+1
         mj = mj+1
         
+        !$omp simd
         do i = 1, ncab
           cab(i,mj) = cmplx( rcab(1,i,2,ma), rcab(2,i,2,ma), kind=dbl )
         end do

@@ -22,7 +22,7 @@ module lateral_grid
     procedure :: deallocate_sub => deallocate_harmonics_sub
     
     procedure :: transform_sub
-    procedure :: vcvv_sub, vcvv_vcvgv_sub, vcvv_vcvxv_sub
+    procedure :: vcvv_vcvgv_sub, vcvv_vcvxv_sub
     
   end type T_lateralGrid
   
@@ -50,12 +50,6 @@ module lateral_grid
         end subroutine grid_sub
       end interface
     end subroutine transform_sub
-    
-    module subroutine vcvv_sub(this, cajml, cbjml, cjm)
-      class(T_lateralGrid), intent(in)  :: this
-      complex(kind=dbl),    intent(in)  :: cajml(*), cbjml(*)
-      complex(kind=dbl),    intent(out) :: cjm(*)
-    end subroutine vcvv_sub
     
     module subroutine vcvv_vcvgv_sub(this, ri, q, dv_r, v, cjm)
       class(T_lateralGrid), intent(in)  :: this

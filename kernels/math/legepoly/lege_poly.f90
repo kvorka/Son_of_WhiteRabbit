@@ -43,10 +43,11 @@ module lege_poly
       class(T_legep), intent(inout) :: this
     end subroutine compute_coeffs_sub
     
-    module  subroutine allocate_rscalars_sub(this, ns, rscal)
-      class(T_legep),              intent(in)  :: this
-      integer,                     intent(in)  :: ns
-      real(kind=dbl), allocatable, intent(out) :: rscal(:)
+    module subroutine allocate_rscalars_sub(this, ns, c_rscal, rscal)
+      class(T_legep),                      intent(in)  :: this
+      integer,                             intent(in)  :: ns
+      type(c_ptr),                         intent(out) :: c_rscal
+      real(kind=dbl), pointer, contiguous, intent(out) :: rscal(:)
     end subroutine allocate_rscalars_sub
     
     module  subroutine c2r_mj_to_mj_sub(this, ncab, cab, rcab)
