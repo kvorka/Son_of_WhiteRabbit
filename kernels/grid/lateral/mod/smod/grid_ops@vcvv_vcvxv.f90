@@ -21,16 +21,10 @@ submodule (grid_ops) vcvv_vcvxv
       
       !$omp simd
       do i1 = 1, 16
-        gout(i1,1,i4) = gtmp(i1,1,1) * gtmp(i1,1,2) + &
-                      & gtmp(i1,2,1) * gtmp(i1,2,2) + &
-                      & gtmp(i1,3,1) * gtmp(i1,3,2)
-      end do
-      
-      !$omp simd
-      do i1 = 1, 16
-        gout(i1,2,i4) = gtmp(i1,2,1) * gtmp(i1,3,3) - gtmp(i1,3,1) * gtmp(i1,2,3)
-        gout(i1,3,i4) = gtmp(i1,3,1) * gtmp(i1,1,3) - gtmp(i1,1,1) * gtmp(i1,3,3)
-        gout(i1,4,i4) = gtmp(i1,1,1) * gtmp(i1,2,3) - gtmp(i1,2,1) * gtmp(i1,1,3)
+        gout(i1,1,i4) = gtmp(i1,1,1) * gtmp(i1,1,2) + gtmp(i1,2,1) * gtmp(i1,2,2) + gtmp(i1,3,1) * gtmp(i1,3,2)
+        gout(i1,2,i4) = gtmp(i1,3,1) * gtmp(i1,2,3) - gtmp(i1,2,1) * gtmp(i1,3,3)
+        gout(i1,3,i4) = gtmp(i1,1,1) * gtmp(i1,3,3) - gtmp(i1,3,1) * gtmp(i1,1,3)
+        gout(i1,4,i4) = gtmp(i1,2,1) * gtmp(i1,1,3) - gtmp(i1,1,1) * gtmp(i1,2,3)
       end do
     end do
     

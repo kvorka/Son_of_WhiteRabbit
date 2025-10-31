@@ -24,17 +24,6 @@ fcompile="gfortran-12 -Ofast \
                       -D$instructions \
                       -cpp"
 
-#fcompile="ifx -fast \
-#              -Ofast \
-#              -ipo \
-#              -ffast-math \
-#              -funroll-loops \
-#              -xHost \
-#              -qopt-zmm-usage=high \
-#              -qopenmp \
-#              -D$instructions \
-#              -cpp"
-
 ###########################################################################################
 ####                    COMPILATION OF THE BASELINE, DIRS SET UP                       ####
 ###########################################################################################
@@ -81,6 +70,7 @@ $fcompile -c kernels/math/legepoly/lege_poly.f90
   $fcompile -c kernels/math/legepoly/smod/codelets/lege_poly@fwd_sum.f90 &
   $fcompile -c kernels/math/legepoly/smod/codelets/lege_poly@bwd_shuffle.f90 &
   $fcompile -c kernels/math/legepoly/smod/codelets/lege_poly@fwd_shuffle.f90 &
+wait
 
 $fcompile -c kernels/math/sphsvt/mod/cleb.f90
   $fcompile -c kernels/math/sphsvt/mod/smod/cleb@gordan1.f90 &

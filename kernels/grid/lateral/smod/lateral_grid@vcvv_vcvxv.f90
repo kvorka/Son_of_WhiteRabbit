@@ -9,9 +9,9 @@ submodule (lateral_grid) vcvv_vcvxv
     call this%rxd%allocate_scalars_sub( 9, cc )
     call this%rxd%allocate_scalars_sub( 4, cr )
     
-    call this%rxd%vec2vec_jml_to_jml_sub( v,     ca, 5, 1 )
-    call this%rxd%vec2vec_jml_to_jml_sub( q,     ca, 5, 2 )
-    call this%rxd%vec2vec_jml_to_jml_sub( curlv, ca, 5, 2 )
+    call this%rxd%vec2vec_jml_to_jml_sub( v,     ca, 3, 1 )
+    call this%rxd%vec2vec_jml_to_jml_sub( q,     ca, 3, 2 )
+    call this%rxd%vec2vec_jml_to_jml_sub( curlv, ca, 3, 3 )
     
     call this%rxd%vec2scal_jml_to_mj_sub( ca, 3, cc, 9, 1 )
     

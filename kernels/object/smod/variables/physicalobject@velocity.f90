@@ -55,7 +55,7 @@ submodule (physicalobject) velocity
       cjr3 = (ij+1) * crr
       cjr4 = (ij+2) * crr
       
-      do im = 0, this%jmax
+      do im = 0, ij
         ijml = 3*(ij*(ij+1)/2+im)-1
         
         curlv(ijml  ) = cj1 * ( dv(ijml+1) + cjr3 * v(ijml+1) )
