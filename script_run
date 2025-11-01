@@ -12,13 +12,10 @@ code_type="test_speed"
 instructions="avx2"
 
 ###########################################################################################
-####                                 COMPILER SET UP                                   ####
+####                             COMPILATION OF THE MODEL                              ####
 ###########################################################################################
 source ./kernels/shell/compiler.sh
 
-###########################################################################################
-####                             COMPILATION OF THE BASELINE                           ####
-###########################################################################################
 libfcompile kernels/math/math math.f90
 libfcompile kernels/math/sph/ sph.f90
 libfcompile kernels/math/fft/ fourier_transform.f90
@@ -32,14 +29,7 @@ libfcompile kernels/grid/lateral/ lateral_grid.f90
 libfcompile kernels/equations/solution/ solution.f90
 libfcompile kernels/equations/matrices/ matrices.f90
 libfcompile kernels/object/ physicalobject.f90
-
-###########################################################################################
-####                            COMPILATION OF THE MODEL                               ####
-###########################################################################################
-$fcompile -c code/ocean/ocean_constants.f90
-libfcompile code/ocean/ ocean.f90
-
-#rm -r -f data || true
+libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 
 ###########################################################################################
 ####                                    LINKING                                        ####
@@ -53,6 +43,8 @@ case $code_type in
     ;;
     
     ocean_convection)
+        rm -r -f data || true
+
         mkdir data
 
         mkdir data/data_ocean_temp

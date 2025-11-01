@@ -15,6 +15,11 @@ fcompile="gfortran-12 -Ofast \
 ####                                  COMPILER FUNCTION                                ####
 ###########################################################################################
 function libfcompile() {
+    if [ ! -z "$3" ]
+      then
+        $fcompile -c $1/$3
+    fi
+    
     $fcompile -c $1/$2
     $fcompile -c $(find $1/smod/. -type f) &
     wait 
