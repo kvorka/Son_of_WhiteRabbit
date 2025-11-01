@@ -1,8 +1,6 @@
 module physicalobject
   use math
-  use sph_indexing
-  use sph_unitvec_op
-  use sph_norms
+  use sph
   use lateral_grid
   use radial_grid
   use matrices

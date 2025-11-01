@@ -1,14 +1,9 @@
-module sph_unitvec_op
-  use math
-  implicit none; public; contains
+submodule (sph) ezvv
+  implicit none; contains
   
-  subroutine ezvv_sub(np, fac, cajml, cjml)
-    integer,           intent(in)  :: np
-    real(kind=dbl),    intent(in)  :: fac
-    complex(kind=dbl), intent(in)  :: cajml(*)
-    complex(kind=dbl), intent(out) :: cjml(3,*)
-    integer                        :: ij, im, ijm, jm0, jm1, jm2
-    complex(kind=dbl)              :: cfac
+  module procedure ezvv_sub
+    integer           :: ij, im, ijm, jm0, jm1, jm2
+    complex(kind=dbl) :: cfac
     
     cfac = cunit * fac
     
@@ -69,6 +64,6 @@ module sph_unitvec_op
         cjml(3,ijm) = (                                       im * cajml(jm0+1) /     (ij+1)  ) * cfac
       end do
       
-  end subroutine ezvv_sub
+  end procedure ezvv_sub
   
-end module sph_unitvec_op
+end submodule ezvv

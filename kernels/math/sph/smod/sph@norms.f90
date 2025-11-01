@@ -1,12 +1,8 @@
-module sph_norms
-  use math
-  implicit none; public; contains
+submodule (sph) norms
+  implicit none; contains
   
-  function scalnorm2_fn(np, cajm) result(sp)
-    integer,           intent(in) :: np
-    complex(kind=dbl), intent(in) :: cajm(*)
-    integer                       :: j, m, indx
-    real(kind=dbl)                :: sp
+  module procedure scalnorm2_fn
+    integer :: j, m, indx
     
     !j == 0
     sp = c2r_fn( cajm(1) * conjg( cajm(1) ) )
@@ -23,13 +19,10 @@ module sph_norms
       end do
     end do
     
-  end function scalnorm2_fn
+  end procedure scalnorm2_fn
   
-  function vectnorm2_fn(np, cajml) result(vp)
-    integer,           intent(in) :: np
-    complex(kind=dbl), intent(in) :: cajml(*)
-    integer                       :: j, m, indx
-    real(kind=dbl)                :: vp
+  module procedure vectnorm2_fn
+    integer :: j, m, indx
     
     !j == 0
     vp = c2r_fn( cajml(1) * conjg(cajml(1)) )
@@ -46,6 +39,6 @@ module sph_norms
       end do
     end do
     
-  end function vectnorm2_fn
+  end procedure vectnorm2_fn
   
-end module sph_norms
+end submodule norms

@@ -1,7 +1,7 @@
 #!/bin/bash
 ###########################################################################################
 ####                              POSSIBLE CODE SETTINGS                               ####
-####    ocean_convection, ice_ocean, ocean_tides, ice_deformation, ice_convergence     ####
+####                                 ocean_convection                                  ####
 ###########################################################################################
 code_type="ocean_convection"
 
@@ -34,7 +34,6 @@ $fcompile -c output/mod/Paths.f90
 $fcompile -c output/mod/OutputMod.f90
 
 rm -f temp_averaged.spec velc_averaged.spec flux_averaged.spec || true
-rm -f curveShape_dn.dat curveShape_up.dat curveTopo_dn.dat curveTopo_up.dat || true
 
 ###########################################################################################
 ####                                    LINKING                                        ####
@@ -44,34 +43,6 @@ case $code_type in
     ocean_convection)
         $fcompile -c code/ocean/ocean_constants.f90
         $fcompile output/OutputOcean.f90 *.o -o code_out
-    ;;
-    
-    ocean_tides)
-        $fcompile -c code/ocean/ocean_constants.f90
-        $fcompile output/OutputOcean.f90 *.o -o code_out
-        ./code_out
-    ;;
-    
-    ice_ocean)
-        $fcompile -c code/ocean/ocean_constants.f90
-        $fcompile output/OutputOcean.f90 *.o -o code_out
-        ./code_out
-        
-        $fcompile -c code/ice/ice_constants.f90
-        $fcompile output/OutputIce.f90 *.o -o code_out
-        ./code_out
-    ;;
-    
-    ice_deformation)
-        $fcompile -c code/ice/ice_constants.f90
-        $fcompile output/OutputIce.f90 *.o -o code_out
-        ./code_out
-    ;;
-    
-    ice_convergence)
-        $fcompile -c code/ice/ice_constants.f90
-        $fcompile output/ConvergenceIce.f90 *.o -o code_out
-        ./code_out
     ;;
     
 esac
