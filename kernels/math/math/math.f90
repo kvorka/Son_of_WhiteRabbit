@@ -2,8 +2,15 @@ module math
   use iso_fortran_env, only: real64, real128
   use omp_lib
   use iso_c_binding
-  use alignement
   implicit none; public
+  
+#if defined (avx512)
+  integer, parameter :: alig = 64      !memory alignement: AVX512
+#elif defined (avx2)
+  integer, parameter :: alig = 32      !memory alignement: AVX2
+#else
+  integer, parameter :: alig = 16      !memory alignement: AVX
+#endif
   
   integer,           parameter :: dbl  = real64    !double precision
   integer,           parameter :: qbl  = real128   !quadruple precision

@@ -25,67 +25,37 @@ fcompile="gfortran-12 -Ofast \
                       -cpp"
 
 ###########################################################################################
-####                    COMPILATION OF THE BASELINE, DIRS SET UP                       ####
+####                                  COMPILER FUNCTION                                ####
 ###########################################################################################
-$fcompile -c kernels/math/processor/alignement.f90
-wait
+function libfcompile() {
+    $fcompile -c $1/$2
+    $fcompile -c $(find $1/smod/. -type f) &
+    wait 
+}
 
-$fcompile -c kernels/math/math/math.f90
-$fcompile -c $(find kernels/math/math/smod/. -type f) &
-wait
+###########################################################################################
+####                             COMPILATION OF THE BASELINE                           ####
+###########################################################################################
+libfcompile kernels/math/math math.f90
+libfcompile kernels/math/sph/ sph.f90
+libfcompile kernels/math/fft/ fourier_transform.f90
+libfcompile kernels/math/legepoly/ lege_poly.f90
+libfcompile kernels/math/sphsvt/mod/ cleb.f90
+libfcompile kernels/math/sphsvt/ sphsvt.f90
+libfcompile kernels/math/lu_matrix/ matrix.f90
+libfcompile kernels/grid/radial/ radial_grid.f90
+libfcompile kernels/grid/lateral/mod/ grid_ops.f90
+libfcompile kernels/grid/lateral/ lateral_grid.f90
+libfcompile kernels/equations/solution/ solution.f90
+libfcompile kernels/equations/matrices/ matrices.f90
+libfcompile kernels/object/ physicalobject.f90
 
-$fcompile -c kernels/math/sph/sph.f90
-$fcompile -c $(find kernels/math/sph/smod/. -type f) &
-wait
+###########################################################################################
+####                            COMPILATION OF THE MODEL                               ####
+###########################################################################################
+$fcompile -c code/ocean/ocean_constants.f90
 
-$fcompile -c kernels/math/fft/fourier_transform.f90
-$fcompile -c $(find kernels/math/fft/smod/. -type f) &
-wait
-
-$fcompile -c kernels/math/legepoly/lege_poly.f90
-$fcompile -c $(find kernels/math/legepoly/smod/. -type f) &
-wait
-
-$fcompile -c kernels/math/sphsvt/mod/cleb.f90
-$fcompile -c $(find kernels/math/sphsvt/mod/smod/. -type f) &
-wait
-
-$fcompile -c kernels/math/sphsvt/sphsvt.f90
-$fcompile -c $(find kernels/math/sphsvt/smod/. -type f) &
-wait
-
-$fcompile -c kernels/math/lu_matrix/matrix.f90
-$fcompile -c $(find kernels/math/lu_matrix/smod/. -type f) &
-wait
-
-$fcompile -c kernels/grid/radial/radial_grid.f90
-$fcompile -c $(find kernels/grid/radial/smod/. -type f) &
-wait
-
-$fcompile -c kernels/grid/lateral/mod/grid_ops.f90
-$fcompile -c $(find kernels/grid/lateral/mod/smod/. -type f) &
-wait
-
-$fcompile -c kernels/grid/lateral/lateral_grid.f90
-$fcompile -c $(find kernels/grid/lateral/smod/. -type f) &
-wait
-
-$fcompile -c kernels/equations/solution/solution.f90
-$fcompile -c $(find kernels/equations/solution/smod/. -type f) &
-wait
-
-$fcompile -c kernels/equations/matrices/matrices.f90
-$fcompile -c $(find kernels/equations/matrices/smod/. -type f) &
-wait
-
-$fcompile -c kernels/object/physicalobject.f90
-$fcompile -c $(find kernels/object/smod/. -type f) &
-wait
-
-$fcompile -c code/ocean/mod/ocean_constants.f90
-$fcompile -c code/ocean/mod/ocean.f90
-$fcompile -c $(find code/ocean/mod/smod/. -type f) &
-wait
+libfcompile code/ocean/mod/ ocean.f90
 
 #rm -r -f data || true
 
