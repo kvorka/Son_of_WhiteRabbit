@@ -3,13 +3,13 @@ module ocean_constants
   implicit none
   
   !Vseobecne nastavenie konstant
-  integer, parameter :: nd_ocean = 145
-  integer, parameter :: jmax_ocean = 213
-  integer, parameter :: n_iter_ocean = 20
+  integer, parameter :: nd_ocean = 81
+  integer, parameter :: jmax_ocean = 125
+  integer, parameter :: n_iter_ocean = 200
   
   !Nastavovanie konstant pre konvektivny vypocet
   character(len=*), parameter :: therm_bnd_ocean = 'basic'
-  character(len=*), parameter :: diffusion_ocean = 'hyper'  ! 'isotr', 'mitgc', 'hyper'
+  character(len=*), parameter :: diffusion_ocean = 'isotr'  ! 'isotr', 'mitgc', 'hyper'
   real(kind=dbl),   parameter :: r_ud_ocean      = 0.60_dbl
   real(kind=dbl),   parameter :: Pr_ocean        = 1._dbl
   real(kind=dbl),   parameter :: Ra_ocean        = 8.0d6

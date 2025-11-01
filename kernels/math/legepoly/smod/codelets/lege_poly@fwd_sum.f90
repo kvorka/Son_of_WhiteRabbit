@@ -7,7 +7,10 @@ submodule (lege_poly) fwd_sum
     do i2 = 1, n
       !$omp simd
       do i1 = 1, 16
-        cr(i2) = cr(i2) + pmj(i1) * swork(i1,i2)
+        cr(1,i2) = cr(1,i2) + pmj(i1) * swork(i1,1,i2)
+        cr(2,i2) = cr(2,i2) + pmj(i1) * swork(i1,2,i2)
+        cr(3,i2) = cr(3,i2) + pmj(i1) * swork(i1,3,i2)
+        cr(4,i2) = cr(4,i2) + pmj(i1) * swork(i1,4,i2)
       end do
     end do
     

@@ -98,8 +98,8 @@ module lege_poly
     module subroutine bwd_sum_sub(n, pmj, cc, swork)
       integer,        intent(in)  :: n
       real(kind=dbl), intent(in)  :: pmj(16)
-      real(kind=dbl), intent(in)  :: cc(n)
-      real(kind=dbl), intent(out) :: swork(16,n)
+      real(kind=dbl), intent(in)  :: cc(4,n)
+      real(kind=dbl), intent(out) :: swork(16,4,n)
     end subroutine bwd_sum_sub
     
     module subroutine bwd_shuffle_sub(n, cosx, swork, sumN, sumS)
@@ -112,8 +112,8 @@ module lege_poly
     module subroutine fwd_sum_sub(n, pmj, swork, cr)
       integer,        intent(in)    :: n
       real(kind=dbl), intent(in)    :: pmj(16)
-      real(kind=dbl), intent(in)    :: swork(16,n)
-      real(kind=dbl), intent(inout) :: cr(n)
+      real(kind=dbl), intent(in)    :: swork(16,4,n)
+      real(kind=dbl), intent(inout) :: cr(4,n)
     end subroutine fwd_sum_sub
     
     module subroutine fwd_shuffle_sub(n, w, cosx, sumN, sumS, swork)

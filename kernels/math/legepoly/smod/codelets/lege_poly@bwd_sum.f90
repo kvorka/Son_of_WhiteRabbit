@@ -6,8 +6,11 @@ submodule (lege_poly) bwd_sum
     
     do i2 = 1, n
       !$omp simd
-        do i1 = 1, 16
-        swork(i1,i2) = swork(i1,i2) + pmj(i1) * cc(i2)
+      do i1 = 1, 16
+        swork(i1,1,i2) = swork(i1,1,i2) + pmj(i1) * cc(1,i2)
+        swork(i1,2,i2) = swork(i1,2,i2) + pmj(i1) * cc(2,i2)
+        swork(i1,3,i2) = swork(i1,3,i2) + pmj(i1) * cc(3,i2)
+        swork(i1,4,i2) = swork(i1,4,i2) + pmj(i1) * cc(4,i2)
       end do
     end do
     
