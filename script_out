@@ -1,51 +1,25 @@
 #!/bin/bash
 ###########################################################################################
-####                              POSSIBLE CODE SETTINGS                               ####
-####                                 ocean_convection                                  ####
-###########################################################################################
-code_type="ocean_convection"
-
-###########################################################################################
-####                               INSTRUCTIONS SET UP                                 ####
-####                                avx, avx2, avx512                                  ####
-###########################################################################################
-instructions="avx2"
-
-###########################################################################################
 ####                                 COMPILER SET UP                                   ####
 ###########################################################################################
-fcompile="gfortran-12 -Ofast \
-                      -march=native \
-                      -fno-bounds-check \
-                      -flto=auto \
-                      -fwhole-program \
-                      -fopenmp \
-                      -D$instructions \
-                      -cpp"
+source ./kernels/shell/compiler.sh
 
 ###########################################################################################
-####                             COMPILATION OF THE BASELINE                           ####
+####                                  REMOVE OLD FILES                                 ####
 ###########################################################################################
-$fcompile -c kernels/math/processor/alignement.f90
-$fcompile -c kernels/math/math/math.f90
-$fcompile -c kernels/math/math/smod/math@conversions.f90
-$fcompile -c kernels/math/sph/sph_norms.f90
-$fcompile -c output/mod/Paths.f90
-$fcompile -c output/mod/OutputMod.f90
-
 rm -f temp_averaged.spec velc_averaged.spec flux_averaged.spec || true
 
 ###########################################################################################
-####                                    LINKING                                        ####
+####                   COMPILATION OF THE BASELINE AND LINKING                         ####
 ###########################################################################################
-case $code_type in
-    
-    ocean_convection)
-        $fcompile -c code/ocean/ocean_constants.f90
-        $fcompile output/OutputOcean.f90 *.o -o code_out
-    ;;
-    
-esac
+libfcompile kernels/math/math math.f90
+libfcompile kernels/math/sph/ sph.f90
+
+$fcompile -c code/ocean/ocean_constants.f90
+$fcompile -c output/mod/Paths.f90
+$fcompile -c output/mod/OutputMod.f90
+
+$fcompile output/OutputOcean.f90 *.o -o code_out
 
 ###########################################################################################
 ####                                    CLEANING                                       ####

@@ -3,7 +3,7 @@
 ####                              POSSIBLE CODE SETTINGS                               ####
 ####                            test_speed, ocean_convection                           ####
 ###########################################################################################
-code_type="ocean_convection"
+code_type="test_speed"
 
 ###########################################################################################
 ####                               INSTRUCTIONS SET UP                                 ####
@@ -14,24 +14,7 @@ instructions="avx2"
 ###########################################################################################
 ####                                 COMPILER SET UP                                   ####
 ###########################################################################################
-fcompile="gfortran-12 -Ofast \
-                      -march=native \
-                      -mprefer-vector-width=512 \
-                      -fno-bounds-check \
-                      -flto=auto \
-                      -fwhole-program \
-                      -fopenmp \
-                      -D$instructions \
-                      -cpp"
-
-###########################################################################################
-####                                  COMPILER FUNCTION                                ####
-###########################################################################################
-function libfcompile() {
-    $fcompile -c $1/$2
-    $fcompile -c $(find $1/smod/. -type f) &
-    wait 
-}
+source ./kernels/shell/compiler.sh
 
 ###########################################################################################
 ####                             COMPILATION OF THE BASELINE                           ####
