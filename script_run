@@ -54,8 +54,7 @@ libfcompile kernels/object/ physicalobject.f90
 ####                            COMPILATION OF THE MODEL                               ####
 ###########################################################################################
 $fcompile -c code/ocean/ocean_constants.f90
-
-libfcompile code/ocean/mod/ ocean.f90
+libfcompile code/ocean/ ocean.f90
 
 #rm -r -f data || true
 

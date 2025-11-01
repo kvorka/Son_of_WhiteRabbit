@@ -3,7 +3,7 @@ module ocean
   use ocean_constants
   use omp_lib
   implicit none
-
+  
   type, extends(T_physicalObject), public :: T_ocean
     complex(kind=dbl), allocatable :: nsph1(:,:), nsph2(:,:), ntorr(:,:), ntemp(:,:)
     
