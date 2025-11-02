@@ -4,8 +4,7 @@ submodule (ocean) timescheme
   module procedure time_scheme_ocean_sub
     integer :: ir, ijm
     
-    !$omp parallel
-    !$omp do collapse (2)
+    !$omp parallel do collapse (2)
     do ijm = 1, this%jms
       do ir = 2, this%nd
         this%rtemp(ir,ijm) = (1-this%ab) * this%ntemp(ijm,ir)
@@ -14,8 +13,7 @@ submodule (ocean) timescheme
         this%rsph2(ir,ijm) = (1-this%ab) * this%nsph2(ijm,ir)
       end do
     end do
-    !$omp end do
-    !$omp end parallel
+    !$omp end parallel do
     
     call this%fullnl_sub()
     
