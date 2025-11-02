@@ -15,7 +15,7 @@ module ocean
     procedure, public, pass :: init_state_sub     => init_state_ocean_sub
     procedure, public, pass :: init_temp_bbnd_sub => init_temp_bbnd_ocean_sub
     procedure, public, pass :: fullnl_sub         => fullnl2_ocean_sub
-    procedure, public, pass :: time_scheme_sub    => time_scheme2_ocean_sub
+    procedure, public, pass :: time_scheme_sub    => time_scheme_ocean_sub
     procedure, public, pass :: iter_sub           => iter_ocean_sub
     procedure, public, pass :: speed_sub          => speed_ocean_sub
     procedure, public, pass :: vypis_ocean_sub    => vypis_ocean_sub
@@ -43,10 +43,6 @@ module ocean
     module subroutine time_scheme_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine time_scheme_ocean_sub
-    
-    module subroutine time_scheme2_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine time_scheme2_ocean_sub
     
     module subroutine iter_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
