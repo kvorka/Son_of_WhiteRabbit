@@ -43,13 +43,12 @@ submodule (ocean) nonlin
   
   module procedure fullnl2_ocean_sub
     integer                        :: ir, ij, ijm
-    real(kind=dbl)                 :: facPr, facBu, facj1, facj2
-    complex(kind=dbl)              :: facEk
+    real(kind=dbl)                 :: facPr, facRa, facEk, facj1, facj2
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:), nlm(:,:)
     
     facPr = 1 / this%Pr
-    facBu = this%Ra / ( 1 - this%r_ud )**2
-    facEk = cs4pi * 2 / this%Ek
+    facRa = this%Ra / ( 1 - this%r_ud )**2
+    facEk = 2 / this%Ek
     
     !$omp parallel private (ijm, ij, facj1, facj2, v, curlv, T, gradT, nlm)
     allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv), nlm(4,this%jms) )
@@ -61,7 +60,7 @@ submodule (ocean) nonlin
       call this%gradT_rr_ijml_sub(ir, T, gradT, -1)
       
       !! Rescale curl(v) with Prandtl number and add ez for Coriolis force
-      curlv(2) = curlv(2) * facPr + cs4pi * 2 / this%Ek
+      curlv(2) = curlv(2) * facPr + cs4pi * facEk
       
       do ijm = 3, this%jmv
         curlv(ijm) = curlv(ijm) * facPr
@@ -72,8 +71,8 @@ submodule (ocean) nonlin
       
       !! Add the buoyancy force with Newtonian gravity profile
       do ij = 1, this%jmax
-        facj1 = -sqrt( (ij  ) / (2*ij+one) ) * facBu / this%rad_grid%rr(ir)**2
-        facj2 = +sqrt( (ij+1) / (2*ij+one) ) * facBu / this%rad_grid%rr(ir)**2
+        facj1 = -sqrt( (ij  ) / (2*ij+one) ) * facRa / this%rad_grid%rr(ir)**2
+        facj2 = +sqrt( (ij+1) / (2*ij+one) ) * facRa / this%rad_grid%rr(ir)**2
         
         do ijm = ij*(ij+1)/2+1, ij*(ij+1)/2+ij+1
           nlm(2,ijm) = nlm(2,ijm) + facj1 * T(ijm)
