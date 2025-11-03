@@ -1,12 +1,26 @@
 #!/bin/bash
 ###########################################################################################
-####                              POSSIBLE CODE SETTINGS                               ####
-####                            test_speed, ocean_convection                           ####
+####                                  CODE SETTINGS                                    ####
+####                               wallclock, convection                               ####
 ###########################################################################################
-code_type="test_speed"
+code_type="wallclock"
 
 ###########################################################################################
-####                             COMPILATION OF THE MODEL                              ####
+####                                     DIRECTORIES                                   ####
+###########################################################################################
+if [ "$code_type" = "convection" ]; then
+    rm -rf data || true
+    
+    mkdir data
+    
+    mkdir data/data_ocean_temp
+    mkdir data/data_ocean_veloc
+    mkdir data/data_ocean_fluxu
+    mkdir data/data_ocean_fluxd
+fi
+
+###########################################################################################
+####                       COMPILATION OF THE MODEL AND CLEANING                       ####
 ###########################################################################################
 source ./kernels/shell/compiler.sh
 
@@ -25,33 +39,6 @@ libfcompile kernels/equations/matrices/ matrices.f90
 libfcompile kernels/object/ physicalobject.f90
 libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 
-###########################################################################################
-####                                    LINKING                                        ####
-###########################################################################################
-case $code_type in
+$fcompile -D$code_type code/codes/BielyKralik.f90 *.o -o "Test_"$code_type".out"
 
-    test_speed)
-        
-        $fcompile code/codes/BielyKralik_speedTest.f90 *.o -o Test_speed
-        
-    ;;
-    
-    ocean_convection)
-        rm -r -f data || true
-
-        mkdir data
-
-        mkdir data/data_ocean_temp
-        mkdir data/data_ocean_veloc
-        mkdir data/data_ocean_fluxu
-        mkdir data/data_ocean_fluxd
-        
-        $fcompile code/codes/BielyKralik_oceanConv.f90 *.o -o Test_convection
-    ;;
-    
-esac
-
-###########################################################################################
-####                                    CLEANING                                       ####
-###########################################################################################
-rm *.smod *.mod *.o
+libfclean

@@ -5,7 +5,7 @@
 rm -f temp_averaged.spec velc_averaged.spec flux_averaged.spec || true
 
 ###########################################################################################
-####                   COMPILATION OF THE BASELINE AND LINKING                         ####
+####                COMPILATION OF THE BASELINE, LINKING AND CLEANING                  ####
 ###########################################################################################
 source ./kernels/shell/compiler.sh
 
@@ -18,7 +18,4 @@ $fcompile -c output/mod/OutputMod.f90
 
 $fcompile output/OutputOcean.f90 *.o -o code_out
 
-###########################################################################################
-####                                    CLEANING                                       ####
-###########################################################################################
-rm *.mod *.o *.smod
+libfclean

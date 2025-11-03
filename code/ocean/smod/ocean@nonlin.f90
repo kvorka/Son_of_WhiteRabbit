@@ -1,12 +1,11 @@
 submodule (ocean) nonlin
   implicit none; contains
   
-  module procedure fullnl_ocean_sub
+  module procedure vgradT_vgradv_ocean_sub
     integer                        :: ir, ijm
-    real(kind=dbl)                 :: fac
     complex(kind=dbl), allocatable :: v(:), dv(:), T(:), gradT(:), nlm(:,:), buoy(:,:), coriolis(:,:)
     
-    !$omp parallel private (v, dv, T, gradT, ijm, fac, nlm, coriolis, buoy)
+    !$omp parallel private (v, dv, T, gradT, ijm, nlm, coriolis, buoy)
     allocate( v(this%jmv), dv(this%jmv), T(this%jms), gradT(this%jmv), &
             & nlm(4,this%jms), buoy(2,this%jms), coriolis(3,this%jms)  )
     
@@ -17,12 +16,11 @@ submodule (ocean) nonlin
       
       call this%lat_grid%vcvv_vcvgv_sub(this%rad_grid%rr(ir), gradT, dv, v, nlm)
       
-      fac = 1 / this%Pr
-        do ijm = 1, this%jms
-          nlm(2,ijm) = nlm(2,ijm) * fac
-          nlm(3,ijm) = nlm(3,ijm) * fac
-          nlm(4,ijm) = nlm(4,ijm) * fac
-        end do
+      do ijm = 1, this%jms
+        nlm(2,ijm) = nlm(2,ijm) * this%facPr
+        nlm(3,ijm) = nlm(3,ijm) * this%facPr
+        nlm(4,ijm) = nlm(4,ijm) * this%facPr
+      end do
       
       call this%coriolis_rr_jml_sub(v, coriolis)
       call this%buoy_rr_jml_sub(ir, T, buoy)
@@ -39,16 +37,12 @@ submodule (ocean) nonlin
     deallocate( v , dv, T , gradT, nlm, buoy, coriolis )
     !$omp end parallel
     
-  end procedure fullnl_ocean_sub
+  end procedure vgradT_vgradv_ocean_sub
   
-  module procedure fullnl2_ocean_sub
+  module procedure vgradT_vcurlv_ocean_sub
     integer                        :: ir, ij, ijm
-    real(kind=dbl)                 :: facPr, facRa, facEk, facj1, facj2
+    real(kind=dbl)                 :: facj1, facj2
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:), nlm(:,:)
-    
-    facPr = 1 / this%Pr
-    facRa = this%Ra / ( 1 - this%r_ud )**2
-    facEk = 2 / this%Ek
     
     !$omp parallel private (ijm, ij, facj1, facj2, v, curlv, T, gradT, nlm)
     allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv), nlm(4,this%jms) )
@@ -60,10 +54,10 @@ submodule (ocean) nonlin
       call this%gradT_rr_ijml_sub(ir, T, gradT, -1)
       
       !! Rescale curl(v) with Prandtl number and add ez for Coriolis force
-      curlv(2) = curlv(2) * facPr + cs4pi * facEk
+      curlv(2) = curlv(2) * this%facPr + cs4pi * this%facEk
       
       do ijm = 3, this%jmv
-        curlv(ijm) = curlv(ijm) * facPr
+        curlv(ijm) = curlv(ijm) * this%facPr
       end do
       
       !! Compute nonlinear terms
@@ -71,8 +65,8 @@ submodule (ocean) nonlin
       
       !! Add the buoyancy force with Newtonian gravity profile
       do ij = 1, this%jmax
-        facj1 = -sqrt( (ij  ) / (2*ij+one) ) * facRa / this%rad_grid%rr(ir)**2
-        facj2 = +sqrt( (ij+1) / (2*ij+one) ) * facRa / this%rad_grid%rr(ir)**2
+        facj1 = -sqrt( (ij  ) / (2*ij+one) ) * this%facRa / this%rad_grid%rr(ir)**2
+        facj2 = +sqrt( (ij+1) / (2*ij+one) ) * this%facRa / this%rad_grid%rr(ir)**2
         
         do ijm = ij*(ij+1)/2+1, ij*(ij+1)/2+ij+1
           nlm(2,ijm) = nlm(2,ijm) + facj1 * T(ijm)
@@ -93,6 +87,6 @@ submodule (ocean) nonlin
     deallocate( v , curlv, T , gradT, nlm )
     !$omp end parallel
     
-  end procedure fullnl2_ocean_sub
+  end procedure vgradT_vcurlv_ocean_sub
   
 end submodule nonlin

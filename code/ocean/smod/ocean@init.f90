@@ -13,6 +13,10 @@ submodule (ocean) init
     this%Ra = Ra_ocean
     this%Ek = Ek_ocean
     
+    this%facPr = 1 / this%Pr
+    this%facRa = this%Ra / ( 1 - this%r_ud )**2
+    this%facEk = 2 / this%Ek
+    
     this%diffusion_type = diffusion_ocean
     this%thermal_bnd    = therm_bnd_ocean
     
