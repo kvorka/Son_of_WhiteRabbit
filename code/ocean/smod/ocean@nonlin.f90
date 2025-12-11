@@ -2,10 +2,22 @@ submodule (ocean) nonlin
   implicit none; contains
   
   module procedure vgradT_vgradv_ocean_sub
-    integer                        :: ir, ijm
+    integer                        :: ir, ijm, i1, i2
     complex(kind=dbl), allocatable :: v(:), dv(:), T(:), gradT(:), nlm(:,:), buoy(:,:), coriolis(:,:)
     
     !$omp parallel private (v, dv, T, gradT, ijm, nlm, coriolis, buoy)
+
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
+        this%rtemp(i1,i2) = (1-this%ab) * this%ntemp(i2,i1)
+        this%rtorr(i1,i2) = (1-this%ab) * this%ntorr(i2,i1)
+        this%rsph1(i1,i2) = (1-this%ab) * this%nsph1(i2,i1)
+        this%rsph2(i1,i2) = (1-this%ab) * this%nsph2(i2,i1)
+      end do
+    end do
+    !$omp end do
+
     allocate( v(this%jmv), dv(this%jmv), T(this%jms), gradT(this%jmv), &
             & nlm(4,this%jms), buoy(2,this%jms), coriolis(3,this%jms)  )
     
@@ -35,16 +47,40 @@ submodule (ocean) nonlin
     !$omp end do
     
     deallocate( v , dv, T , gradT, nlm, buoy, coriolis )
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
+        this%rtemp(i1,i2) = this%rtemp(i1,i2) + this%ab * this%ntemp(i2,i1)
+        this%rtorr(i1,i2) = this%rtorr(i1,i2) + this%ab * this%ntorr(i2,i1)
+        this%rsph1(i1,i2) = this%rsph1(i1,i2) + this%ab * this%nsph1(i2,i1)
+        this%rsph2(i1,i2) = this%rsph2(i1,i2) + this%ab * this%nsph2(i2,i1)
+      end do
+    end do
+    !$omp end do
+    
     !$omp end parallel
     
   end procedure vgradT_vgradv_ocean_sub
   
   module procedure vgradT_vcurlv_ocean_sub
-    integer                        :: ir, ij, ijm
+    integer                        :: ir, ij, ijm, i1, i2
     real(kind=dbl)                 :: facj1, facj2
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:), nlm(:,:)
     
     !$omp parallel private (ijm, ij, facj1, facj2, v, curlv, T, gradT, nlm)
+
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
+        this%rtemp(i1,i2) = (1-this%ab) * this%ntemp(i2,i1)
+        this%rtorr(i1,i2) = (1-this%ab) * this%ntorr(i2,i1)
+        this%rsph1(i1,i2) = (1-this%ab) * this%nsph1(i2,i1)
+        this%rsph2(i1,i2) = (1-this%ab) * this%nsph2(i2,i1)
+      end do
+    end do
+    !$omp end do
+
     allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv), nlm(4,this%jms) )
     
     !$omp do
@@ -85,6 +121,18 @@ submodule (ocean) nonlin
     !$omp end do
     
     deallocate( v , curlv, T , gradT, nlm )
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
+        this%rtemp(i1,i2) = this%rtemp(i1,i2) + this%ab * this%ntemp(i2,i1)
+        this%rtorr(i1,i2) = this%rtorr(i1,i2) + this%ab * this%ntorr(i2,i1)
+        this%rsph1(i1,i2) = this%rsph1(i1,i2) + this%ab * this%nsph1(i2,i1)
+        this%rsph2(i1,i2) = this%rsph2(i1,i2) + this%ab * this%nsph2(i2,i1)
+      end do
+    end do
+    !$omp end do
+    
     !$omp end parallel
     
   end procedure vgradT_vcurlv_ocean_sub

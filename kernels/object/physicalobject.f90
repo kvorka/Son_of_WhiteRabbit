@@ -36,7 +36,7 @@ module physicalobject
     procedure, pass :: init_eq_mech_sub, init_eq_torr_sub, init_eq_temp_sub
     procedure, pass :: mat_temp_fn, mat_mech_fn, mat_torr_fn
     procedure, pass :: prepare_mat_mech_sub, prepare_mat_temp_sub, prepare_mat_torr_sub
-    procedure, pass :: solve_temp_sub, solve_torr_sub, solve_mech_sub
+    procedure, pass :: solve_temp_sub, solve_torr_sub, solve_mech_sub, solve_all_sub
     
     !Forces
     procedure, pass :: hdiff_fn
@@ -197,6 +197,10 @@ module physicalobject
     module subroutine solve_mech_sub(this)
       class(T_physicalObject), intent(inout) :: this
     end subroutine solve_mech_sub
+    
+    module subroutine solve_all_sub(this)
+      class(T_physicalObject), intent(inout) :: this
+    end subroutine solve_all_sub
     
     module real(kind=dbl) function nuss_fn(this)
       class(T_physicalObject), intent(in) :: this
