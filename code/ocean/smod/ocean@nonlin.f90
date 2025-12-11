@@ -74,12 +74,33 @@ submodule (ocean) nonlin
     do i2 = 1, this%jms
       do i1 = 2, this%nd
         this%rtemp(i1,i2) = (1-this%ab) * this%ntemp(i2,i1)
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
         this%rtorr(i1,i2) = (1-this%ab) * this%ntorr(i2,i1)
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
         this%rsph1(i1,i2) = (1-this%ab) * this%nsph1(i2,i1)
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
         this%rsph2(i1,i2) = (1-this%ab) * this%nsph2(i2,i1)
       end do
     end do
-    !$omp end do
+    !$omp end do nowait
 
     allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv), nlm(4,this%jms) )
     
@@ -126,12 +147,33 @@ submodule (ocean) nonlin
     do i2 = 1, this%jms
       do i1 = 2, this%nd
         this%rtemp(i1,i2) = this%rtemp(i1,i2) + this%ab * this%ntemp(i2,i1)
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
         this%rtorr(i1,i2) = this%rtorr(i1,i2) + this%ab * this%ntorr(i2,i1)
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
         this%rsph1(i1,i2) = this%rsph1(i1,i2) + this%ab * this%nsph1(i2,i1)
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do collapse (2)
+    do i2 = 1, this%jms
+      do i1 = 2, this%nd
         this%rsph2(i1,i2) = this%rsph2(i1,i2) + this%ab * this%nsph2(i2,i1)
       end do
     end do
-    !$omp end do
+    !$omp end do nowait
     
     !$omp end parallel
     
