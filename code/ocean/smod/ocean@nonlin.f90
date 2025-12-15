@@ -7,14 +7,25 @@ submodule (ocean) nonlin
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:), nlm(:,:)
     
     !$omp parallel private (im, ij0, v, curlv, T, gradT, nlm)
-
-    !$omp do collapse (2) schedule(guided,2)
+    
+    !$omp do schedule(guided,2)
     do ij = 0, this%jmax
       do ir = 2, this%nd
         ij0 = jm(ij,0)
         
         do im = 0, ij
           this%rhs%temp(ij)%arr(im,ir) = (1-this%ab) * this%ntemp(ij0+im,ir)
+        end do
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do schedule(guided,2)
+    do ij = 1, this%jmax
+      do ir = 2, this%nd
+        ij0 = jm(ij,0)
+        
+        do im = 0, ij
           this%rhs%torr(ij)%arr(im,ir) = (1-this%ab) * this%ntorr(ij0+im,ir)
           this%rhs%sph1(ij)%arr(im,ir) = (1-this%ab) * this%nsph1(ij0+im,ir)
           this%rhs%sph2(ij)%arr(im,ir) = (1-this%ab) * this%nsph2(ij0+im,ir)
@@ -22,7 +33,7 @@ submodule (ocean) nonlin
       end do
     end do
     !$omp end do
-
+    
     allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv), nlm(4,this%jms) )
     
     !$omp do private(ij, ijm, facj1, facj2)
@@ -64,13 +75,24 @@ submodule (ocean) nonlin
     
     deallocate( v , curlv, T , gradT, nlm )
     
-    !$omp do collapse (2) schedule(guided,2)
+    !$omp do schedule(guided,2)
     do ij = 0, this%jmax
       do ir = 2, this%nd
         ij0 = jm(ij,0)
         
         do im = 0, ij
           this%rhs%temp(ij)%arr(im,ir) = this%rhs%temp(ij)%arr(im,ir) + this%ab * this%ntemp(ij0+im,ir)
+        end do
+      end do
+    end do
+    !$omp end do nowait
+    
+    !$omp do schedule(guided,2)
+    do ij = 1, this%jmax
+      do ir = 2, this%nd
+        ij0 = jm(ij,0)
+        
+        do im = 0, ij
           this%rhs%torr(ij)%arr(im,ir) = this%rhs%torr(ij)%arr(im,ir) + this%ab * this%ntorr(ij0+im,ir)
           this%rhs%sph1(ij)%arr(im,ir) = this%rhs%sph1(ij)%arr(im,ir) + this%ab * this%nsph1(ij0+im,ir)
           this%rhs%sph2(ij)%arr(im,ir) = this%rhs%sph2(ij)%arr(im,ir) + this%ab * this%nsph2(ij0+im,ir)
