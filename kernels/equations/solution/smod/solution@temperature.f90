@@ -15,7 +15,7 @@ submodule (solution) temperature
     do ij = 0, this%jmax
       ij0 = ij*(ij+1)/2+1
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         temp_jm(ij0+im) = this%temp(ij)%arr(im,is)
       end do
     end do
@@ -30,15 +30,15 @@ submodule (solution) temperature
     do ij = 0, this%jmax
       ij0 = ij*(ij+1)/2+1
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         temp1(ij0+im) = this%temp(ij)%arr(im,is)
       end do
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         temp2(ij0+im) = this%temp(ij)%arr(im,is+2)
       end do
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         temp3(ij0+im) = this%temp(ij)%arr(im,is+4)
       end do
     end do

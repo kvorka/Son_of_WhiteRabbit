@@ -9,7 +9,7 @@ submodule (matrix) mult
     indend   = min(this%ldu,this%n-k)
     
     do i2 = indstart, indend
-      do i1 = 0, howmany
+      do concurrent ( i1 = 0:howmany )
         bout(i1) = bout(i1) + this%M(i2,i) * bin(i1,k+i2)
       end do
     end do

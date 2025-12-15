@@ -39,7 +39,7 @@ module matrix
       complex(kind=dbl), intent(inout) :: b(0:howmany,*)
     end subroutine lu_solve_sub
     
-    module subroutine matrix_multiple_sub(this, i, howmany, bin, bout)
+    module pure subroutine matrix_multiple_sub(this, i, howmany, bin, bout)
       class(T_matrix),   intent(in)    :: this
       integer,           intent(in)    :: i, howmany
       complex(kind=dbl), intent(in)    :: bin(0:howmany,*)

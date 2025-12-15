@@ -20,7 +20,7 @@ submodule (physicalobject) velocity
       fac2 = this%rad_grid%drr(ir, 0)
       fac3 = this%rad_grid%drr(ir,+1)
       
-      do ijml = 1, this%jmv
+      do concurrent ( ijml = 1:this%jmv )
         dv(ijml) = fac1 * dv(ijml) + fac2 * v(ijml) + fac3 * v3(ijml)
       end do
       

@@ -54,7 +54,7 @@ submodule (physicalobject) temperature
         call this%sol%temp_jm_sub( ir+1, temp3 )
         call this%sol%temp_jm_sub( ir+2, temp4 )
         
-        do ijm = 1, this%jms
+        do concurrent ( ijm = 1:this%jms )
           dT_dr_r(ijm) = fac1 * temp1(ijm) + &
                        & fac2 * temp2(ijm) + &
                        & fac3 * temp3(ijm) + &
@@ -70,7 +70,7 @@ submodule (physicalobject) temperature
         call this%sol%temp_jm_sub( ir+1, temp3 )
         call this%sol%temp_jm_sub( ir+2, temp4 )
         
-        do ijm = 1, this%jms
+        do concurrent ( ijm = 1:this%jms )
           dT_dr_r(ijm) = fac2 * temp2(ijm) + &
                        & fac3 * temp3(ijm) + &
                        & fac4 * temp4(ijm)
@@ -85,7 +85,7 @@ submodule (physicalobject) temperature
         call this%sol%temp_jm_sub( ir  , temp2 )
         call this%sol%temp_jm_sub( ir+1, temp3 )
         
-        do ijm = 1, this%jms
+        do concurrent ( ijm = 1:this%jms )
           dT_dr_r(ijm) = fac1 * temp1(ijm) + &
                        & fac2 * temp2(ijm) + &
                        & fac3 * temp3(ijm)
@@ -116,7 +116,7 @@ submodule (physicalobject) temperature
       fac2 = this%rad_grid%drr(ir, 0)
       fac3 = this%rad_grid%drr(ir,+1)
       
-      do ijm = 1, this%jms
+      do concurrent ( ijm = 1:this%jms )
         dT(ijm) = fac1 * dT(ijm) + fac2 * T(ijm) + fac3 * temp3(ijm)
       end do
     

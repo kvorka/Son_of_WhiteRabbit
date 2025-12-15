@@ -35,7 +35,7 @@ submodule (solution) velocity
     do ij = 1, this%jmax
       ij0 = 3*(ij*(ij+1)/2)-1
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         velocity_jml(ij0+3*im  ) = this%mech(ij)%arr(im,isp  )
         velocity_jml(ij0+3*im+1) = this%torr(ij)%arr(im,ist  )
         velocity_jml(ij0+3*im+2) = this%mech(ij)%arr(im,isp+1)
@@ -59,19 +59,19 @@ submodule (solution) velocity
     do ij = 1, this%jmax
       ij0 = 3*(ij*(ij+1)/2)-1
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         velocity1(ij0+3*im  ) = this%mech(ij)%arr(im,isp  )
         velocity1(ij0+3*im+1) = this%torr(ij)%arr(im,ist  )
         velocity1(ij0+3*im+2) = this%mech(ij)%arr(im,isp+1)
       end do
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         velocity2(ij0+3*im  ) = this%mech(ij)%arr(im,isp+5)
         velocity2(ij0+3*im+1) = this%torr(ij)%arr(im,ist+2)
         velocity2(ij0+3*im+2) = this%mech(ij)%arr(im,isp+6)
       end do
       
-      do im = 0, ij
+      do concurrent ( im = 0:ij )
         velocity3(ij0+3*im  ) = this%mech(ij)%arr(im,isp+10)
         velocity3(ij0+3*im+1) = this%torr(ij)%arr(im,ist+ 4)
         velocity3(ij0+3*im+2) = this%mech(ij)%arr(im,isp+11)

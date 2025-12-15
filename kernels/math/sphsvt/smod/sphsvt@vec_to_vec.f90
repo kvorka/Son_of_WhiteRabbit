@@ -4,7 +4,7 @@ submodule (sphsvt) vec_to_vec
   module procedure vec2vec_jml_to_jml_sub
     integer :: ijm
     
-    do ijm = 1, this%jmv
+    do concurrent ( ijm = 1:this%jmv )
       cab(cabpadding,ijm) = cjml(ijm)
     end do
     
