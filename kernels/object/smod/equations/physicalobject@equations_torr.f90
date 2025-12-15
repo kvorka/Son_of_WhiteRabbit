@@ -5,8 +5,7 @@ submodule (physicalobject) equations_torr
     
     call this%sol%init_storr_sub()
     call this%mat%init_mtorr_sub()
-    
-    allocate( this%rtorr(this%nd+1,this%jms) ) ; this%rtorr = czero
+    call this%rhs%init_rtorr_sub()
     
   end procedure init_eq_torr_sub
 

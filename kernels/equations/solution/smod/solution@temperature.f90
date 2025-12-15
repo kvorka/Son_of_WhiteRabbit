@@ -3,30 +3,44 @@ submodule (solution) temperature
   
   module procedure temp_fn
     
-    temp_fn = this%temp(2*(ir-1)+1,ijm)
+    temp_fn = this%temp(ij)%arr(im,2*(ir-1)+1)
     
   end procedure temp_fn
   
   module procedure temp_jm_sub
-    integer :: ijm, is
+    integer :: is, ij, im, ij0
     
     is = 2*(ir-1)+1
     
-    do ijm = 1, this%jms
-      temp_jm(ijm) = this%temp(is,ijm)
+    do ij = 0, this%jmax
+      ij0 = ij*(ij+1)/2+1
+      
+      do im = 0, ij
+        temp_jm(ij0+im) = this%temp(ij)%arr(im,is)
+      end do
     end do
     
   end procedure temp_jm_sub
   
   module procedure temp3_jm_sub
-    integer :: ijm, is
+    integer :: is, ij, im, ij0
     
     is = 2*(ir-1)+1
     
-    do ijm = 1, this%jms
-      temp1(ijm) = this%temp(is  ,ijm)
-      temp2(ijm) = this%temp(is+2,ijm)
-      temp3(ijm) = this%temp(is+4,ijm)
+    do ij = 0, this%jmax
+      ij0 = ij*(ij+1)/2+1
+      
+      do im = 0, ij
+        temp1(ij0+im) = this%temp(ij)%arr(im,is)
+      end do
+      
+      do im = 0, ij
+        temp2(ij0+im) = this%temp(ij)%arr(im,is+2)
+      end do
+      
+      do im = 0, ij
+        temp3(ij0+im) = this%temp(ij)%arr(im,is+4)
+      end do
     end do
     
   end procedure temp3_jm_sub

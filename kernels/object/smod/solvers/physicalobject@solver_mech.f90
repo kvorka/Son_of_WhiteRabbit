@@ -2,32 +2,34 @@ submodule (physicalobject) solver_mech
   implicit none ; contains
   
   module procedure solve_mech_sub
-    integer :: ij, ijm, ir, is
+    integer :: ij, im, ir, is
     
-    !$omp parallel do private (ir,is,ij)
-    do ijm = 2, this%jms
-      ij = this%j_indx(ijm)
-      
+    !$omp parallel do private(ir, is, im) schedule (guided,2)
+    do ij = 1, this%jmax
       do ir = 2, this%nd
-        this%rsph1(ir,ijm) = this%rsph1(ir,ijm) + this%mat%mech(ij)%multipl_fn(5*(ir-1)+1,this%sol%mech(:,ijm))
-        this%rsph2(ir,ijm) = this%rsph2(ir,ijm) + this%mat%mech(ij)%multipl_fn(5*(ir-1)+2,this%sol%mech(:,ijm))
+        call this%mat%mech(ij)%addmultipl_sub( 5*(ir-1)+1, ij, this%sol%mech(ij)%arr, this%rhs%sph1(ij)%arr(0,ir) )
+        call this%mat%mech(ij)%addmultipl_sub( 5*(ir-1)+2, ij, this%sol%mech(ij)%arr, this%rhs%sph2(ij)%arr(0,ir) )
       end do
       
       do ir = 1, this%nd
         is = 5*(ir-1)+1
         
-        this%sol%mech(is  ,ijm) = this%rsph1(ir,ijm)
-        this%sol%mech(is+1,ijm) = this%rsph2(ir,ijm)
-        this%sol%mech(is+2,ijm) = czero
-        this%sol%mech(is+3,ijm) = czero
-        this%sol%mech(is+4,ijm) = czero
+        do im = 0, ij
+          this%sol%mech(ij)%arr(im,is  ) = this%rhs%sph1(ij)%arr(im,ir)
+          this%sol%mech(ij)%arr(im,is+1) = this%rhs%sph2(ij)%arr(im,ir)
+          this%sol%mech(ij)%arr(im,is+2) = czero
+          this%sol%mech(ij)%arr(im,is+3) = czero
+          this%sol%mech(ij)%arr(im,is+4) = czero
+        end do
       end do
         
       ir = this%nd+1
-        this%sol%mech(5*this%nd+1,ijm) = this%rsph1(ir,ijm)
-        this%sol%mech(5*this%nd+2,ijm) = this%rsph2(ir,ijm)
-        
-      call this%mat%mech(ij)%luSolve_sub( this%sol%mech(:,ijm) )
+        do im = 0, ij
+          this%sol%mech(ij)%arr(im,5*this%nd+1) = this%rhs%sph1(ij)%arr(im,ir)
+          this%sol%mech(ij)%arr(im,5*this%nd+2) = this%rhs%sph2(ij)%arr(im,ir)
+        end do
+      
+      call this%mat%mech(ij)%luSolve_sub( ij, this%sol%mech(ij)%arr )
     end do
     !$omp end parallel do
       

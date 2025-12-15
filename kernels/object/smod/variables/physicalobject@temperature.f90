@@ -3,8 +3,8 @@ submodule (physicalobject) temperature
   
   module procedure temp_r_fn
     
-    temp_r_fn = this%rad_grid%c(ir,-1) * this%sol%temp_fn(ir  ,ijm) + &
-              & this%rad_grid%c(ir,+1) * this%sol%temp_fn(ir+1,ijm)
+    temp_r_fn = this%rad_grid%c(ir,-1) * this%sol%temp_fn(ir  ,ij,im) + &
+              & this%rad_grid%c(ir,+1) * this%sol%temp_fn(ir+1,ij,im)
     
   end procedure temp_r_fn
   
@@ -17,20 +17,20 @@ submodule (physicalobject) temperature
     fac4 = this%rad_grid%d(ir,+2)
     
     if ( (ir > 1) .and. (ir < this%nd) ) then
-      dT_dr_r_fn = fac1 * this%sol%temp_fn(ir-1,ijm) + &
-                 & fac2 * this%sol%temp_fn(ir  ,ijm) + &
-                 & fac3 * this%sol%temp_fn(ir+1,ijm) + &
-                 & fac4 * this%sol%temp_fn(ir+2,ijm)
+      dT_dr_r_fn = fac1 * this%sol%temp_fn(ir-1,ij,im) + &
+                 & fac2 * this%sol%temp_fn(ir  ,ij,im) + &
+                 & fac3 * this%sol%temp_fn(ir+1,ij,im) + &
+                 & fac4 * this%sol%temp_fn(ir+2,ij,im)
     
     else if ( ir == 1) then
-      dT_dr_r_fn = fac2 * this%sol%temp_fn(ir  ,ijm) + &
-                 & fac3 * this%sol%temp_fn(ir+1,ijm) + &
-                 & fac4 * this%sol%temp_fn(ir+2,ijm)
+      dT_dr_r_fn = fac2 * this%sol%temp_fn(ir  ,ij,im) + &
+                 & fac3 * this%sol%temp_fn(ir+1,ij,im) + &
+                 & fac4 * this%sol%temp_fn(ir+2,ij,im)
     
     else
-      dT_dr_r_fn = fac1 * this%sol%temp_fn(ir-1,ijm) + &
-                 & fac2 * this%sol%temp_fn(ir  ,ijm) + &
-                 & fac3 * this%sol%temp_fn(ir+1,ijm)
+      dT_dr_r_fn = fac1 * this%sol%temp_fn(ir-1,ij,im) + &
+                 & fac2 * this%sol%temp_fn(ir  ,ij,im) + &
+                 & fac3 * this%sol%temp_fn(ir+1,ij,im)
     
     end if
     

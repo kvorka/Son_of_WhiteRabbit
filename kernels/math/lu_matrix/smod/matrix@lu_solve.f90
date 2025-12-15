@@ -2,31 +2,49 @@ submodule (matrix) lu_solve
   implicit none; contains
   
   module procedure lu_solve_sub
-    integer           :: i, j
-    complex(kind=dbl) :: dum
+    integer                        :: j, i1, i2
+    complex(kind=dbl), allocatable :: dum(:)
+    
+    allocate( dum(0:howmany) )
     
     do j = 1, this%n
-      i   = this%I(j)
-      dum = b(i)
+      i2 = this%I(j)
       
-      if (i /= j) then
-        b(i) = b(j)
-        b(j) = dum
+      do i1 = 0, howmany
+        dum(i1) = b(i1,i2)
+      end do
+      
+      if (i2 /= j) then
+        do i1 = 0, howmany
+          b(i1,i2) = b(i1,j)
+          b(i1,j)  = dum(i1)
+        end do
       end if
       
-      do i = j+1, min(this%n,this%ld+j)
-        b(i) = b(i) - this%L(i-j,j) * dum
+      do i2 = j+1, min(this%n,this%ld+j)
+        do i1 = 0, howmany
+          b(i1,i2) = b(i1,i2) - this%L(i2-j,j) * dum(i1)
+        end do
       end do
     end do
     
-    do i = this%n, 1, -1
-      dum = b(i)
-        do j = 2, min(this%ldu,this%n-i+1)
-          dum = dum - this%U(j,i) * b(i+j-1)
+    do i2 = this%n, 1, -1
+      do i1 = 0, howmany
+        dum(i1) = b(i1,i2)
+      end do
+
+      do j = 2, min(this%ldu,this%n-i2+1)
+        do i1 = 0, howmany
+          dum(i1) = dum(i1) - this%U(j,i2) * b(i1,i2+j-1)
         end do
+      end do
       
-      b(i) = dum / this%U(1,i)
+      do i1 = 0, howmany
+        b(i1,i2) = dum(i1) / this%U(1,i2)
+      end do
     end do
+    
+    deallocate( dum )
     
   end procedure lu_solve_sub
   

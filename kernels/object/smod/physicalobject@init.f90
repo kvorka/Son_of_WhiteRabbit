@@ -15,13 +15,7 @@ submodule (physicalobject) init
     call this%lat_grid%init_sub(this%jmax)
     call this%sol%init_sub(this%nd, this%jmax)
     call this%mat%init_sub(this%nd, this%jmax)
-    
-    allocate( this%j_indx(this%jms) )
-      do j = 0, this%jmax
-        do m = 0, j
-          this%j_indx(j*(j+1)/2+m+1) = j
-        end do
-      end do
+    call this%rhs%init_sub(this%nd, this%jmax)
     
     this%poc = 0
     this%t   = zero
@@ -32,13 +26,7 @@ submodule (physicalobject) init
   
   module procedure deallocate_objects_sub
     
-    deallocate( this%j_indx )
-    
-    deallocate( this%rsph1 )
-    deallocate( this%rsph2 )
-    deallocate( this%rtorr )
-    deallocate( this%rtemp )
-    
+    call this%rhs%deallocate_sub()
     call this%sol%deallocate_sub()
     call this%mat%deallocate_sub()
     call this%rad_grid%deallocate_sub()

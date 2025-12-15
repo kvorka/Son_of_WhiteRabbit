@@ -3,9 +3,9 @@ module ocean_constants
   implicit none
   
   !Vseobecne nastavenie konstant
-  integer, parameter :: nd_ocean = 145
+  integer, parameter :: nd_ocean = 97
   integer, parameter :: jmax_ocean = 213
-  integer, parameter :: n_iter_ocean = 20
+  integer, parameter :: n_iter_ocean = 200
   
   !Nastavovanie konstant pre konvektivny vypocet
   character(len=*), parameter :: therm_bnd_ocean = 'basic'

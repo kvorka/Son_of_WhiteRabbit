@@ -2,27 +2,29 @@ submodule (physicalobject) solver_torr
   implicit none ; contains
   
   module procedure solve_torr_sub
-    integer :: ij, ijm, ir, is
+    integer :: ij, im, ir, is
     
-    !$omp parallel do private (ir,is,ij)
-    do ijm = 2, this%jms
-      ij = this%j_indx(ijm)
-      
+    !$omp parallel do private(im, ir, is) schedule (guided,2)
+    do ij = 1, this%jmax
       do ir = 2, this%nd
-        this%rtorr(ir,ijm) = this%rtorr(ir,ijm) + this%mat%torr(ij)%multipl_fn(2*(ir-1)+1,this%sol%torr(:,ijm))
+        call this%mat%torr(ij)%addmultipl_sub( 2*(ir-1)+1, ij, this%sol%torr(ij)%arr, this%rhs%torr(ij)%arr(0,ir) )
       end do
       
       do ir = 1, this%nd
-        is = 2*(ir-1) + 1
+        is = 2*(ir-1)+1
         
-        this%sol%torr(is  ,ijm) = this%rtorr(ir,ijm)
-        this%sol%torr(is+1,ijm) = czero
+        do im = 0, ij
+          this%sol%torr(ij)%arr(im,is  ) = this%rhs%torr(ij)%arr(im,ir)
+          this%sol%torr(ij)%arr(im,is+1) = czero
+        end do
       end do
       
       ir = this%nd+1
-        this%sol%torr(2*this%nd+1,ijm) = this%rtorr(ir,ijm)
-        
-      call this%mat%torr(ij)%luSolve_sub( this%sol%torr(:,ijm) )
+        do im = 0, ij
+          this%sol%torr(ij)%arr(im,2*this%nd+1) = this%rhs%torr(ij)%arr(im,ir)
+        end do
+      
+      call this%mat%torr(ij)%luSolve_sub( ij, this%sol%torr(ij)%arr )
     end do
     !$omp end parallel do
     

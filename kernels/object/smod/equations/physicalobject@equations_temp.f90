@@ -5,8 +5,7 @@ submodule (physicalobject) equations_temp
     
     call this%sol%init_stemp_sub()
     call this%mat%init_mtemp_sub()
-    
-    allocate( this%rtemp(this%nd+1,this%jms) ) ; this%rtemp = czero
+    call this%rhs%init_rtemp_sub()
     
   end procedure init_eq_temp_sub
 

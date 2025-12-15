@@ -13,7 +13,7 @@ module matrix
     procedure :: init_sub       => init_matrix_sub
     procedure :: fill_sub       => lu_decomposition_sub
     procedure :: luSolve_sub    => lu_solve_sub
-    procedure :: multipl_fn     => matrix_multiple_fn
+    procedure :: addmultipl_sub => matrix_multiple_sub
     procedure :: deallocate_sub => deallocate_matrix_sub
     
   end type T_matrix
@@ -33,16 +33,18 @@ module matrix
       real(kind=dbl),  intent(in)    :: matrixU(this%ldu,this%n), matrixM(this%ldu,this%n)
     end subroutine lu_decomposition_sub
     
-    module subroutine lu_solve_sub(this, b)
+    module subroutine lu_solve_sub(this, howmany, b)
       class(T_matrix),   intent(in)    :: this
-      complex(kind=dbl), intent(inout) :: b(this%n)
+      integer,           intent(in)    :: howmany
+      complex(kind=dbl), intent(inout) :: b(0:howmany,*)
     end subroutine lu_solve_sub
     
-    module complex(kind=dbl) function matrix_multiple_fn(this, i, vector)
-      class(T_matrix),   intent(in) :: this
-      integer,           intent(in) :: i
-      complex(kind=dbl), intent(in) :: vector(this%n)
-    end function matrix_multiple_fn
+    module subroutine matrix_multiple_sub(this, i, howmany, bin, bout)
+      class(T_matrix),   intent(in)    :: this
+      integer,           intent(in)    :: i, howmany
+      complex(kind=dbl), intent(in)    :: bin(0:howmany,*)
+      complex(kind=dbl), intent(inout) :: bout(0:howmany)
+    end subroutine matrix_multiple_sub
   end interface
   
 end module matrix

@@ -32,76 +32,76 @@ submodule (ocean) init_state
         im = 0
           call random_number( realp )
           
-          this%sol%temp(is,jm(ij,im)) = cmplx( realp, zero, kind=dbl ) / 1e3
+          this%sol%temp(ij)%arr(im,is) = cmplx( realp, zero, kind=dbl ) / 1e3
         
         do im = 1, ij
           call random_number( realp )
           call random_number( imagp )
           
-          this%sol%temp(is,jm(ij,im)) = cmplx( realp, imagp, kind=dbl ) / 1e3
+          this%sol%temp(ij)%arr(im,is) = cmplx( realp, imagp, kind=dbl ) / 1e3
         end do
       end do
     end do
     
   end subroutine init_conduction_sub
   
-  subroutine init_fromFile_sub(this)
-    class(T_ocean),  intent(inout) :: this
-    integer                        :: ir, ijm, ndI, jmsI, jmvI
-    real(kind=dbl),    allocatable :: r(:)
-    complex(kind=dbl), allocatable :: velc(:), temp(:,:), spher1(:,:), torr(:,:), spher2(:,:)
-    
-    ndI  = nd_init_ocean
-    jmsI = jm(jmax_init_ocean,jmax_init_ocean)
-    jmvI = jml(jmax_init_ocean,jmax_init_ocean,+1)
-    
-    allocate( r(ndI+1)         )
-    allocate( velc(jmvI)       )
-    allocate( temp(ndI+1,jmsI) )
-    
-    allocate( spher1(ndI+1,jmsI) ); spher1 = czero
-    allocate( spher2(ndI+1,jmsI) ); spher2 = czero
-    allocate( torr(ndI+1,jmsI)   ); torr = czero
-    
-    open(unit=8, file='code/ocean/inittemp', status='old', action='read')
-      do ir = 1, ndI+1
-        read(8,*) r(ir), temp(ir,:)
-      end do
-    close(8)
-    
-    open(unit=8, file='code/ocean/initvelc', status='old', action='read')
-      do ir = 1, ndI+1
-        read(8,*) r(ir), velc
-        
-        do ijm = 2, jmsI
-          spher1(ir,ijm) = velc(3*(ijm-1)-1)
-          torr(  ir,ijm) = velc(3*(ijm-1)  )
-          spher2(ir,ijm) = velc(3*(ijm-1)+1)
-        end do
-      end do
-    close(8)
-    
-    deallocate(velc)
-    
-    do ir = 1, this%nd+1
-      this%sol%temp(2*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, temp   )
-      this%sol%mech(6*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, spher1 )
-      this%sol%torr(3*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, torr   )
-      this%sol%mech(6*(ir-1)+2,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, spher2 )
-    end do
-    
-    deallocate( r, spher1, spher2, torr, temp )
-    
-  end subroutine init_fromFile_sub
+  !subroutine init_fromFile_sub(this)
+  !  class(T_ocean),  intent(inout) :: this
+  !  integer                        :: ir, ijm, ndI, jmsI, jmvI
+  !  real(kind=dbl),    allocatable :: r(:)
+  !  complex(kind=dbl), allocatable :: velc(:), temp(:,:), spher1(:,:), torr(:,:), spher2(:,:)
+  !  
+  !  ndI  = nd_init_ocean
+  !  jmsI = jm(jmax_init_ocean,jmax_init_ocean)
+  !  jmvI = jml(jmax_init_ocean,jmax_init_ocean,+1)
+  !  
+  !  allocate( r(ndI+1)         )
+  !  allocate( velc(jmvI)       )
+  !  allocate( temp(ndI+1,jmsI) )
+  !  
+  !  allocate( spher1(ndI+1,jmsI) ); spher1 = czero
+  !  allocate( spher2(ndI+1,jmsI) ); spher2 = czero
+  !  allocate( torr(ndI+1,jmsI)   ); torr = czero
+  !  
+  !  open(unit=8, file='code/ocean/inittemp', status='old', action='read')
+  !    do ir = 1, ndI+1
+  !      read(8,*) r(ir), temp(ir,:)
+  !    end do
+  !  close(8)
+  !  
+  !  open(unit=8, file='code/ocean/initvelc', status='old', action='read')
+  !    do ir = 1, ndI+1
+  !      read(8,*) r(ir), velc
+  !      
+  !      do ijm = 2, jmsI
+  !        spher1(ir,ijm) = velc(3*(ijm-1)-1)
+  !        torr(  ir,ijm) = velc(3*(ijm-1)  )
+  !        spher2(ir,ijm) = velc(3*(ijm-1)+1)
+  !      end do
+  !    end do
+  !  close(8)
+  !  
+  !  deallocate(velc)
+  !  
+  !  do ir = 1, this%nd+1
+  !    this%sol%temp(2*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, temp   )
+  !    this%sol%mech(6*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, spher1 )
+  !    this%sol%torr(3*(ir-1)+1,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, torr   )
+  !    this%sol%mech(6*(ir-1)+2,:) = this%rad_grid%interpolation_fn( this%jms, ir, r, spher2 )
+  !  end do
+  !  
+  !  deallocate( r, spher1, spher2, torr, temp )
+  !  
+  !end subroutine init_fromFile_sub
   
   module procedure init_state_ocean_sub
     real(kind=dbl) :: ab_help, cf_help
     
-    if (.not. init_through_file_ocean) then
+    !if (.not. init_through_file_ocean) then
       call init_conduction_sub(this)
-    else
-      call init_fromFile_sub(this)
-    end if
+    !else
+    !  call init_fromFile_sub(this)
+    !end if
     
     !! First step with implicit stepping
     ab_help = this%ab

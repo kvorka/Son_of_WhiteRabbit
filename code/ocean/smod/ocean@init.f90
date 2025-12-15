@@ -2,6 +2,7 @@ submodule (ocean) init
   implicit none; contains
   
   module procedure init_ocean_sub
+    integer :: ir, ijm
     
     call this%init_objects_sub( nd = nd_ocean, jmax = jmax_ocean, r_ud = r_ud_ocean )
     
@@ -36,10 +37,21 @@ submodule (ocean) init
     call this%prepare_mat_mech_sub()
     
     !! Initialize the non-linear terms
-    allocate( this%ntemp(this%jms,2:this%nd) ); this%ntemp = czero
-    allocate( this%ntorr(this%jms,2:this%nd) ); this%ntorr = czero
-    allocate( this%nsph1(this%jms,2:this%nd) ); this%nsph1 = czero
-    allocate( this%nsph2(this%jms,2:this%nd) ); this%nsph2 = czero
+    allocate( this%ntemp(this%jms,2:this%nd) )
+    allocate( this%ntorr(this%jms,2:this%nd) )
+    allocate( this%nsph1(this%jms,2:this%nd) )
+    allocate( this%nsph2(this%jms,2:this%nd) )
+    
+    !$omp parallel do
+    do ir = 2, this%nd
+      do ijm = 1, this%jms
+        this%ntemp(ijm,ir) = czero
+        this%ntorr(ijm,ir) = czero
+        this%nsph1(ijm,ir) = czero
+        this%nsph2(ijm,ir) = czero
+      end do
+    end do
+    !$omp end parallel do
     
     !! Set the thermal bottom boundary condition
     call this%init_temp_bbnd_sub()

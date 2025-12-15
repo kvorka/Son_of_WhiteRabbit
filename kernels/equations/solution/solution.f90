@@ -1,10 +1,10 @@
 module solution
-  use math
+  use spharray
   implicit none
   
   type, public :: T_solution
-    integer                        :: nd, jmax, jms, jmv
-    complex(kind=dbl), allocatable :: mech(:,:), temp(:,:), torr(:,:)
+    integer                        :: nd, jmax
+    type(T_spharray), allocatable :: mech(:), temp(:), torr(:)
     
     contains
     
@@ -43,9 +43,9 @@ module solution
       class(T_solution), intent(inout) :: this
     end subroutine init_smech_sub
     
-    module complex(kind=dbl) function temp_fn(this, ir, ijm)
+    module complex(kind=dbl) function temp_fn(this, ir, ij, im)
       class(T_solution), intent(in) :: this
-      integer,           intent(in) :: ir, ijm
+      integer,           intent(in) :: ir, ij, im
     end function temp_fn
     
     module subroutine temp_jm_sub(this, ir, temp_jm)
@@ -60,9 +60,9 @@ module solution
       complex(kind=dbl), intent(out) :: temp1(*), temp2(*), temp3(*)
     end subroutine temp3_jm_sub
     
-    module complex(kind=dbl) function velocity_fn(this, ir, il, ijm)
+    module complex(kind=dbl) function velocity_fn(this, ir, ij, im, il)
       class(T_solution), intent(in) :: this
-      integer,           intent(in) :: ir, il, ijm
+      integer,           intent(in) :: ir, ij, im, il
     end function velocity_fn
     
     module subroutine velocity_jml_sub(this, ir, velocity_jml)

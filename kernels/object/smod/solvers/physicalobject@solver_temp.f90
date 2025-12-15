@@ -2,27 +2,29 @@ submodule (physicalobject) solver_temp
   implicit none ; contains
   
   module procedure solve_temp_sub
-    integer :: ij, ir, is, ijm
+    integer :: ij, ir, is, im
     
-    !$omp parallel do private (ir,is,ij)
-    do ijm = 1, this%jms
-      ij = this%j_indx(ijm)
-      
+    !$omp parallel do private(im, ir, is) schedule (guided,2)
+    do ij = 0, this%jmax
       do ir = 2, this%nd
-        this%rtemp(ir,ijm) = this%rtemp(ir,ijm) + this%mat%temp(ij)%multipl_fn(2*(ir-1)+1, this%sol%temp(:,ijm))
+        call this%mat%temp(ij)%addmultipl_sub( 2*(ir-1)+1, ij, this%sol%temp(ij)%arr, this%rhs%temp(ij)%arr(0,ir) )
       end do
       
       do ir = 1, this%nd
         is = 2*(ir-1)+1
         
-        this%sol%temp(is  ,ijm) = this%rtemp(ir,ijm)
-        this%sol%temp(is+1,ijm) = czero
+        do im = 0, ij
+          this%sol%temp(ij)%arr(im,is  ) = this%rhs%temp(ij)%arr(im,ir)
+          this%sol%temp(ij)%arr(im,is+1) = czero
+        end do
       end do
       
       ir = this%nd+1
-        this%sol%temp(2*this%nd+1,ijm) = this%rtemp(ir,ijm)
+        do im = 0, ij
+          this%sol%temp(ij)%arr(im,2*this%nd+1) = this%rhs%temp(ij)%arr(im,ir)
+        end do
       
-      call this%mat%temp(ij)%luSolve_sub( this%sol%temp(:,ijm) )
+      call this%mat%temp(ij)%luSolve_sub( ij, this%sol%temp(ij)%arr )
     end do
     !$omp end parallel do
     

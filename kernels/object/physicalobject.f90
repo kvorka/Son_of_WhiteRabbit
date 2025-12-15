@@ -5,19 +5,19 @@ module physicalobject
   use radial_grid
   use matrices
   use solution
+  use rhs
   implicit none
   
   type, abstract, public :: T_physicalObject
-    character(len=5)               :: thermal_bnd, diffusion_type
-    integer                        :: nd, jmax, jms, jmv, n_iter, poc
-    real(kind=dbl)                 :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
-    integer,           allocatable :: j_indx(:)
-    complex(kind=dbl), allocatable :: rsph1(:,:), rsph2(:,:), rtorr(:,:), rtemp(:,:)
+    character(len=5) :: thermal_bnd, diffusion_type
+    integer          :: nd, jmax, jms, jmv, n_iter, poc
+    real(kind=dbl)   :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
     
     type(T_radialGrid)  :: rad_grid
     type(T_lateralGrid) :: lat_grid
     type(T_matrices)    :: mat
     type(T_solution)    :: sol
+    type(T_rhs)         :: rhs
     
     contains
     
@@ -62,14 +62,14 @@ module physicalobject
     end subroutine deallocate_objects_sub
     
     !Interfaces :: Variables temperature
-    module complex(kind=dbl) function temp_r_fn(this, ir, ijm)
+    module complex(kind=dbl) function temp_r_fn(this, ir, ij, im)
       class(T_physicalObject), intent(in) :: this
-      integer,                 intent(in) :: ir, ijm
+      integer,                 intent(in) :: ir, ij, im
     end function temp_r_fn
     
-    module complex(kind=dbl) function dT_dr_r_fn(this, ir, ijm)
+    module complex(kind=dbl) function dT_dr_r_fn(this, ir, ij, im)
       class(T_physicalObject), intent(in) :: this
-      integer,                 intent(in) :: ir, ijm
+      integer,                 intent(in) :: ir, ij, im
     end function dT_dr_r_fn
     
     module subroutine dT_dr_r_ijm_sub(this, ir, dT_dr_r)

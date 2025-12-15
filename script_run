@@ -3,7 +3,7 @@
 ####                                  CODE SETTINGS                                    ####
 ####                               wallclock, convection                               ####
 ###########################################################################################
-code_type="wallclock"
+code_type="convection"
 
 ###########################################################################################
 ####                                     DIRECTORIES                                   ####
@@ -31,11 +31,13 @@ libfcompile kernels/math/legepoly/ lege_poly.f90
 libfcompile kernels/math/sphsvt/mod/ cleb.f90
 libfcompile kernels/math/sphsvt/ sphsvt.f90
 libfcompile kernels/math/lu_matrix/ matrix.f90
+libfcompile kernels/math/spharray/ spharray.f90
 libfcompile kernels/grid/radial/ radial_grid.f90
 libfcompile kernels/grid/lateral/mod/ grid_ops.f90
 libfcompile kernels/grid/lateral/ lateral_grid.f90
 libfcompile kernels/equations/solution/ solution.f90
 libfcompile kernels/equations/matrices/ matrices.f90
+libfcompile kernels/equations/rhs/ rhs.f90
 libfcompile kernels/object/ physicalobject.f90
 libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 
