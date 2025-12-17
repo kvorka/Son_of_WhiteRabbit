@@ -27,11 +27,9 @@ submodule (ocean) init
     end if
     
     !! Initialize the equations
-    call this%init_eq_temp_sub()
-    call this%init_eq_torr_sub()
-    call this%init_eq_mech_sub()
+    call this%init_eq_all_sub()
     
-    !! Initialize the matrices
+    !! Prepare the matrices
     call this%prepare_mat_temp_sub()
     call this%prepare_mat_torr_sub()
     call this%prepare_mat_mech_sub()

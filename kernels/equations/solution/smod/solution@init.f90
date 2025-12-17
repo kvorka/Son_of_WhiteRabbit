@@ -11,7 +11,9 @@ submodule (solution) init
   module procedure deallocate_solution_sub
     integer :: ij
     
-    do ij = 0, this%jmax
+    call this%temp(0)%deallocate_sub()
+    
+    do ij = 1, this%jmax
       call this%temp(ij)%deallocate_sub()
       call this%mech(ij)%deallocate_sub()
       call this%torr(ij)%deallocate_sub()

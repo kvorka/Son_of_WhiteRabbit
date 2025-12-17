@@ -11,8 +11,9 @@ submodule (rhs) init
   module procedure deallocate_rhs_sub
     integer :: ij
     
-    do ij = 0, this%jmax
-      call this%temp(ij)%deallocate_sub()
+    call this%temp(0)%deallocate_sub()
+    
+    do ij = 1, this%jmax
       call this%sph1(ij)%deallocate_sub()
       call this%sph2(ij)%deallocate_sub()
       call this%torr(ij)%deallocate_sub()
