@@ -3,18 +3,17 @@ submodule (physicalobject) buoyancy
   
   module procedure buoy_rr_jml_sub
     integer        :: ij, ijm
-    real(kind=dbl) :: fac, fac1, fac2
+    real(kind=dbl) :: facrr, facj1, facj2
     
-    !!TODO: now only Newtonian profile
-    fac = this%Ra / this%rad_grid%rr(ir)**2 / ( 1 - this%r_ud )**2
+    facrr = this%facRa / this%rad_grid%rr(ir)**2
     
     do ij = 1, this%jmax
-      fac1 = -sqrt( (ij  ) / (2*ij+one) ) * fac
-      fac2 = +sqrt( (ij+1) / (2*ij+one) ) * fac
+      facj1 = -sqrt( (ij  ) / (2*ij+one) ) * facrr
+      facj2 = +sqrt( (ij+1) / (2*ij+one) ) * facrr
       
-      do ijm = ij*(ij+1)/2+1, ij*(ij+1)/2+ij+1
-        force(1,ijm) = fac1 * T(ijm)
-        force(2,ijm) = fac2 * T(ijm)
+      do concurrent ( ijm = jm(ij,0):jm(ij,ij) )
+        nsph1(ijm) = nsph1(ijm) + facj1 * T(ijm)
+        nsph2(ijm) = nsph2(ijm) + facj2 * T(ijm)
       end do
     end do
       

@@ -11,7 +11,7 @@ module physicalobject
   type, abstract, public :: T_physicalObject
     character(len=5) :: thermal_bnd, diffusion_type
     integer          :: nd, jmax, jms, jmv, n_iter, poc
-    real(kind=dbl)   :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
+    real(kind=dbl)   :: t, dt, cf, ab, r_ud, Pr, Ra, Ek, facPr, facRa, facEk
     
     type(T_radialGrid)  :: rad_grid
     type(T_lateralGrid) :: lat_grid
@@ -134,11 +134,11 @@ module physicalobject
       complex(kind=dbl),       intent(inout) :: coriolis(*)
     end subroutine coriolis_rr_jml_sub
     
-    module subroutine buoy_rr_jml_sub(this, ir, T, force)
+    module subroutine buoy_rr_jml_sub(this, ir, T, nsph1, nsph2)
       class(T_physicalObject), intent(in)    :: this
       integer,                 intent(in)    :: ir
       complex(kind=dbl),       intent(in)    :: T(*)
-      complex(kind=dbl),       intent(inout) :: force(2,*)
+      complex(kind=dbl),       intent(inout) :: nsph1(*), nsph2(*)
     end subroutine buoy_rr_jml_sub
     
     module function mat_temp_fn(this, j, a) result(matica)

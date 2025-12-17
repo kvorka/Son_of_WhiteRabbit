@@ -12,7 +12,7 @@ submodule (physicalobject) diffusion
         hdiff_fn = 10._dbl
       
       case ('hyper')
-        jdiff = 9 * this%jmax / 10
+        jdiff = 7 * this%jmax / 10
         
         if ( j < jdiff ) then
           hdiff_fn = one

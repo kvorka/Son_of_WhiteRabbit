@@ -10,6 +10,7 @@ instructions="avx2"
 ###########################################################################################
 fcompile="gfortran-12 -Ofast \
                       -march=native \
+                      -mprefer-vector-width=512 \
                       -fno-bounds-check \
                       -flto=auto \
                       -fwhole-program \

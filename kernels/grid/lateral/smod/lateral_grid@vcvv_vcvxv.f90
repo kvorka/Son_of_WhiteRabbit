@@ -21,8 +21,8 @@ submodule (lateral_grid) vcvv_vcvxv
     call this%transform_sub( 4, 9, cc, cr, grid_op_vcvv_vcvxv_sub )
     
     !Rearranging indexing
-    call this%rxd%scal2scal_mj_to_jm_sub( cr, 4, 1, cjm, 4, 1 )
-    call this%rxd%scal2vecscal_mj_to_jm_sub( cr, 4, 2, cjm, 4, 2 )
+    call this%rxd%scal2scal_mj_to_jm_sub( cr, 4, 1, ntemp )
+    call this%rxd%scal2vecscal_mj_to_jm_sub( cr, 4, 2, nsph1, ntorr, nsph2)
     
     !Cleaning
     deallocate( cc, cr )

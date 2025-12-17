@@ -83,6 +83,12 @@ module math
       integer,           intent(in)  :: length
       complex(kind=dbl), intent(out) :: arr(*)
     end subroutine zero_carray_sub
+    
+    module subroutine copy_carray_sub(length, arr_to, arr_from)
+      integer,           intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: arr_from(*)
+      complex(kind=dbl), intent(out) :: arr_to(*)
+    end subroutine copy_carray_sub
   end interface
   
   interface

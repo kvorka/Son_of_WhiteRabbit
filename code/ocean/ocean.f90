@@ -4,7 +4,6 @@ module ocean
   implicit none
   
   type, extends(T_physicalObject), public :: T_ocean
-    real(kind=dbl)                 :: facPr, facRa, facEk
     complex(kind=dbl), allocatable :: nsph1(:,:), nsph2(:,:), ntorr(:,:), ntemp(:,:)
     
     contains

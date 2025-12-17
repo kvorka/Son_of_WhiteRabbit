@@ -54,18 +54,18 @@ module sphsvt
       complex(kind=dbl), intent(inout) :: cab(ncab,*)
     end subroutine gradvec2vec_jmlk_to_jml_sub
     
-    module subroutine scal2scal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm, ncjm, cjmpadding)
+    module subroutine scal2scal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm)
       class(T_sphsvt),   intent(in)    :: this
-      integer,           intent(in)    :: ncr, ncjm, crpadding, cjmpadding
+      integer,           intent(in)    :: ncr, crpadding
       complex(kind=dbl), intent(in)    :: cr(ncr,*)
-      complex(kind=dbl), intent(inout) :: cjm(ncjm,*)
+      complex(kind=dbl), intent(inout) :: cjm(*)
     end subroutine scal2scal_mj_to_jm_sub
     
-    module subroutine scal2vecscal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm, ncjm, cjmpadding)
+    module subroutine scal2vecscal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm1, cjm2, cjm3)
       class(T_sphsvt),   intent(in)    :: this
-      integer,           intent(in)    :: ncr, crpadding, ncjm, cjmpadding
+      integer,           intent(in)    :: ncr, crpadding
       complex(kind=dbl), intent(inout) :: cr(ncr,*)
-      complex(kind=dbl), intent(inout) :: cjm(ncjm,*)
+      complex(kind=dbl), intent(inout) :: cjm1(*), cjm2(*), cjm3(*)
     end subroutine scal2vecscal_mj_to_jm_sub
   end interface
   
