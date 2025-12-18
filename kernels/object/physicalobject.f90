@@ -36,7 +36,8 @@ module physicalobject
     procedure, pass :: init_eq_mech_sub, init_eq_torr_sub, init_eq_temp_sub, init_eq_all_sub
     procedure, pass :: mat_temp_fn, mat_mech_fn, mat_torr_fn
     procedure, pass :: prepare_mat_mech_sub, prepare_mat_temp_sub, prepare_mat_torr_sub
-    procedure, pass :: solve_temp_sub, solve_torr_sub, solve_mech_sub, solve_all_sub
+    procedure, pass :: solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub
+    procedure, pass :: solve_all_sub
     
     !Forces
     procedure, pass :: hdiff_fn
@@ -190,17 +191,20 @@ module physicalobject
       class(T_physicalObject), intent(inout) :: this
     end subroutine prepare_mat_mech_sub
     
-    module subroutine solve_temp_sub(this)
+    module subroutine solve_temp_ij_sub(this, ij)
       class(T_physicalObject), intent(inout) :: this
-    end subroutine solve_temp_sub
+      integer,                 intent(in)    :: ij
+    end subroutine solve_temp_ij_sub
     
-    module subroutine solve_torr_sub(this)
+    module subroutine solve_torr_ij_sub(this, ij)
       class(T_physicalObject), intent(inout) :: this
-    end subroutine solve_torr_sub
+      integer,                 intent(in)    :: ij
+    end subroutine solve_torr_ij_sub
     
-    module subroutine solve_mech_sub(this)
+    module subroutine solve_mech_ij_sub(this, ij)
       class(T_physicalObject), intent(inout) :: this
-    end subroutine solve_mech_sub
+      integer,                 intent(in)    :: ij
+    end subroutine solve_mech_ij_sub
     
     module subroutine solve_all_sub(this)
       class(T_physicalObject), intent(inout) :: this
