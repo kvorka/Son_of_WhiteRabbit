@@ -2,7 +2,7 @@ submodule (lateral_grid) transform
   implicit none; contains
   
   module procedure transform_sub
-    integer                             :: itheta
+    integer                             :: itheta, i1
     type(c_ptr)                         :: c_work, c_rcc, c_rcr
     real(kind=dbl), pointer, contiguous :: work(:)
     real(kind=dbl), pointer, contiguous :: pmm(:), pmj2(:), pmj1(:), pmj(:)
@@ -17,23 +17,30 @@ submodule (lateral_grid) transform
     call this%lgp%index_bwd_sub( nb, cc, rcc )
     
     !Allocating memory
-    call alloc_aligned1d_sub( (4*(nb+1)+nb+2*nb*this%fft%n)*16, c_work, work )
+    call alloc_aligned1d_sub( (4*(nb+2)+nb+2*nb*this%fft%n)*16, c_work, work )
       
-      pmm   => work(                                 1 :                                 16 )
-      pmj   => work(                              16+1 :   2*                            16 )
-      pmj1  => work(   2*                         16+1 :   3*                            16 )
-      pmj2  => work(   3*                         16+1 :   4*                            16 )
-      swork => work(   4*                         16+1 :   4*(nb+1)*                     16 )
-      sumN  => work(   4*(nb+1)*                  16+1 : ( 4*(nb+1)+     nb*this%fft%n )*16 )
-      sumS  => work( ( 4*(nb+1)+  nb*this%fft%n )*16+1 : ( 4*(nb+1)   +2*nb*this%fft%n )*16 )
-      grid  => work( ( 4*(nb+1)+2*nb*this%fft%n )*16+1 : ( 4*(nb+1)+nb+2*nb*this%fft%n )*16 )
+      cosx  => work(                                 1 :                                 16 )
+      sinx  => work(                              16+1 :   2*                            16 )
+      cosx2 => work(   2*                         16+1 :   3*                            16 )
+      wght  => work(   3*                         16+1 :   4*                            16 )
+      pmm   => work(   4*                         16+1 :   5*                            16 )
+      pmj   => work(   5*                         16+1 :   6*                            16 )
+      pmj1  => work(   6*                         16+1 :   7*                            16 )
+      pmj2  => work(   7*                         16+1 :   8*                            16 )
+      swork => work(   8*                         16+1 :   4*(nb+2)*                     16 )
+      sumN  => work(   4*(nb+2)*                  16+1 : ( 4*(nb+2)+     nb*this%fft%n )*16 )
+      sumS  => work( ( 4*(nb+2)+  nb*this%fft%n )*16+1 : ( 4*(nb+2)   +2*nb*this%fft%n )*16 )
+      grid  => work( ( 4*(nb+2)+2*nb*this%fft%n )*16+1 : ( 4*(nb+2)+nb+2*nb*this%fft%n )*16 )
     
     !Cycle over latitudes :: calculating 16 at once
     do itheta = 1, (this%lgp%nLege/16)*16, 16
-      cosx  => this%lgp%rw(itheta:itheta+15,1)
-      sinx  => this%lgp%rw(itheta:itheta+15,2)
-      cosx2 => this%lgp%rw(itheta:itheta+15,3)
-      wght  => this%lgp%rw(itheta:itheta+15,4)
+      !$omp simd
+      do i1 = 1, 16
+        cosx(i1)  = this%lgp%rw(itheta+i1-1,1)
+        sinx(i1)  = this%lgp%rw(itheta+i1-1,2)
+        cosx2(i1) = this%lgp%rw(itheta+i1-1,3)
+        wght(i1)  = this%lgp%rw(itheta+i1-1,4)
+      end do
       
       call zero_rarray_sub( nb*16*this%fft%n, sumN )
       call zero_rarray_sub( nb*16*this%fft%n, sumS )
