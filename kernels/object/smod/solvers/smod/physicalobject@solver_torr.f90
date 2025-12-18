@@ -5,24 +5,24 @@ submodule (physicalobject) solver_torr
     integer :: im, ir, is
     
     do concurrent ( ir = 2:this%nd )
-      call this%mat%torr(ij)%addmultipl_sub( 2*(ir-1)+1, ij, this%sol%torr(ij)%arr, this%rhs%torr(ij)%arr(0,ir) )
+      call this%torr(ij)%addmultipl_sub( 2*(ir-1)+1, this%torr(ij)%rhs1(0,ir) )
     end do
     
     do ir = 1, this%nd
       is = 2*(ir-1)+1
       
       do concurrent ( im = 0:ij )
-        this%sol%torr(ij)%arr(im,is  ) = this%rhs%torr(ij)%arr(im,ir)
-        this%sol%torr(ij)%arr(im,is+1) = czero
+        this%torr(ij)%sol(im,is  ) = this%torr(ij)%rhs1(im,ir)
+        this%torr(ij)%sol(im,is+1) = czero
       end do
     end do
     
     ir = this%nd+1
       do concurrent ( im = 0:ij )
-        this%sol%torr(ij)%arr(im,2*this%nd+1) = this%rhs%torr(ij)%arr(im,ir)
+        this%torr(ij)%sol(im,2*this%nd+1) = this%torr(ij)%rhs1(im,ir)
       end do
     
-    call this%mat%torr(ij)%luSolve_sub( ij, this%sol%torr(ij)%arr )
+    call this%torr(ij)%luSolve_sub()
     
   end procedure solve_torr_ij_sub
   

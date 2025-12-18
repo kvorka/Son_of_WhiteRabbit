@@ -6,8 +6,8 @@ submodule (physicalobject) spheroidal_matrix
     
     !$omp parallel do
     do ij = 0, this%jmax
-      call this%mat%mech(ij)%fill_sub( this%mat_mech_fn( ij, this%cf   ), &
-                                     & this%mat_mech_fn( ij, this%cf-1 )  )
+      call this%mech(ij)%fill_sub( this%mat_mech_fn( ij, this%cf   ), &
+                                 & this%mat_mech_fn( ij, this%cf-1 )  )
     end do
     !$omp end parallel do
     

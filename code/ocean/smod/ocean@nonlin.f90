@@ -12,10 +12,10 @@ submodule (ocean) nonlin
       do ir = 2, this%nd
         ij0 = jm(ij,0)
         
-        call copy2_carray_sub(ij+1, 1-this%ab, this%ntemp(ij0,ir), this%rhs%temp(ij)%arr(0,ir))
-        call copy2_carray_sub(ij+1, 1-this%ab, this%ntorr(ij0,ir), this%rhs%torr(ij)%arr(0,ir))
-        call copy2_carray_sub(ij+1, 1-this%ab, this%nsph1(ij0,ir), this%rhs%sph1(ij)%arr(0,ir))
-        call copy2_carray_sub(ij+1, 1-this%ab, this%nsph2(ij0,ir), this%rhs%sph2(ij)%arr(0,ir))
+        call copy2_carray_sub(ij+1, 1-this%ab, this%ntemp(ij0,ir), this%temp(ij)%rhs1(0,ir))
+        call copy2_carray_sub(ij+1, 1-this%ab, this%ntorr(ij0,ir), this%torr(ij)%rhs1(0,ir))
+        call copy2_carray_sub(ij+1, 1-this%ab, this%nsph1(ij0,ir), this%mech(ij)%rhs1(0,ir))
+        call copy2_carray_sub(ij+1, 1-this%ab, this%nsph2(ij0,ir), this%mech(ij)%rhs2(0,ir))
       end do
     end do
     !$omp end do
@@ -57,10 +57,10 @@ submodule (ocean) nonlin
       do ir = 2, this%nd
         ij0 = jm(ij,0)
         
-        call copy3_carray_sub(ij+1, this%ab, this%ntemp(ij0,ir), this%rhs%temp(ij)%arr(0,ir))
-        call copy3_carray_sub(ij+1, this%ab, this%ntorr(ij0,ir), this%rhs%torr(ij)%arr(0,ir))
-        call copy3_carray_sub(ij+1, this%ab, this%nsph1(ij0,ir), this%rhs%sph1(ij)%arr(0,ir))
-        call copy3_carray_sub(ij+1, this%ab, this%nsph2(ij0,ir), this%rhs%sph2(ij)%arr(0,ir))
+        call copy3_carray_sub(ij+1, this%ab, this%ntemp(ij0,ir), this%temp(ij)%rhs1(0,ir))
+        call copy3_carray_sub(ij+1, this%ab, this%ntorr(ij0,ir), this%torr(ij)%rhs1(0,ir))
+        call copy3_carray_sub(ij+1, this%ab, this%nsph1(ij0,ir), this%mech(ij)%rhs1(0,ir))
+        call copy3_carray_sub(ij+1, this%ab, this%nsph2(ij0,ir), this%mech(ij)%rhs2(0,ir))
       end do
     end do
     !$omp end do

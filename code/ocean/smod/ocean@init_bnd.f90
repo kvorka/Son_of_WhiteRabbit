@@ -24,7 +24,7 @@ submodule (ocean) init_bnd
     !      this%rtemp(1,:) = this%rtemp(1,:) / ( this%rtemp(1,1)%re / s4pi )
     !  end select
     !else
-    this%rhs%temp(0)%arr(0,1) = cs4pi
+    this%temp(0)%rhs1(0,1) = cs4pi
     !end if
     
   end procedure init_temp_bbnd_ocean_sub

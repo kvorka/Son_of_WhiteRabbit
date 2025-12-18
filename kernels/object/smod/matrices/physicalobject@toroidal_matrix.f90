@@ -6,8 +6,8 @@ submodule (physicalobject) toroidal_visc_matrix
     
     !$omp parallel do
     do ij = 0, this%jmax
-      call this%mat%torr(ij)%fill_sub( this%mat_torr_fn( ij, this%cf   ), &
-                                     & this%mat_torr_fn( ij, this%cf-1 )  )
+      call this%torr(ij)%fill_sub( this%mat_torr_fn( ij, this%cf   ), &
+                                 & this%mat_torr_fn( ij, this%cf-1 )  )
     end do
     !$omp end parallel do
     

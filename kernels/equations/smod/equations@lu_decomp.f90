@@ -1,4 +1,4 @@
-submodule (matrix) lu_decomp
+submodule (equations) lu_decomp
   implicit none; contains
   
   module procedure lu_decomposition_sub

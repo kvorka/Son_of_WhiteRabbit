@@ -3,7 +3,7 @@
 ####                                  CODE SETTINGS                                    ####
 ####                               wallclock, convection                               ####
 ###########################################################################################
-code_type="convection"
+code_type="wallclock"
 
 ###########################################################################################
 ####                                     DIRECTORIES                                   ####
@@ -24,20 +24,16 @@ fi
 ###########################################################################################
 source ./kernels/shell/compiler.sh
 
-libfcompile kernels/math/math math.f90
-libfcompile kernels/math/sph/ sph.f90
-libfcompile kernels/math/fft/ fourier_transform.f90
-libfcompile kernels/math/legepoly/ lege_poly.f90
-libfcompile kernels/math/sphsvt/mod/ cleb.f90
-libfcompile kernels/math/sphsvt/ sphsvt.f90
-libfcompile kernels/math/lu_matrix/ matrix.f90
-libfcompile kernels/math/spharray/ spharray.f90
-libfcompile kernels/grid/radial/ radial_grid.f90
-libfcompile kernels/grid/lateral/mod/ grid_ops.f90
-libfcompile kernels/grid/lateral/ lateral_grid.f90
-libfcompile kernels/equations/solution/ solution.f90
-libfcompile kernels/equations/matrices/ matrices.f90
-libfcompile kernels/equations/rhs/ rhs.f90
+libfcompile kernels/math math.f90
+libfcompile kernels/sph/ sph.f90
+libfcompile kernels/fft/ fourier_transform.f90
+libfcompile kernels/legepoly/ lege_poly.f90
+libfcompile kernels/sphsvt/mod/ cleb.f90
+libfcompile kernels/sphsvt/ sphsvt.f90
+libfcompile kernels/equations/ equations.f90
+libfcompile kernels/radgrid/ radial_grid.f90
+libfcompile kernels/latgrid/mod/ grid_ops.f90
+libfcompile kernels/latgrid/ lateral_grid.f90
 libfcompile kernels/object/ physicalobject.f90
 libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 

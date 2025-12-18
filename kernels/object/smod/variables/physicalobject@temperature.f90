@@ -1,10 +1,31 @@
 submodule (physicalobject) temperature
   implicit none ; contains
   
+  module procedure temp_fn
+    
+    temp_fn = this%temp(ij)%sol(im,2*(ir-1)+1)
+    
+  end procedure temp_fn
+  
+  module procedure temp_jm_sub
+    integer :: is, ij, im, ij0
+    
+    is = 2*(ir-1)+1
+    
+    do ij = 0, this%jmax
+      ij0 = ij*(ij+1)/2+1
+      
+      do concurrent ( im = 0:ij )
+        temp_jm(ij0+im) = this%temp(ij)%sol(im,is)
+      end do
+    end do
+    
+  end procedure temp_jm_sub
+  
   module procedure temp_r_fn
     
-    temp_r_fn = this%rad_grid%c(ir,-1) * this%sol%temp_fn(ir  ,ij,im) + &
-              & this%rad_grid%c(ir,+1) * this%sol%temp_fn(ir+1,ij,im)
+    temp_r_fn = this%rad_grid%c(ir,-1) * this%temp_fn(ir  ,ij,im) + &
+              & this%rad_grid%c(ir,+1) * this%temp_fn(ir+1,ij,im)
     
   end procedure temp_r_fn
   
@@ -17,20 +38,20 @@ submodule (physicalobject) temperature
     fac4 = this%rad_grid%d(ir,+2)
     
     if ( (ir > 1) .and. (ir < this%nd) ) then
-      dT_dr_r_fn = fac1 * this%sol%temp_fn(ir-1,ij,im) + &
-                 & fac2 * this%sol%temp_fn(ir  ,ij,im) + &
-                 & fac3 * this%sol%temp_fn(ir+1,ij,im) + &
-                 & fac4 * this%sol%temp_fn(ir+2,ij,im)
+      dT_dr_r_fn = fac1 * this%temp_fn(ir-1,ij,im) + &
+                 & fac2 * this%temp_fn(ir  ,ij,im) + &
+                 & fac3 * this%temp_fn(ir+1,ij,im) + &
+                 & fac4 * this%temp_fn(ir+2,ij,im)
     
     else if ( ir == 1) then
-      dT_dr_r_fn = fac2 * this%sol%temp_fn(ir  ,ij,im) + &
-                 & fac3 * this%sol%temp_fn(ir+1,ij,im) + &
-                 & fac4 * this%sol%temp_fn(ir+2,ij,im)
+      dT_dr_r_fn = fac2 * this%temp_fn(ir  ,ij,im) + &
+                 & fac3 * this%temp_fn(ir+1,ij,im) + &
+                 & fac4 * this%temp_fn(ir+2,ij,im)
     
     else
-      dT_dr_r_fn = fac1 * this%sol%temp_fn(ir-1,ij,im) + &
-                 & fac2 * this%sol%temp_fn(ir  ,ij,im) + &
-                 & fac3 * this%sol%temp_fn(ir+1,ij,im)
+      dT_dr_r_fn = fac1 * this%temp_fn(ir-1,ij,im) + &
+                 & fac2 * this%temp_fn(ir  ,ij,im) + &
+                 & fac3 * this%temp_fn(ir+1,ij,im)
     
     end if
     
@@ -49,10 +70,10 @@ submodule (physicalobject) temperature
     if ( (ir > 1) .and. (ir < this%nd) ) then
       allocate( temp1(this%jms), temp2(this%jms), temp3(this%jms), temp4(this%jms) )
       
-        call this%sol%temp_jm_sub( ir-1, temp1 )
-        call this%sol%temp_jm_sub( ir  , temp2 )
-        call this%sol%temp_jm_sub( ir+1, temp3 )
-        call this%sol%temp_jm_sub( ir+2, temp4 )
+        call this%temp_jm_sub( ir-1, temp1 )
+        call this%temp_jm_sub( ir  , temp2 )
+        call this%temp_jm_sub( ir+1, temp3 )
+        call this%temp_jm_sub( ir+2, temp4 )
         
         do concurrent ( ijm = 1:this%jms )
           dT_dr_r(ijm) = fac1 * temp1(ijm) + &
@@ -66,9 +87,9 @@ submodule (physicalobject) temperature
     else if ( ir == 1) then
       allocate( temp2(this%jms), temp3(this%jms), temp4(this%jms) )
       
-        call this%sol%temp_jm_sub( ir  , temp2 )
-        call this%sol%temp_jm_sub( ir+1, temp3 )
-        call this%sol%temp_jm_sub( ir+2, temp4 )
+        call this%temp_jm_sub( ir  , temp2 )
+        call this%temp_jm_sub( ir+1, temp3 )
+        call this%temp_jm_sub( ir+2, temp4 )
         
         do concurrent ( ijm = 1:this%jms )
           dT_dr_r(ijm) = fac2 * temp2(ijm) + &
@@ -81,9 +102,9 @@ submodule (physicalobject) temperature
     else
       allocate( temp1(this%jms), temp2(this%jms), temp3(this%jms) )
       
-        call this%sol%temp_jm_sub( ir-1, temp1 )
-        call this%sol%temp_jm_sub( ir  , temp2 )
-        call this%sol%temp_jm_sub( ir+1, temp3 )
+        call this%temp_jm_sub( ir-1, temp1 )
+        call this%temp_jm_sub( ir  , temp2 )
+        call this%temp_jm_sub( ir+1, temp3 )
         
         do concurrent ( ijm = 1:this%jms )
           dT_dr_r(ijm) = fac1 * temp1(ijm) + &
@@ -99,22 +120,38 @@ submodule (physicalobject) temperature
   
   module procedure temp_rr_ijm_sub
     
-    call this%sol%temp_jm_sub( ir, temp_rr_ijm )
+    call this%temp_jm_sub( ir, temp_rr_ijm )
     
   end procedure temp_rr_ijm_sub
   
   module procedure dT_dr_rr_ijm_sub
-    integer                        :: ijm
+    integer                        :: is, ij, im, ij0, ijm
     real(kind=dbl)                 :: fac1, fac2, fac3
     complex(kind=dbl), allocatable :: temp3(:)
     
+    is = 2*(ir-2)+1
+    
+    fac1 = this%rad_grid%drr(ir,-1)
+    fac2 = this%rad_grid%drr(ir, 0)
+    fac3 = this%rad_grid%drr(ir,+1)
+    
     allocate( temp3(this%jms) )
       
-      call this%sol%temp3_jm_sub( ir-1, dT, T, temp3 )
-      
-      fac1 = this%rad_grid%drr(ir,-1)
-      fac2 = this%rad_grid%drr(ir, 0)
-      fac3 = this%rad_grid%drr(ir,+1)
+      do ij = 0, this%jmax
+        ij0 = ij*(ij+1)/2+1
+        
+        do concurrent ( im = 0:ij )
+          dT(ij0+im) = this%temp(ij)%sol(im,is)
+        end do
+        
+        do concurrent ( im = 0:ij )
+          T(ij0+im) = this%temp(ij)%sol(im,is+2)
+        end do
+        
+        do concurrent ( im = 0:ij )
+          temp3(ij0+im) = this%temp(ij)%sol(im,is+4)
+        end do
+      end do
       
       do concurrent ( ijm = 1:this%jms )
         dT(ijm) = fac1 * dT(ijm) + fac2 * T(ijm) + fac3 * temp3(ijm)

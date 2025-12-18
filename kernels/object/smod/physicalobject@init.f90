@@ -2,7 +2,6 @@ submodule (physicalobject) init
   implicit none ; contains
   
   module procedure init_objects_sub
-    integer :: j, m
     
     this%nd   = nd
     this%jmax = jmax
@@ -13,9 +12,6 @@ submodule (physicalobject) init
     
     call this%rad_grid%init_sub(this%nd, r_ud/(1-r_ud), 1/(1-r_ud))
     call this%lat_grid%init_sub(this%jmax)
-    call this%sol%init_sub(this%nd, this%jmax)
-    call this%mat%init_sub(this%nd, this%jmax)
-    call this%rhs%init_sub(this%nd, this%jmax)
     
     this%poc = 0
     this%t   = zero
@@ -26,9 +22,6 @@ submodule (physicalobject) init
   
   module procedure deallocate_objects_sub
     
-    call this%rhs%deallocate_sub()
-    call this%sol%deallocate_sub()
-    call this%mat%deallocate_sub()
     call this%rad_grid%deallocate_sub()
     call this%lat_grid%deallocate_sub()
     

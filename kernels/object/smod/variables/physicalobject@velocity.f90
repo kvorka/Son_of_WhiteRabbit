@@ -2,23 +2,68 @@ submodule (physicalobject) velocity
   implicit none; contains
   
   module procedure v_rr_ijml_sub
+    integer :: ij, im, ij0, isp, ist
     
-    call this%sol%velocity_jml_sub( ir, v_rr_ijml )
+    isp = 5*(ir-1)+1
+    ist = 2*(ir-1)+1
+    
+    !ij = 0
+      !im = 0
+        v_rr_ijml(1) = czero
+    
+    do ij = 1, this%jmax
+      ij0 = 3*(ij*(ij+1)/2)-1
+      
+      do concurrent ( im = 0:ij )
+        v_rr_ijml(ij0+3*im  ) = this%mech(ij)%sol(im,isp  )
+        v_rr_ijml(ij0+3*im+1) = this%torr(ij)%sol(im,ist  )
+        v_rr_ijml(ij0+3*im+2) = this%mech(ij)%sol(im,isp+1)
+      end do
+    end do
     
   end procedure v_rr_ijml_sub
   
   module procedure dv_dr_rr_ijml_sub
-    integer                        :: ijml
+    integer                        :: ij, im, ij0, ijml, isp, ist
     real(kind=dbl)                 :: fac1, fac2, fac3
     complex(kind=dbl), allocatable :: v3(:)
     
+    isp = 5*(ir-2)+1
+    ist = 2*(ir-2)+1
+    
+    fac1 = this%rad_grid%drr(ir,-1)
+    fac2 = this%rad_grid%drr(ir, 0)
+    fac3 = this%rad_grid%drr(ir,+1)
+    
     allocate( v3(this%jmv) )
       
-      call this%sol%velocity3_jml_sub( ir-1, dv, v, v3 )
-      
-      fac1 = this%rad_grid%drr(ir,-1)
-      fac2 = this%rad_grid%drr(ir, 0)
-      fac3 = this%rad_grid%drr(ir,+1)
+      !ij = 0
+        !im = 0
+          dv(1) = czero
+          v(1)  = czero
+          v3(1) = czero
+          
+      do ij = 1, this%jmax
+        ij0 = 3*(ij*(ij+1)/2)-1
+        
+        do concurrent ( im = 0:ij )
+          dv(ij0+3*im  ) = this%mech(ij)%sol(im,isp  )
+          dv(ij0+3*im+1) = this%torr(ij)%sol(im,ist  )
+          dv(ij0+3*im+2) = this%mech(ij)%sol(im,isp+1)
+        end do
+        
+        do concurrent ( im = 0:ij )
+          v(ij0+3*im  ) = this%mech(ij)%sol(im,isp+5)
+          v(ij0+3*im+1) = this%torr(ij)%sol(im,ist+2)
+          v(ij0+3*im+2) = this%mech(ij)%sol(im,isp+6)
+        end do
+        
+        do concurrent ( im = 0:ij )
+          v3(ij0+3*im  ) = this%mech(ij)%sol(im,isp+10)
+          v3(ij0+3*im+1) = this%torr(ij)%sol(im,ist+ 4)
+          v3(ij0+3*im+2) = this%mech(ij)%sol(im,isp+11)
+        end do
+      end do
       
       do concurrent ( ijml = 1:this%jmv )
         dv(ijml) = fac1 * dv(ijml) + fac2 * v(ijml) + fac3 * v3(ijml)

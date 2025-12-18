@@ -3,9 +3,7 @@ module physicalobject
   use sph
   use lateral_grid
   use radial_grid
-  use matrices
-  use solution
-  use rhs
+  use equations
   implicit none
   
   type, abstract, public :: T_physicalObject
@@ -13,16 +11,17 @@ module physicalobject
     integer          :: nd, jmax, jms, jmv, n_iter, poc
     real(kind=dbl)   :: t, dt, cf, ab, r_ud, Pr, Ra, Ek, facPr, facRa, facEk
     
-    type(T_radialGrid)  :: rad_grid
-    type(T_lateralGrid) :: lat_grid
-    type(T_matrices)    :: mat
-    type(T_solution)    :: sol
-    type(T_rhs)         :: rhs
+    type(T_radialGrid)             :: rad_grid
+    type(T_lateralGrid)            :: lat_grid
+    type(T_equations), allocatable :: temp(:), torr(:), mech(:)
     
     contains
     
     procedure, pass :: init_objects_sub       => init_objects_sub
     procedure, pass :: deallocate_objects_sub => deallocate_objects_sub
+    
+    !Solutions
+    procedure :: temp_fn, temp_jm_sub
     
     !Variables :: Thermal solution
     procedure, pass :: temp_r_fn, dT_dr_r_fn, dT_dr_r_ijm_sub
@@ -33,7 +32,7 @@ module physicalobject
     procedure, pass :: dv_dr_rr_ijml_sub, curlv_rr_ijml_sub
     
     !Matrices, equations, solvers
-    procedure, pass :: init_eq_mech_sub, init_eq_torr_sub, init_eq_temp_sub, init_eq_all_sub
+    procedure, pass :: init_eq_all_sub
     procedure, pass :: mat_temp_fn, mat_mech_fn, mat_torr_fn
     procedure, pass :: prepare_mat_mech_sub, prepare_mat_temp_sub, prepare_mat_torr_sub
     procedure, pass :: solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub
@@ -61,6 +60,18 @@ module physicalobject
     module subroutine deallocate_objects_sub(this)
       class(T_physicalObject), intent(inout) :: this
     end subroutine deallocate_objects_sub
+    
+    !Interfaces :: Solutions
+    module complex(kind=dbl) function temp_fn(this, ir, ij, im)
+      class(T_physicalObject), intent(in) :: this
+      integer,                 intent(in) :: ir, ij, im
+    end function temp_fn
+    
+    module subroutine temp_jm_sub(this, ir, temp_jm)
+      class(T_physicalObject), intent(in)  :: this
+      integer,                 intent(in)  :: ir
+      complex(kind=dbl),       intent(out) :: temp_jm(*)
+    end subroutine temp_jm_sub
     
     !Interfaces :: Variables temperature
     module complex(kind=dbl) function temp_r_fn(this, ir, ij, im)
@@ -162,18 +173,6 @@ module physicalobject
       real(kind=dbl),          intent(in) :: a
       real(kind=dbl),        allocatable  :: matica(:,:)
     end function mat_mech_fn
-    
-    module subroutine init_eq_temp_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine init_eq_temp_sub
-    
-    module subroutine init_eq_torr_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine init_eq_torr_sub
-    
-    module subroutine init_eq_mech_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine init_eq_mech_sub
     
     module subroutine init_eq_all_sub(this)
       class(T_physicalObject), intent(inout) :: this
