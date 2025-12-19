@@ -26,8 +26,8 @@ submodule (ocean) nonlin
     !$omp do private (ijm)
     do ir = 2, this%nd
       !! Get vorticity and temperature gradient
-      call this%curlv_rr_ijml_sub(ir, v, curlv)
-      call this%gradT_rr_ijml_sub(ir, T, gradT, -1)
+      call this%curlv_rr_jml_sub(ir, v, curlv)
+      call this%gradT_rr_jml_sub(ir, T, gradT, -1)
       
       !! Rescale curl(v) with Prandtl number and add ez for Coriolis force
       curlv(2) = curlv(2) * this%facPr + cs4pi * this%facEk

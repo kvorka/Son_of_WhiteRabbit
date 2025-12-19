@@ -25,7 +25,7 @@ submodule (physicalobject) meassures
         
         !$omp parallel do private (ij,ij0l,velocity)
         do ir = 1, this%nd+1
-          call this%v_rr_ijml_sub( ir, velocity )
+          call this%velc_rr_jml_sub( ir, velocity )
           
           do ij = 1, this%jmax
             ij0l = 3*(ij*(ij+1)/2)-1
@@ -43,7 +43,7 @@ submodule (physicalobject) meassures
         
         !$omp parallel do private (velocity)
         do ir = 1, this%nd+1
-          call this%v_rr_ijml_sub( ir, velocity )
+          call this%velc_rr_jml_sub( ir, velocity )
           field_vals(ir) = vectnorm2_fn( this%jmax, velocity )
         end do
         !$omp end parallel do
@@ -65,7 +65,7 @@ submodule (physicalobject) meassures
       
       !$omp parallel do private (j,m,velocity)
       do ir = 1, this%nd+1
-        call this%v_rr_ijml_sub( ir, velocity )
+        call this%velc_rr_jml_sub( ir, velocity )
         
         do j = 1, this%jmax
           do m = 0, j
@@ -92,7 +92,7 @@ submodule (physicalobject) meassures
       
       !$omp parallel do private (j,m,velocity)
       do ir = 1, this%nd+1
-        call this%v_rr_ijml_sub( ir, velocity )
+        call this%velc_rr_jml_sub( ir, velocity )
         
         do j = 1, this%jmax
           do m = 0, j
@@ -120,7 +120,7 @@ submodule (physicalobject) meassures
     
     !$omp parallel do private (temperature)
     do ir = 1, this%nd+1
-      call this%temp_rr_ijm_sub( ir, temperature )
+      call this%temp_rr_jm_sub( ir, temperature )
       field_vals(ir) = scalnorm2_fn( this%jmax, temperature )
     end do
     !$omp end parallel do
