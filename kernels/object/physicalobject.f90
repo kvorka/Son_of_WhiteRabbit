@@ -25,7 +25,7 @@ module physicalobject
                      & curlv_rr_jml_sub, init_eq_all_sub, mat_temp_fn, mat_mech_fn, mat_torr_fn, prepare_mat_mech_sub,        &
                      & prepare_mat_temp_sub, prepare_mat_torr_sub, solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub,   &
                      & solve_all_sub, hdiff_fn, coriolis_rr_jml_sub, buoy_rr_jml_sub, vypis_sub, reynolds_fn, temperature_fn, &
-                     & nuss_fn, reynolds_poloidal_fn, reynolds_torroidal_fn
+                     & nuss_fn, reynolds_poloidal_fn, reynolds_torroidal_fn, write_binfile_sub
     
   end type T_physicalObject
   
@@ -120,6 +120,14 @@ module physicalobject
     end subroutine curlv_rr_jml_sub
     
     !! Interfaces :: output
+    module subroutine write_binfile_sub(this, filenum, filepath, arr, status)
+      class(T_physicalObject), intent(in) :: this
+      integer,                 intent(in) :: filenum
+      character(len=*),        intent(in) :: filepath
+      complex(kind=dbl),       intent(in) :: arr(*)
+      character(len=*),        intent(in) :: status
+    end subroutine write_binfile_sub
+    
     module subroutine vypis_sub(this, filenum, path, quantity)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: filenum
