@@ -2,7 +2,7 @@ submodule (ocean) nonlin
   implicit none; contains
   
   module procedure vgradT_vcurlv_ocean_sub
-    integer                        :: ir, ij, ijm, ij0
+    integer                        :: ir, ij, ij0
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:), ntemp(:), nsph1(:), ntorr(:), nsph2(:)
     
     !$omp parallel private (v, curlv, T, gradT, ntemp, nsph1, ntorr, nsph2)
@@ -23,7 +23,7 @@ submodule (ocean) nonlin
     allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv),        &
             & ntemp(this%jms), nsph1(this%jms), ntorr(this%jms), nsph2(this%jms) )
     
-    !$omp do private (ijm)
+    !$omp do
     do ir = 2, this%nd
       !! Get vorticity and temperature gradient
       call this%curlv_rr_jml_sub(ir, v, curlv)
@@ -31,10 +31,7 @@ submodule (ocean) nonlin
       
       !! Rescale curl(v) with Prandtl number and add ez for Coriolis force
       curlv(2) = curlv(2) * this%facPr + cs4pi * this%facEk
-      
-      do ijm = 3, this%jmv
-        curlv(ijm) = curlv(ijm) * this%facPr
-      end do
+      call rescale_carray_sub( this%jmv-2, this%facPr, curlv(3) )
       
       !! Compute nonlinear terms
       call this%lat_grid%vcvv_vcvxv_sub(gradT, curlv, v, ntemp, nsph1, ntorr, nsph2)

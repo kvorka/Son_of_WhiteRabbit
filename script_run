@@ -20,23 +20,33 @@ if [ "$code_type" = "convection" ]; then
 fi
 
 ###########################################################################################
-####                       COMPILATION OF THE MODEL AND CLEANING                       ####
+####                               PREPARING THE COMPILER                              ####
 ###########################################################################################
-source ./kernels/shell/compiler.sh
+source ./shell/compiler.sh
 
-libfcompile kernels/math math.f90
+###########################################################################################
+####                                  COMPILING KERNELS                                ####
+###########################################################################################
+libfcompile kernels/math math.f90 calloc.f90
 libfcompile kernels/sph/ sph.f90
 libfcompile kernels/fft/ fourier_transform.f90
 libfcompile kernels/legepoly/ lege_poly.f90
-libfcompile kernels/sphsvt/mod/ cleb.f90
+libfcompile kernels/sphsvt/mod/cleb/ cleb.f90
+libfcompile kernels/sphsvt/mod/sphbase/ sphbase.f90
 libfcompile kernels/sphsvt/ sphsvt.f90
 libfcompile kernels/equations/ equations.f90
 libfcompile kernels/radgrid/ radial_grid.f90
 libfcompile kernels/latgrid/mod/ grid_ops.f90
 libfcompile kernels/latgrid/ lateral_grid.f90
 libfcompile kernels/object/ physicalobject.f90
-libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 
+###########################################################################################
+####                             COMPILING MODEL AND LINKING                           ####
+###########################################################################################
+libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 $fcompile -D$code_type code/codes/BielyKralik.f90 *.o -o "Test_"$code_type".out"
 
+###########################################################################################
+####                                       CLEANING                                    ####
+###########################################################################################
 libfclean

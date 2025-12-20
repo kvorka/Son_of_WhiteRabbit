@@ -1,16 +1,8 @@
 module math
   use iso_fortran_env, only: real64, real128
   use omp_lib
-  use iso_c_binding
+  use calloc
   implicit none; public
-  
-#if defined (avx512)
-  integer, parameter :: alig = 64      !memory alignement: AVX512
-#elif defined (avx2)
-  integer, parameter :: alig = 32      !memory alignement: AVX2
-#else
-  integer, parameter :: alig = 16      !memory alignement: AVX
-#endif
   
   integer,           parameter :: dbl  = real64    !double precision
   integer,           parameter :: qbl  = real128   !quadruple precision
@@ -103,18 +95,19 @@ module math
       complex(kind=dbl), intent(in)    :: arr_from(*)
       complex(kind=dbl), intent(inout) :: arr_to(*)
     end subroutine copy3_carray_sub
-  end interface
-  
-  interface
-    type(c_ptr) function fortmalloc(alignmt, n) bind(C, name='aligned_alloc')
-      import                     :: c_ptr, c_int
-      integer(kind=c_int), value :: alignmt, n
-    end function fortmalloc
     
-    subroutine fortfree(ptr) bind(C, name="free")
-      import             :: c_ptr
-      type(c_ptr), value :: ptr
-    end subroutine fortfree
+    module subroutine copy4_carray_sub(length, fac, arr_from, arr_to)
+      integer,           intent(in)    :: length
+      real(kind=dbl),    intent(in)    :: fac
+      complex(kind=dbl), intent(in)    :: arr_from(*)
+      complex(kind=dbl), intent(inout) :: arr_to(*)
+    end subroutine copy4_carray_sub
+    
+    module subroutine rescale_carray_sub(length, fac, arr)
+      integer,           intent(in) :: length
+      real(kind=dbl),    intent(in) :: fac
+      complex(kind=dbl), intent(inout) :: arr(*)
+    end subroutine rescale_carray_sub
   end interface
   
 end module math

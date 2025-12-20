@@ -2,8 +2,7 @@ submodule (sphsvt) vec_to_scal
   implicit none; contains
   
   module procedure vec2scal_jml_to_mj_sub
-    integer                        :: j, m, l, mj, lmj, i1, indx
-    real(kind=dbl)                 :: cg
+    integer                        :: j, m, l, lmj
     complex(kind=dbl), allocatable :: sum1(:), sum2(:), sum3(:)
     
     allocate( sum1(ncab), sum2(ncab), sum3(ncab) )
@@ -17,29 +16,12 @@ submodule (sphsvt) vec_to_scal
         do l = abs(j-1), min(this%jmax1, j+1)
           lmj = 3*(l*(l+1)/2+m+1)+j-l
           
-          cg = cleb1_fn(j,m,1,0,l,m)
-            do concurrent ( i1 = 1:ncab )
-              sum3(i1) = sum3(i1) + cab(i1,lmj-3) * cg
-            end do
-          
-          cg = cleb1_fn(j,m,1,-1,l,m-1) * (-1)**(j+l)
-            do concurrent ( i1 = 1:ncab )
-              sum1(i1) = sum1(i1) + conjg( cab(i1,lmj) ) * cg
-            end do
-          
-          cg = cleb1_fn(j,m,1,+1,l,m+1)
-            do concurrent ( i1 = 1:ncab )
-              sum2(i1) = sum2(i1) + cab(i1,lmj) * cg
-            end do
+          call copy3_carray_sub( ncab,               cleb1_fn(j,m,1, 0,l,m  ), cab(1,lmj-3), sum3 )
+          call copy4_carray_sub( ncab, (-1)**(j+l) * cleb1_fn(j,m,1,-1,l,m-1), cab(1,lmj  ), sum1 )
+          call copy3_carray_sub( ncab,               cleb1_fn(j,m,1,+1,l,m+1), cab(1,lmj  ), sum2 )
         end do
         
-        mj = m*this%jmax3-m*(m+1)/2+j+1
-          do concurrent ( i1 = 1:ncab )
-            indx = 3*(i1-1)+ccpadding
-              cc(indx  ,mj) =         ( +sum1(i1) - sum2(i1) ) * sq2_1
-              cc(indx+1,mj) = cunit * ( -sum1(i1) - sum2(i1) ) * sq2_1
-              cc(indx+2,mj) =           +sum3(i1)
-          end do
+        call eee2xyz_sub( ncab, sum1, sum2, sum3, cc(ccpadding,m*this%jmax3-m*(m+1)/2+j+1) )
       end do
     
     do m = 1, this%jmax2
@@ -51,34 +33,12 @@ submodule (sphsvt) vec_to_scal
         do l = j-1, min(this%jmax1, j+1)
           lmj = 3*(l*(l+1)/2+m-1)+j-l
           
-          !every time
-            cg = cleb1_fn(j,m,1,-1,l,m-1)
-              do concurrent ( i1 = 1:ncab )
-                sum1(i1) = sum1(i1) + cab(i1,lmj) * cg
-              end do
-          
-          if ( l > m-1 ) then
-            cg = cleb1_fn(j,m,1,0,l,m)
-              do concurrent ( i1 = 1:ncab )
-                sum3(i1) = sum3(i1) + cab(i1,lmj+3) * cg
-              end do
-          end if
-          
-          if ( l > m ) then
-            cg = cleb1_fn(j,m,1,+1,l,m+1)
-              do concurrent ( i1 = 1:ncab )
-                sum2(i1) = sum2(i1) + cab(i1,lmj+6) * cg
-              end do
-          end if
+                         call copy3_carray_sub( ncab, cleb1_fn(j,m,1,-1,l,m-1), cab(1,lmj  ), sum1 )
+          if ( l > m-1 ) call copy3_carray_sub( ncab, cleb1_fn(j,m,1, 0,l,m  ), cab(1,lmj+3), sum3 )
+          if ( l > m   ) call copy3_carray_sub( ncab, cleb1_fn(j,m,1,+1,l,m+1), cab(1,lmj+6), sum2 )
         end do
         
-        mj = m*this%jmax3-m*(m+1)/2+j+1
-          do concurrent ( i1 = 1:ncab )
-            indx = 3*(i1-1)+ccpadding
-              cc(indx  ,mj) =         ( +sum1(i1) - sum2(i1) ) * sq2_1
-              cc(indx+1,mj) = cunit * ( -sum1(i1) - sum2(i1) ) * sq2_1
-              cc(indx+2,mj) =           +sum3(i1)
-          end do
+        call eee2xyz_sub( ncab, sum1, sum2, sum3, cc(ccpadding,m*this%jmax3-m*(m+1)/2+j+1) )
       end do
     end do
     

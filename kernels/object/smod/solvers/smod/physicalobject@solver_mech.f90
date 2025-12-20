@@ -2,9 +2,9 @@ submodule (physicalobject) solver_mech
   implicit none ; contains
   
   module procedure solve_mech_ij_sub
-    integer :: im, ir, is
+    integer :: ir, is
     
-    do concurrent ( ir = 2:this%nd )
+    do ir = 2, this%nd
       call this%mech(ij)%addmultipl_sub( 5*(ir-1)+1, this%mech(ij)%rhs1(0,ir) )
       call this%mech(ij)%addmultipl_sub( 5*(ir-1)+2, this%mech(ij)%rhs2(0,ir) )
     end do
@@ -12,20 +12,14 @@ submodule (physicalobject) solver_mech
     do ir = 1, this%nd
       is = 5*(ir-1)+1
       
-      do concurrent ( im = 0:ij )
-        this%mech(ij)%sol(im,is  ) = this%mech(ij)%rhs1(im,ir)
-        this%mech(ij)%sol(im,is+1) = this%mech(ij)%rhs2(im,ir)
-        this%mech(ij)%sol(im,is+2) = czero
-        this%mech(ij)%sol(im,is+3) = czero
-        this%mech(ij)%sol(im,is+4) = czero
-      end do
-    end do
+      call copy_carray_sub( ij+1, this%mech(ij)%rhs1(0,ir), this%mech(ij)%sol(0,is  ) )
+      call copy_carray_sub( ij+1, this%mech(ij)%rhs2(0,ir), this%mech(ij)%sol(0,is+1) )
       
-    ir = this%nd+1
-      do concurrent ( im = 0:ij )
-        this%mech(ij)%sol(im,5*this%nd+1) = this%mech(ij)%rhs1(im,ir)
-        this%mech(ij)%sol(im,5*this%nd+2) = this%mech(ij)%rhs2(im,ir)
-      end do
+      call zero_carray_sub( 3*(ij+1), this%mech(ij)%sol(0,is+2) )
+    end do
+    
+    call copy_carray_sub( ij+1, this%mech(ij)%rhs1(0,this%nd+1), this%mech(ij)%sol(0,5*this%nd+1) )
+    call copy_carray_sub( ij+1, this%mech(ij)%rhs2(0,this%nd+1), this%mech(ij)%sol(0,5*this%nd+2) )
     
     call this%mech(ij)%luSolve_sub()
     

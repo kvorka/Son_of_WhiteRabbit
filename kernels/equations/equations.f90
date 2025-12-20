@@ -39,7 +39,7 @@ module equations
       class(T_equations), intent(inout) :: this
     end subroutine lu_solve_sub
     
-    module pure subroutine matrix_multiple_sub(this, i, bout)
+    module subroutine matrix_multiple_sub(this, i, bout)
       class(T_equations), intent(in)    :: this
       integer,            intent(in)    :: i
       complex(kind=dbl),  intent(inout) :: bout(0:this%mm)

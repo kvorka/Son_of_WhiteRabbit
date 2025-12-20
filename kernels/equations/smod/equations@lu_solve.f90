@@ -2,46 +2,34 @@ submodule (equations) lu_solve
   implicit none; contains
   
   module procedure lu_solve_sub
-    integer                        :: j, i1, i2
+    integer                        :: j, i
     complex(kind=dbl), allocatable :: dum(:)
     
     allocate( dum(0:this%mm) )
     
     do j = 1, this%n
-      i2 = this%I(j)
+      i = this%I(j)
       
-      do concurrent ( i1 = 0:this%mm )
-        dum(i1) = this%sol(i1,i2)
-      end do
+      call copy_carray_sub( this%mm+1, this%sol(0,i), dum )
       
-      if (i2 /= j) then
-        do concurrent ( i1 = 0:this%mm )
-          this%sol(i1,i2) = this%sol(i1,j)
-          this%sol(i1,j)  = dum(i1)
-        end do
+      if ( i /= j ) then
+        call copy_carray_sub( this%mm+1, this%sol(0,j), this%sol(0,i) )
+        call copy_carray_sub( this%mm+1, dum, this%sol(0,j) )
       end if
       
-      do i2 = j+1, min(this%n,this%ld+j)
-        do concurrent ( i1 = 0:this%mm )
-          this%sol(i1,i2) = this%sol(i1,i2) - this%L(i2-j,j) * dum(i1)
-        end do
+      do i = j+1, min(this%n,this%ld+j)
+        call copy3_carray_sub( this%mm+1, -this%L(i-j,j), dum, this%sol(0,i) )
       end do
     end do
     
-    do i2 = this%n, 1, -1
-      do concurrent ( i1 = 0:this%mm )
-        dum(i1) = this%sol(i1,i2)
-      end do
+    do i = this%n, 1, -1
+      call copy_carray_sub( this%mm+1, this%sol(0,i), dum )
 
-      do j = 2, min(this%ldu,this%n-i2+1)
-        do concurrent ( i1 = 0:this%mm )
-          dum(i1) = dum(i1) - this%U(j,i2) * this%sol(i1,i2+j-1)
-        end do
+      do j = 2, min(this%ldu,this%n-i+1)
+        call copy3_carray_sub( this%mm+1, -this%U(j,i), this%sol(0,i+j-1), dum )
       end do
       
-      do concurrent ( i1 = 0:this%mm )
-        this%sol(i1,i2) = dum(i1) / this%U(1,i2)
-      end do
+      call copy2_carray_sub( this%mm+1, 1/this%U(1,i), dum, this%sol(0,i) )
     end do
     
     deallocate( dum )

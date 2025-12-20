@@ -29,13 +29,13 @@ submodule (sphsvt) scal_to_vec
         mj  = m*this%jmax3-m*(m+1)/2+j+1
         mj2 = mj + this%jmax + 2 - m
         
-        cjm1(ijm) = cr(crpadding  ,mj2-1)   * cleb1_fn(j-1,m+1,1,-1,j,m) + &
+        cjm1(ijm) =        cr(crpadding  ,mj2-1)   * cleb1_fn(j-1,m+1,1,-1,j,m) + &
                   &        cr(crpadding+2,mj -1)   * cleb1_fn(j-1,m+0,1, 0,j,m) + &
                   & conjg( cr(crpadding  ,mj2-1) ) * cleb1_fn(j-1,m-1,1,+1,j,m) ; cjm1(ijm)%im = zero
-        cjm2(ijm) = cr(crpadding  ,mj2  )   * cleb1_fn(j  ,m+1,1,-1,j,m) + &
+        cjm2(ijm) =        cr(crpadding  ,mj2  )   * cleb1_fn(j  ,m+1,1,-1,j,m) + &
                   &        cr(crpadding+2,mj   )   * cleb1_fn(j  ,m+0,1, 0,j,m) + &
                   & conjg( cr(crpadding  ,mj2  ) ) * cleb1_fn(j  ,m-1,1,+1,j,m) ; cjm2(ijm)%re = zero
-        cjm3(ijm) = cr(crpadding  ,mj2+1)   * cleb1_fn(j+1,m+1,1,-1,j,m) + &
+        cjm3(ijm) =        cr(crpadding  ,mj2+1)   * cleb1_fn(j+1,m+1,1,-1,j,m) + &
                   &        cr(crpadding+2,mj +1)   * cleb1_fn(j+1,m+0,1, 0,j,m) + &
                   & conjg( cr(crpadding  ,mj2+1) ) * cleb1_fn(j+1,m-1,1,+1,j,m) ; cjm3(ijm)%im = zero
       

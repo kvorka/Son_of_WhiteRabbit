@@ -1,5 +1,6 @@
 module sphsvt
   use cleb
+  use sphbase
   implicit none
   
   type, public :: T_sphsvt
