@@ -3,9 +3,9 @@ submodule (ocean) nonlin
   
   module procedure vgradT_vcurlv_ocean_sub
     integer                        :: ir, ij, ij0
-    complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:), ntemp(:), nsph1(:), ntorr(:), nsph2(:)
+    complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:)
     
-    !$omp parallel private (v, curlv, T, gradT, ntemp, nsph1, ntorr, nsph2)
+    !$omp parallel private (v, curlv, T, gradT)
     
     !$omp do private (ir,ij0) schedule (guided,2)
     do ij = 0, this%jmax
@@ -20,8 +20,7 @@ submodule (ocean) nonlin
     end do
     !$omp end do
     
-    allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv),        &
-            & ntemp(this%jms), nsph1(this%jms), ntorr(this%jms), nsph2(this%jms) )
+    allocate( v(this%jmv), curlv(this%jmv), T(this%jms), gradT(this%jmv) )
     
     !$omp do
     do ir = 2, this%nd
@@ -34,20 +33,15 @@ submodule (ocean) nonlin
       call rescale_carray_sub( this%jmv-2, this%facPr, curlv(3) )
       
       !! Compute nonlinear terms
-      call this%lat_grid%vcvv_vcvxv_sub(gradT, curlv, v, ntemp, nsph1, ntorr, nsph2)
+      call this%lat_grid%vcvv_vcvxv_sub( gradT, curlv, v, this%ntemp(1,ir), this%nsph1(1,ir), &
+                                                       &  this%ntorr(1,ir), this%nsph2(1,ir)  )
       
       !! Add the buoyancy force with Newtonian gravity profile
-      call this%buoy_rr_jml_sub(ir, T, nsph1, nsph2)
-      
-      !! Assign to output arrays
-      call copy_carray_sub(this%jms, ntemp, this%ntemp(1,ir))
-      call copy_carray_sub(this%jms, nsph1, this%nsph1(1,ir))
-      call copy_carray_sub(this%jms, ntorr, this%ntorr(1,ir))
-      call copy_carray_sub(this%jms, nsph2, this%nsph2(1,ir))
+      call this%buoy_rr_jml_sub(ir, T, this%nsph1(1,ir), this%nsph2(1,ir))
     end do
     !$omp end do
     
-    deallocate( v , curlv, T , gradT, ntemp, nsph1, ntorr, nsph2 )
+    deallocate( v, curlv, T, gradT )
     
     !$omp do private (ir,ij0) schedule (guided,2)
     do ij = 0, this%jmax

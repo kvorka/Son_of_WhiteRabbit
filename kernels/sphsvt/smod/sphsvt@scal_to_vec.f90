@@ -5,7 +5,7 @@ submodule (sphsvt) scal_to_vec
     integer           :: j, m, mj, mj1, mj2, ijm
     complex(kind=dbl) :: cr12
     
-    do concurrent ( mj = 1:this%jms2 )
+    do concurrent ( mj = 1:this%jms1 )
       cr12               = ( +cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding+1,mj) = ( -cr(crpadding,mj) + cr(crpadding+1,mj) * cunit ) * sq2_1
       cr(crpadding  ,mj) = cr12
@@ -14,8 +14,8 @@ submodule (sphsvt) scal_to_vec
     j = 0
       m = 0
         ijm = 1
-        mj  = m*this%jmax3-m*(m+1)/2+j+1
-        mj2 = mj + this%jmax + 3 - m
+        mj  = m*this%jmax2-m*(m+1)/2+j+1
+        mj2 = mj + this%jmax2 - m
         
         cjm1(ijm) = czero
         cjm2(ijm) = czero
@@ -26,8 +26,8 @@ submodule (sphsvt) scal_to_vec
     do j = 1, this%jmax
       m = 0
         ijm = ijm+1
-        mj  = m*this%jmax3-m*(m+1)/2+j+1
-        mj2 = mj + this%jmax + 2 - m
+        mj  = m*this%jmax2-m*(m+1)/2+j+1
+        mj2 = mj + this%jmax + 1 - m  !!! TODO::to iste
         
         cjm1(ijm) =        cr(crpadding  ,mj2-1)   * cleb1_fn(j-1,m+1,1,-1,j,m) + &
                   &        cr(crpadding+2,mj -1)   * cleb1_fn(j-1,m+0,1, 0,j,m) + &
@@ -41,9 +41,9 @@ submodule (sphsvt) scal_to_vec
       
       do m = 1, j
         ijm = ijm+1
-        mj  = m*this%jmax3-m*(m+1)/2+j+1
-        mj1 = mj - this%jmax - 3 + m
-        mj2 = mj + this%jmax + 2 - m
+        mj  = m*this%jmax2-m*(m+1)/2+j+1
+        mj1 = mj - this%jmax - 2 + m  !! TODO::to iste
+        mj2 = mj + this%jmax + 1 - m  !! TODO::to iste
         
         cjm1(ijm) = cr(crpadding  ,mj2-1) * cleb1_fn(j-1,m+1,1,-1,j,m) + &
                   & cr(crpadding+2,mj -1) * cleb1_fn(j-1,m+0,1, 0,j,m) + &

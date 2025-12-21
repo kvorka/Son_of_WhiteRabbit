@@ -1,16 +1,17 @@
 module sphsvt
   use cleb
   use sphbase
+  use sph
   implicit none
   
   type, public :: T_sphsvt
-    integer :: jmax, jmax1, jmax2, jmax3, jms, jms1, jms2, jmv, jmv1
+    integer :: jmax, jmax1, jmax2, jms, jms1, jmv
     
     contains
     
     procedure :: init_sub => init_sphsvt_sub
-    procedure :: allocate_scalars_sub, allocate_vectors_sub
-    procedure :: scal2scal_mj_to_jm_sub, vec2vec_jml_to_jml_sub, vec2scal_jml_to_mj_sub, scal2vecscal_mj_to_jm_sub
+    procedure :: allocate_scalars_sub
+    procedure :: scal2scal_mj_to_jm_sub, vec2scal_jml_to_mj_sub, scal2vecscal_mj_to_jm_sub
     
   end type T_sphsvt
   
@@ -25,19 +26,6 @@ module sphsvt
       integer,                        intent(in)  :: ns
       complex(kind=dbl), allocatable, intent(out) :: cscal(:)
     end subroutine allocate_scalars_sub
-    
-    module subroutine allocate_vectors_sub(this, nv, cvec)
-      class(T_sphsvt),                intent(in)  :: this
-      integer,                        intent(in)  :: nv
-      complex(kind=dbl), allocatable, intent(out) :: cvec(:)
-    end subroutine allocate_vectors_sub
-    
-    module subroutine vec2vec_jml_to_jml_sub(this, cjml, cab, ncab, cabpadding)
-      class(T_sphsvt),   intent(in)    :: this
-      integer,           intent(in)    :: ncab, cabpadding
-      complex(kind=dbl), intent(in)    :: cjml(*)
-      complex(kind=dbl), intent(inout) :: cab(ncab,*)
-    end subroutine vec2vec_jml_to_jml_sub
     
     module subroutine vec2scal_jml_to_mj_sub(this, cab, ncab, cc, ncc, ccpadding)
       class(T_sphsvt),   intent(in)    :: this

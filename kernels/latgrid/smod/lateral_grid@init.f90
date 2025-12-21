@@ -17,8 +17,8 @@ submodule (lateral_grid) init
     call this%fft%init_sub( nF )
     
     !Sums of associated Legendre polynomials
-    nL = (3*(jmax+2)/2+1)/2+16+1-mod((3*(jmax+2)/2+1)/2+1,16)
-    call this%lgp%init_sub( jmax+2, nL, i2r_fn( nF ) )
+    nL = (3*(jmax+1)/2+1)/2+16+1-mod((3*(jmax+1)/2+1)/2+1,16)
+    call this%lgp%init_sub( jmax+1, nL, i2r_fn( nF ) )
     
   end procedure init_harmonics_sub
   

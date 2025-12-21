@@ -7,13 +7,13 @@ submodule (sphsvt) scal_to_scal
     do j = 0, this%jmax
       m = 0
         ijm = j*(j+1)/2+m+1
-        imj = m*this%jmax3-m*(m+1)/2+j+1
+        imj = m*this%jmax2-m*(m+1)/2+j+1
           cjm(ijm)%re = cr(crpadding,imj)%re
           cjm(ijm)%im = zero
       
       do m = 1, j
         ijm = j*(j+1)/2+m+1
-        imj = m*this%jmax3-m*(m+1)/2+j+1
+        imj = m*this%jmax2-m*(m+1)/2+j+1
           cjm(ijm) = cr(crpadding,imj)
       end do
     end do
