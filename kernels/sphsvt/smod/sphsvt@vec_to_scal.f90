@@ -1,49 +1,78 @@
 submodule (sphsvt) vec_to_scal
   implicit none; contains
   
-  module procedure vec2scal_jml_to_mj_sub
-    integer                        :: j, m, l, lmj
+  module procedure vec2scal_jm_to_mj_sub
+    integer                        :: ij, im, il, ilm, ilj
+    real(kind=dbl)                 :: cg
     complex(kind=dbl), allocatable :: sum1(:), sum2(:), sum3(:)
     
-    allocate( sum1(ncab), sum2(ncab), sum3(ncab) )
+    allocate( sum1(3), sum2(3), sum3(3) )
     
-    m = 0
-      do j = m, this%jmax1
-        call zero_carray_sub( ncab, sum1(1) )
-        call zero_carray_sub( ncab, sum2(1) )
-        call zero_carray_sub( ncab, sum3(1) )
+    im = 0
+      do ij = im, this%jmax1
+        call zero_carray_sub( 3, sum1(1) )
+        call zero_carray_sub( 3, sum2(1) )
+        call zero_carray_sub( 3, sum3(1) )
         
-        do l = abs(j-1), min(this%jmax, j+1)
-          lmj = 3*(l*(l+1)/2+m+1)+j-l
+        do il = abs(ij-1), min(this%jmax, ij+1)
+          ilm = jm(il,im+1)
+          ilj = ij-il+2
           
-          call copy3_carray_sub( ncab,               cleb1_fn(j,m,1, 0,l,m  ), cab(1,lmj-3), sum3 )
-          call copy4_carray_sub( ncab, (-1)**(j+l) * cleb1_fn(j,m,1,-1,l,m-1), cab(1,lmj  ), sum1 )
-          call copy3_carray_sub( ncab,               cleb1_fn(j,m,1,+1,l,m+1), cab(1,lmj  ), sum2 )
+          cg = cleb1_fn(ij,im,1,0,il,im)
+            sum3(1) = sum3(1) + cg * v1(ilm-1,ilj)
+            sum3(2) = sum3(2) + cg * v2(ilm-1,ilj)
+            sum3(3) = sum3(3) + cg * v3(ilm-1,ilj)
+          
+          cg = (-1)**(ij+il) * cleb1_fn(ij,im,1,-1,il,im-1)
+            sum1(1) = sum1(1) + cg * conjg( v1(ilm,ilj) )
+            sum1(2) = sum1(2) + cg * conjg( v2(ilm,ilj) )
+            sum1(3) = sum1(3) + cg * conjg( v3(ilm,ilj) )
+          
+          cg = cleb1_fn(ij,im,1,+1,il,im+1)
+            sum2(1) = sum2(1) + cg * v1(ilm,ilj)
+            sum2(2) = sum2(2) + cg * v2(ilm,ilj)
+            sum2(3) = sum2(3) + cg * v3(ilm,ilj)
         end do
         
-        call eee2xyz_sub( ncab, sum1, sum2, sum3, cc(ccpadding,m*this%jmax2-m*(m+1)/2+j+1) )
+        call eee2xyz_sub( 3, sum1, sum2, sum3, cc(1,im*this%jmax2-im*(im+1)/2+ij+1) )
       end do
     
-    do m = 1, this%jmax1
-      do j = m, this%jmax1
-        call zero_carray_sub( ncab, sum1(1) )
-        call zero_carray_sub( ncab, sum2(1) )
-        call zero_carray_sub( ncab, sum3(1) )
+    do im = 1, this%jmax1
+      do ij = im, this%jmax1
+        call zero_carray_sub( 3, sum1(1) )
+        call zero_carray_sub( 3, sum2(1) )
+        call zero_carray_sub( 3, sum3(1) )
         
-        do l = j-1, min(this%jmax, j+1)
-          lmj = 3*(l*(l+1)/2+m-1)+j-l
+        do il = ij-1, min(this%jmax, ij+1)
+          ilm = jm(il,im-1)
+          ilj = ij-il+2
           
-                         call copy3_carray_sub( ncab, cleb1_fn(j,m,1,-1,l,m-1), cab(1,lmj  ), sum1 )
-          if ( l > m-1 ) call copy3_carray_sub( ncab, cleb1_fn(j,m,1, 0,l,m  ), cab(1,lmj+3), sum3 )
-          if ( l > m   ) call copy3_carray_sub( ncab, cleb1_fn(j,m,1,+1,l,m+1), cab(1,lmj+6), sum2 )
+          cg = cleb1_fn(ij,im,1,-1,il,im-1)
+            sum1(1) = sum1(1) + cg * v1(ilm,ilj)
+            sum1(2) = sum1(2) + cg * v2(ilm,ilj)
+            sum1(3) = sum1(3) + cg * v3(ilm,ilj)
+          
+          if ( il > im-1 ) then
+            cg = cleb1_fn(ij,im,1,0,il,im)
+              sum3(1) = sum3(1) + cg * v1(ilm+1,ilj)
+              sum3(2) = sum3(2) + cg * v2(ilm+1,ilj)
+              sum3(3) = sum3(3) + cg * v3(ilm+1,ilj)
+          end if
+          
+          if ( il > im ) then
+            cg = cleb1_fn(ij,im,1,+1,il,im+1)
+              sum2(1) = sum2(1) + cg * v1(ilm+2,ilj)
+              sum2(2) = sum2(2) + cg * v2(ilm+2,ilj)
+              sum2(3) = sum2(3) + cg * v3(ilm+2,ilj)
+          end if
         end do
         
-        call eee2xyz_sub( ncab, sum1, sum2, sum3, cc(ccpadding,m*this%jmax2-m*(m+1)/2+j+1) )
+        call eee2xyz_sub( 3, sum1, sum2, sum3, cc(1,im*this%jmax2-im*(im+1)/2+ij+1) )
       end do
     end do
     
     deallocate( sum1, sum2, sum3 )
     
-  end procedure vec2scal_jml_to_mj_sub
+  end procedure vec2scal_jm_to_mj_sub
   
 end submodule vec_to_scal

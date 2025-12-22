@@ -1,7 +1,7 @@
 submodule (sphsvt) scal_to_vec
   implicit none; contains
   
-  module procedure scal2vecscal_mj_to_jm_sub
+  module procedure scal2vec_mj_to_jm_sub
     integer           :: j, m, mj, mj1, mj2, ijm
     complex(kind=dbl) :: cr12
     
@@ -57,6 +57,6 @@ submodule (sphsvt) scal_to_vec
       end do
     end do
     
-  end procedure scal2vecscal_mj_to_jm_sub
+  end procedure scal2vec_mj_to_jm_sub
   
 end submodule scal_to_vec

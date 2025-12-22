@@ -10,8 +10,6 @@ submodule (sphsvt) init
     this%jms  = jm(this%jmax  ,this%jmax  )
     this%jms1 = jm(this%jmax+1,this%jmax+1)
     
-    this%jmv  = jml(this%jmax,this%jmax,+1)
-    
   end procedure init_sphsvt_sub
   
 end submodule init

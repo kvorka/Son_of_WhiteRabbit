@@ -5,13 +5,12 @@ module sphsvt
   implicit none
   
   type, public :: T_sphsvt
-    integer :: jmax, jmax1, jmax2, jms, jms1, jmv
+    integer :: jmax, jmax1, jmax2, jms, jms1
     
     contains
     
     procedure :: init_sub => init_sphsvt_sub
-    procedure :: allocate_scalars_sub
-    procedure :: scal2scal_mj_to_jm_sub, vec2scal_jml_to_mj_sub, scal2vecscal_mj_to_jm_sub
+    procedure :: scal2scal_mj_to_jm_sub, vec2scal_jm_to_mj_sub, scal2vec_mj_to_jm_sub
     
   end type T_sphsvt
   
@@ -21,18 +20,11 @@ module sphsvt
       integer,         intent(in)    :: jmax
     end subroutine init_sphsvt_sub
     
-    module subroutine allocate_scalars_sub(this, ns, cscal)
-      class(T_sphsvt),                intent(in)  :: this
-      integer,                        intent(in)  :: ns
-      complex(kind=dbl), allocatable, intent(out) :: cscal(:)
-    end subroutine allocate_scalars_sub
-    
-    module subroutine vec2scal_jml_to_mj_sub(this, cab, ncab, cc, ncc, ccpadding)
+    module subroutine vec2scal_jm_to_mj_sub(this, v1, v2, v3, cc)
       class(T_sphsvt),   intent(in)    :: this
-      integer,           intent(in)    :: ncab, ncc, ccpadding
-      complex(kind=dbl), intent(in)    :: cab(ncab,*)
-      complex(kind=dbl), intent(inout) :: cc(ncc,*)
-    end subroutine vec2scal_jml_to_mj_sub
+      complex(kind=dbl), intent(in)    :: v1(this%jms,3), v2(this%jms,3), v3(this%jms,3)
+      complex(kind=dbl), intent(inout) :: cc(9,*)
+    end subroutine vec2scal_jm_to_mj_sub
     
     module subroutine scal2scal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm)
       class(T_sphsvt),   intent(in)    :: this
@@ -41,12 +33,12 @@ module sphsvt
       complex(kind=dbl), intent(inout) :: cjm(*)
     end subroutine scal2scal_mj_to_jm_sub
     
-    module subroutine scal2vecscal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm1, cjm2, cjm3)
+    module subroutine scal2vec_mj_to_jm_sub(this, cr, ncr, crpadding, cjm1, cjm2, cjm3)
       class(T_sphsvt),   intent(in)    :: this
       integer,           intent(in)    :: ncr, crpadding
       complex(kind=dbl), intent(inout) :: cr(ncr,*)
       complex(kind=dbl), intent(inout) :: cjm1(*), cjm2(*), cjm3(*)
-    end subroutine scal2vecscal_mj_to_jm_sub
+    end subroutine scal2vec_mj_to_jm_sub
   end interface
   
 end module sphsvt
