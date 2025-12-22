@@ -20,6 +20,17 @@ if [ "$code_type" = "convection" ]; then
 fi
 
 ###########################################################################################
+####                                    COMPILE SHTNS                                  ####
+###########################################################################################
+cd shtns/
+./configure --disable-verbose --disable-openmp --enable-march=native --prefix=$(pwd)
+make
+make install
+cd ..
+
+cp shtns/include/shtns.f03 kernels/latgrid2/
+
+###########################################################################################
 ####                               PREPARING THE COMPILER                              ####
 ###########################################################################################
 source ./shell/compiler.sh
@@ -34,10 +45,12 @@ libfcompile kernels/legepoly/ lege_poly.f90
 libfcompile kernels/sphsvt/mod/cleb/ cleb.f90
 libfcompile kernels/sphsvt/mod/sphbase/ sphbase.f90
 libfcompile kernels/sphsvt/ sphsvt.f90
+libfcompile kernels/sphsvt2/ sphsvt2.f90
 libfcompile kernels/equations/ equations.f90
 libfcompile kernels/radgrid/ radial_grid.f90
 libfcompile kernels/latgrid/mod/ grid_ops.f90
 libfcompile kernels/latgrid/ lateral_grid.f90
+libfcompile kernels/latgrid2/ lateral_grid2.f90
 libfcompile kernels/object/ physicalobject.f90
 
 ###########################################################################################
