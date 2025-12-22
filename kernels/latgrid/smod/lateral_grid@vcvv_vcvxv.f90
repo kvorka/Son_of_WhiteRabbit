@@ -2,7 +2,7 @@ submodule (lateral_grid) vcvv_vcvxv
   implicit none; contains
   
   module procedure vcvv_vcvxv_sub
-    integer                        :: ijml
+    integer                        :: ij, im, il, ijm, ijml
     complex(kind=dbl), allocatable :: ca(:,:), cc(:), cr(:)
     
     !! Arrays for transforms preparation
@@ -12,11 +12,24 @@ submodule (lateral_grid) vcvv_vcvxv
     !! Vector decomposition
     allocate( ca(3,this%rxd%jmv) )
       
-      !$omp simd
-      do ijml = 1, this%rxd%jmv
-        ca(1,ijml) = v(ijml)
-        ca(2,ijml) = q(ijml)
-        ca(3,ijml) = curlv(ijml)
+      ij = 0
+        im = 0
+          ca(1,1) = v(1,3)
+          ca(2,1) = q(1,3)
+          ca(3,1) = curlv(1,3)
+          
+      do ij = 1, this%rxd%jmax
+        do im = 0, ij
+          ijm = ij*(ij+1)/2+im+1
+          
+          do il = 1, 3
+            ijml = 3*(ijm-1)+il-2
+            
+            ca(1,ijml) = v(ijm,il)
+            ca(2,ijml) = q(ijm,il)
+            ca(3,ijml) = curlv(ijm,il)
+          end do
+        end do
       end do
       
       call this%rxd%vec2scal_jml_to_mj_sub( ca, 3, cc, 9, 1 )

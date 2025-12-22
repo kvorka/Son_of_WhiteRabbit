@@ -20,12 +20,12 @@ module physicalobject
     procedure, pass :: init_objects_sub       => init_objects_sub
     procedure, pass :: deallocate_objects_sub => deallocate_objects_sub
     
-    procedure, pass :: temp_rr_fn, temp_rr_jm_sub, temp3_rr_jm_sub, temp4_rr_jm_sub, dT_dr_rr_jm_sub, gradT_rr_jml_sub,       &
-                     & temp_r_fn, dT_dr_r_fn, dT_dr_r_jm_sub, velc_rr_jml_sub, velc3_rr_jml_sub, dv_dr_rr_jml_sub,            &
-                     & curlv_rr_jml_sub, init_eq_all_sub, mat_temp_fn, mat_mech_fn, mat_torr_fn, prepare_mat_mech_sub,        &
+    procedure, pass :: temp_rr_fn, temp_rr_jm_sub, temp3_rr_jm_sub, temp4_rr_jm_sub, dT_dr_rr_jm_sub, gradT_ptp_rr_jm_sub,    &
+                     & temp_r_fn, dT_dr_r_fn, dT_dr_r_jm_sub, velc_rr_jml_sub, velc3_rr_jml_sub, dv_dr_ptp_rr_jm_sub,         &
+                     & curlv_ptp_rr_jm_sub, init_eq_all_sub, mat_temp_fn, mat_mech_fn, mat_torr_fn, prepare_mat_mech_sub,     &
                      & prepare_mat_temp_sub, prepare_mat_torr_sub, solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub,   &
                      & solve_all_sub, hdiff_fn, coriolis_rr_jml_sub, buoy_rr_jml_sub, vypis_sub, reynolds_fn, temperature_fn, &
-                     & nuss_fn, reynolds_poloidal_fn, reynolds_torroidal_fn, write_binfile_sub
+                     & nuss_fn, reynolds_poloidal_fn, reynolds_torroidal_fn, write_binfile_sub, velc3_ptp_rr_jm_sub
     
   end type T_physicalObject
   
@@ -71,11 +71,11 @@ module physicalobject
       complex(kind=dbl),       intent(out) :: T(*), dT(*)
     end subroutine dT_dr_rr_jm_sub
     
-    module subroutine gradT_rr_jml_sub(this, ir, T, gradT, sgn)
+    module subroutine gradT_ptp_rr_jm_sub(this, ir, T, gradT, sgn)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir, sgn
-      complex(kind=dbl),       intent(out) :: T(*), gradT(*)
-    end subroutine gradT_rr_jml_sub
+      complex(kind=dbl),       intent(out) :: T(this%jms), gradT(this%jms,3)
+    end subroutine gradT_ptp_rr_jm_sub
     
     !! Interfaces :: temperature on r grid
     module complex(kind=dbl) function temp_r_fn(this, ir, ij, im)
@@ -107,17 +107,23 @@ module physicalobject
       complex(kind=dbl),       intent(out) :: v1_jml(*), v2_jml(*), v3_jml(*)
     end subroutine velc3_rr_jml_sub
     
-    module subroutine dv_dr_rr_jml_sub(this, ir, v, dv)
+    module subroutine velc3_ptp_rr_jm_sub(this, ir, v1, v2, v3)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: dv(*), v(*)
-    end subroutine dv_dr_rr_jml_sub
+      complex(kind=dbl),       intent(out) :: v1(this%jms,3), v2(this%jms,3), v3(this%jms,3)
+    end subroutine velc3_ptp_rr_jm_sub
     
-    module subroutine curlv_rr_jml_sub(this, ir, v, curlv)
+    module subroutine dv_dr_ptp_rr_jm_sub(this, ir, v, dv)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: v(*), curlv(*)
-    end subroutine curlv_rr_jml_sub
+      complex(kind=dbl),       intent(out) :: dv(this%jms,3), v(this%jms,3)
+    end subroutine dv_dr_ptp_rr_jm_sub
+    
+    module subroutine curlv_ptp_rr_jm_sub(this, ir, v, curlv)
+      class(T_physicalObject), intent(in)  :: this
+      integer,                 intent(in)  :: ir
+      complex(kind=dbl),       intent(out) :: v(this%jms,3), curlv(this%jms,3)
+    end subroutine curlv_ptp_rr_jm_sub
     
     !! Interfaces :: output
     module subroutine write_binfile_sub(this, filenum, filepath, arr, status)

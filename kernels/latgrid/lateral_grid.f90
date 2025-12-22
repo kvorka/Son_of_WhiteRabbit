@@ -53,7 +53,7 @@ module lateral_grid
     
     module subroutine vcvv_vcvxv_sub(this, q, curlv, v, ntemp, nsph1, ntorr, nsph2)
       class(T_lateralGrid), intent(in)  :: this
-      complex(kind=dbl),    intent(in)  :: curlv(*), q(*), v(*)
+      complex(kind=dbl),    intent(in)  :: curlv(this%rxd%jms,3), q(this%rxd%jms,3), v(this%rxd%jms,3)
       complex(kind=dbl),    intent(out) :: ntemp(*), nsph1(*), ntorr(*), nsph2(*)
     end subroutine vcvv_vcvxv_sub
   end interface

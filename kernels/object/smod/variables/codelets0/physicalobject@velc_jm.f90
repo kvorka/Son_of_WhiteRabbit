@@ -59,4 +59,49 @@ submodule (physicalobject) velc_jm
     
   end procedure velc3_rr_jml_sub
   
+  module procedure velc3_ptp_rr_jm_sub
+    integer :: ij, ij0, is
+    
+    !! Poloidal coefficients of velocity
+    is = 5*(ir-1)+1
+    
+    !ij = 0
+      !im = 0
+        v1(1,1) = czero
+        v1(1,3) = czero
+        v2(1,1) = czero
+        v2(1,3) = czero
+        v3(1,1) = czero
+        v3(1,3) = czero
+        
+    do ij = 1, this%jmax
+      ij0 = jm(ij,0)
+      
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,is   ), v1(ij0,1) )
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,is+ 1), v1(ij0,3) )
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,is+ 5), v2(ij0,1) )
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,is+ 6), v2(ij0,3) )
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,is+10), v3(ij0,1) )
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,is+11), v3(ij0,3) )
+    end do
+    
+    !! Toroidal coefficient of velocity
+    is = 2*(ir-1)+1
+    
+    !ij = 0
+      !im = 0
+        v1(1,2) = czero
+        v2(1,2) = czero
+        v3(1,2) = czero
+        
+    do ij = 1, this%jmax
+      ij0 = jm(ij,0)
+      
+      call copy_carray_sub( ij+1, this%torr(ij)%sol(0,is  ), v1(ij0,2) )
+      call copy_carray_sub( ij+1, this%torr(ij)%sol(0,is+2), v2(ij0,2) )
+      call copy_carray_sub( ij+1, this%torr(ij)%sol(0,is+4), v3(ij0,2) )
+    end do
+    
+  end procedure velc3_ptp_rr_jm_sub
+  
 end submodule velc_jm

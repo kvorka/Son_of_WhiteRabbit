@@ -1,21 +1,23 @@
 submodule (physicalobject) curlV
   implicit none; contains
   
-  module procedure curlv_rr_jml_sub
-    integer                        :: ij, im, ijml
+  module procedure curlv_ptp_rr_jm_sub
+    integer                        :: ij, ijm
     real(kind=dbl)                 :: cjr1, cjr2, cjr3, cjr4, crr
     complex(kind=dbl)              :: cj1, cj2
-    complex(kind=dbl), allocatable :: dv(:)
+    complex(kind=dbl), allocatable :: dv(:,:)
     
     crr = 1 / this%rad_grid%rr(ir)
     
-    allocate( dv(this%jmv) )
+    allocate( dv(this%jms,3) )
     
-    call this%dv_dr_rr_jml_sub( ir, v, dv )
+    call this%dv_dr_ptp_rr_jm_sub( ir, v, dv )
     
     !ij = 0
       !im = 0
-        curlv(1) = czero
+        curlv(1,1) = czero
+        curlv(1,2) = czero
+        curlv(1,3) = czero
     
     do ij = 1, this%jmax
       cj1 = sqrt( (ij+1) / (2*ij+one) ) * cunit
@@ -26,17 +28,16 @@ submodule (physicalobject) curlV
       cjr3 = (ij+1) * crr
       cjr4 = (ij+2) * crr
       
-      do im = 0, ij
-        ijml = 3*(ij*(ij+1)/2+im)-1
-        
-        curlv(ijml  ) = cj1 * ( dv(ijml+1) + cjr3 * v(ijml+1) )
-        curlv(ijml+1) = cj1 * ( dv(ijml  ) - cjr1 * v(ijml  ) ) + cj2 * ( dv(ijml+2) + cjr4 * v(ijml+2) )
-        curlv(ijml+2) =                                           cj2 * ( dv(ijml+1) - cjr2 * v(ijml+1) )
+      !$omp simd
+      do ijm = jm(ij,0), jm(ij,ij)
+        curlv(ijm,1) = cj1 * ( dv(ijm,2) + cjr3 * v(ijm,2) )
+        curlv(ijm,2) = cj1 * ( dv(ijm,1) - cjr1 * v(ijm,1) ) + cj2 * ( dv(ijm,3) + cjr4 * v(ijm,3) )
+        curlv(ijm,3) =                                         cj2 * ( dv(ijm,2) - cjr2 * v(ijm,2) )
       end do
     end do
     
     deallocate( dv )
     
-  end procedure curlv_rr_jml_sub
+  end procedure curlv_ptp_rr_jm_sub
   
 end submodule curlV

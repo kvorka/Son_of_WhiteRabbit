@@ -16,7 +16,7 @@ fcompile="gfortran-12 -Ofast \
                       -fwhole-program \
                       -fopenmp \
                       -D$instructions \
-                      -cpp -fcheck=all"
+                      -cpp"
 
 ###########################################################################################
 ####                                  COMPILER FUNCTION                                ####
