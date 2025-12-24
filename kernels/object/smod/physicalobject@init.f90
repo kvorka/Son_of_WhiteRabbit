@@ -12,6 +12,7 @@ submodule (physicalobject) init
     
     call this%rad_grid%init_sub(this%nd, r_ud/(1-r_ud), 1/(1-r_ud))
     call this%lat_grid%init_sub(this%jmax)
+    call this%lat_grid2%init_sub(this%jmax)
     
     this%poc = 0
     this%t   = zero

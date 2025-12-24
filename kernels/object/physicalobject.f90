@@ -2,6 +2,7 @@ module physicalobject
   use math
   use sph
   use lateral_grid
+  use lateral_grid2
   use radial_grid
   use equations
   implicit none
@@ -13,6 +14,7 @@ module physicalobject
     
     type(T_radialGrid)             :: rad_grid
     type(T_lateralGrid)            :: lat_grid
+    type(T_lateralGrid2)           :: lat_grid2
     type(T_equations), allocatable :: temp(:), torr(:), mech(:)
     
     contains

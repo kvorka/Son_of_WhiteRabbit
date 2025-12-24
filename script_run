@@ -4,6 +4,7 @@
 ####                               wallclock, convection                               ####
 ###########################################################################################
 code_type="wallclock"
+build_shtns=0
 
 ###########################################################################################
 ####                                     DIRECTORIES                                   ####
@@ -22,13 +23,8 @@ fi
 ###########################################################################################
 ####                                    COMPILE SHTNS                                  ####
 ###########################################################################################
-cd shtns/
-./configure --disable-verbose --disable-openmp --enable-march=native --prefix=$(pwd)
-make
-make install
-cd ..
-
-cp shtns/include/shtns.f03 kernels/latgrid2/
+source ./shell/shtns.sh $build_shtns
+cp shtns/libshtns.a .
 
 ###########################################################################################
 ####                               PREPARING THE COMPILER                              ####
@@ -57,7 +53,9 @@ libfcompile kernels/object/ physicalobject.f90
 ####                             COMPILING MODEL AND LINKING                           ####
 ###########################################################################################
 libfcompile code/ocean/ ocean.f90 ocean_constants.f90
-$fcompile -D$code_type code/codes/BielyKralik.f90 *.o -o "Test_"$code_type".out"
+$fcompile -D$code_type code/codes/BielyKralik.f90 *.o *.a -o "Test_"$code_type".out" -lfftw3 -lm
+
+$fcompile code/codes/Test_shtns.f90 *.o *.a -o Test_shtns.out -lfftw3 -lm
 
 ###########################################################################################
 ####                                       CLEANING                                    ####

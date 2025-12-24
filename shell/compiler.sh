@@ -36,5 +36,5 @@ function libfcompile() {
 ####                                  CLEANING FUNCTION                                ####
 ###########################################################################################
 function libfclean() {
-    rm *.smod *.mod *.o || true
+    rm *.smod *.mod *.o *.a || true
 }

@@ -13,7 +13,7 @@ module ocean
     
     procedure, public, pass :: init_state_sub     => init_state_ocean_sub
     procedure, public, pass :: init_temp_bbnd_sub => init_temp_bbnd_ocean_sub
-    procedure, public, pass :: fullnl_sub         => vgradT_vcurlv_ocean_sub
+    procedure, public, pass :: fullnl_sub         => vgradT_vcurlv_ocean_2_sub
     procedure, public, pass :: time_scheme_sub    => time_scheme_ocean_sub
     procedure, public, pass :: iter_sub           => iter_ocean_sub
     procedure, public, pass :: speed_sub          => speed_ocean_sub
@@ -55,13 +55,13 @@ module ocean
       class(T_ocean), intent(inout) :: this
     end subroutine vypis_ocean_sub
     
-    module subroutine vgradT_vgradv_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine vgradT_vgradv_ocean_sub
-    
     module subroutine vgradT_vcurlv_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine vgradT_vcurlv_ocean_sub
+    
+    module subroutine vgradT_vcurlv_ocean_2_sub(this)
+      class(T_ocean), intent(inout) :: this
+    end subroutine vgradT_vcurlv_ocean_2_sub
   end interface
   
 end module ocean
