@@ -21,11 +21,11 @@ submodule (equations) init
     !! right hand side and optional second rhs holder
     this%mm = mm
     
-    allocate( this%sol(0:this%mm,this%n) )
-    allocate( this%rhs1(0:this%mm,nrhs)  )
+    allocate( this%sol(0:this%mm,this%n) ); this%sol = czero
+    allocate( this%rhs1(0:this%mm,nrhs)  ); this%rhs1 = czero
     
     if ( def_rhs2 ) then
-      allocate( this%rhs2(0:this%mm,nrhs)  )
+      allocate( this%rhs2(0:this%mm,nrhs)  ); this%rhs2 = czero
     end if
     
   end procedure init_equations_sub

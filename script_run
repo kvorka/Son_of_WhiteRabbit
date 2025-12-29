@@ -3,8 +3,8 @@
 ####                                  CODE SETTINGS                                    ####
 ####                               wallclock, convection                               ####
 ###########################################################################################
-code_type="wallclock"
-build_shtns=0
+code_type="convection"
+build_shtns=1
 
 ###########################################################################################
 ####                                     DIRECTORIES                                   ####
@@ -54,8 +54,8 @@ libfcompile kernels/object/ physicalobject.f90
 ###########################################################################################
 libfcompile code/ocean/ ocean.f90 ocean_constants.f90
 $fcompile -D$code_type code/codes/BielyKralik.f90 *.o *.a -o "Test_"$code_type".out" -lfftw3 -lm
-
-$fcompile code/codes/Test_shtns.f90 *.o *.a -o Test_shtns.out -lfftw3 -lm
+#
+#$fcompile code/codes/Test_shtns.f90 *.o *.a -o Test_shtns.out -lfftw3 -lm -lc
 
 ###########################################################################################
 ####                                       CLEANING                                    ####

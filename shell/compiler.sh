@@ -11,6 +11,7 @@ instructions="avx2"
 fcompile="gfortran-12 -Ofast \
                       -march=native \
                       -mprefer-vector-width=512 \
+                      -fdefault-real-8 \
                       -fno-bounds-check \
                       -flto=auto \
                       -fwhole-program \

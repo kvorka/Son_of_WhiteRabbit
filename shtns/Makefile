@@ -1,15 +1,15 @@
 ## path prefix for make install (installs to $(PREFIX)/lib and $(PREFIX)/include)
-PREFIX=/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns
+PREFIX=/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns
 SED=/usr/bin/sed
 LIBS=-lfftw3 -lm 
 shtns_ver := $(shell grep -m 1 -e "^* v" CHANGELOG.md | sed -e "s/^* v\([^ ]*\).*/-DSHTNS_VER=\\\\\"\1\\\\\"/")
 git_id := $(shell git describe --tags --always --dirty=*)
 
 # compiler command with options for the sht codelets
-shtcc=gcc -O2  -I/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns/include -L/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns/lib -march=native -mtune=skylake -O3 -ffast-math -std=gnu99 -fopenmp-simd -fno-tree-loop-distribute-patterns -mno-vzeroupper -fno-stack-protector -D_GNU_SOURCE
+shtcc=gcc -O2  -I/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns/include -L/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns/lib -march=native -mtune=skylake -O3 -ffast-math -std=gnu99 -fopenmp-simd -fno-tree-loop-distribute-patterns -mno-vzeroupper -fno-stack-protector -D_GNU_SOURCE
 # compiler command with options for other source (initialization, ...)
-cc=gcc -O2  -I/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns/include -L/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns/lib -march=native -mtune=skylake -fno-math-errno -fno-trapping-math -ffinite-math-only -fcx-limited-range -std=gnu11 -D_GNU_SOURCE -DSHTNS_GIT=\"$(git_id)\" $(shtns_ver) 
-fc= -O2  -I/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns/include -L/home/jakub/WorkDir/Son_of_WhiteRabbit/shtns/lib 
+cc=gcc -O2  -I/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns/include -L/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns/lib -march=native -mtune=skylake -fno-math-errno -fno-trapping-math -ffinite-math-only -fcx-limited-range -std=gnu11 -D_GNU_SOURCE -DSHTNS_GIT=\"$(git_id)\" $(shtns_ver) 
+fc=gfortran -O2  -I/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns/include -L/home/kvorka/WorkDir/codes/Son_of_WhiteRabbit/shtns/lib 
 
 hfiles = sht_private.h sht_config.h shtns.h shtns_simd.h
 objs = sht_kernels_a.o sht_kernels_s.o sht_odd_nlat.o sht_fly.o sht_init.o

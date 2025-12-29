@@ -121,7 +121,7 @@
 
 /* 0:no output, 1:output info to stdout, 2:more output (debug info), 3:also
    print fftw plans. */
-#define SHT_VERBOSE 0
+#define SHT_VERBOSE 1
 
 /* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
