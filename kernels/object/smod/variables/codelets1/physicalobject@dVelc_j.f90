@@ -14,12 +14,9 @@ submodule (physicalobject) dVelc_j
       
       call this%velc3_ptp_rr_jm_sub( ir-1, dv, v, v3 )
       
-      !$omp simd
-      do ijm = 1, this%jms
-        dv(ijm,1) = fac1 * dv(ijm,1) + fac2 * v(ijm,1) + fac3 * v3(ijm,1)
-        dv(ijm,2) = fac1 * dv(ijm,2) + fac2 * v(ijm,2) + fac3 * v3(ijm,2)
-        dv(ijm,3) = fac1 * dv(ijm,3) + fac2 * v(ijm,3) + fac3 * v3(ijm,3)
-      end do
+      call copy4_carray_sub( this%jms, fac3, fac2, fac1, v3(1,1), v(1,1), dv(1,1) )
+      call copy4_carray_sub( this%jms, fac3, fac2, fac1, v3(1,2), v(1,2), dv(1,2) )
+      call copy4_carray_sub( this%jms, fac3, fac2, fac1, v3(1,3), v(1,3), dv(1,3) )
       
     deallocate( v3 )
     

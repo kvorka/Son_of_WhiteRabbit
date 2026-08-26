@@ -6,19 +6,20 @@ submodule (physicalobject) toroidal_visc_matrix
     
     !$omp parallel do
     do ij = 0, this%jmax
-      call this%torr(ij)%fill_sub( this%mat_torr_fn( ij, this%cf   ), &
-                                 & this%mat_torr_fn( ij, this%cf-1 )  )
+      call this%mat_torr_sub( ij, this%cf  , this%torr(ij)%U )
+      call this%mat_torr_sub( ij, this%cf-1, this%torr(ij)%M )
+      
+      call this%torr(ij)%luDecompose_sub()
     end do
     !$omp end parallel do
     
   end procedure prepare_mat_torr_sub
   
-  module procedure mat_torr_fn
+  module procedure mat_torr_sub
     integer        :: ir, is
     real(kind=dbl) :: fac
     
-    allocate(matica(7,2*this%nd+1) )
-      call zero_rarray_sub( 7*(2*this%nd+1), matica )
+    matica = zero
     
     ir = 1
       is = 1
@@ -50,6 +51,6 @@ submodule (physicalobject) toroidal_visc_matrix
         matica(2,is) = this%rad_grid%c(ir,-1)
         matica(4,is) = this%rad_grid%c(ir,+1)
   
-  end procedure mat_torr_fn
+  end procedure mat_torr_sub
   
 end submodule toroidal_visc_matrix

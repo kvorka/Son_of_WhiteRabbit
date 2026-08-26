@@ -1,63 +1,143 @@
 #!/bin/bash
 ###########################################################################################
-####                                  CODE SETTINGS                                    ####
-####                               wallclock, convection                               ####
+####                                    CODE TYPE                                      ####
+####                          wallclock, benchmark, convection                         ####
+####                                                                                   ####
+####                                MEMORY ALIGNEMENT                                  ####
+####                               mem16, mem32, mem64                                 ####
+####                                                                                   ####
+####                                      KERNEL                                       ####
+####                     kernelC (mem32 [fma/nofma], mem64 [fma])                      ####
+####                           kernelF (mem16, mem32, mem64)                           ####
+####                                                                                   ####
+####                                    COMPILER                                       ####
+####                                 gfortran, ifx                                     ####
 ###########################################################################################
-code_type="convection"
-build_shtns=1
+code_type="benchmark"
+memory="mem64"
+kernel="kernelC"
+instructions="fma"
+compiler="gfortran"
 
 ###########################################################################################
-####                                     DIRECTORIES                                   ####
-###########################################################################################
-if [ "$code_type" = "convection" ]; then
-    rm -rf data || true
-    
-    mkdir data
-    
-    mkdir data/data_ocean_temp
-    mkdir data/data_ocean_veloc
-    mkdir data/data_ocean_fluxu
-    mkdir data/data_ocean_fluxd
-fi
-
-###########################################################################################
-####                                    COMPILE SHTNS                                  ####
-###########################################################################################
-source ./shell/shtns.sh $build_shtns
-cp shtns/libshtns.a .
-
-###########################################################################################
-####                               PREPARING THE COMPILER                              ####
+####                              PREPARING THE COMPILER                               ####
 ###########################################################################################
 source ./shell/compiler.sh
 
 ###########################################################################################
-####                                  COMPILING KERNELS                                ####
+####                                PATHS TO LIBRARIES                                 ####
 ###########################################################################################
-libfcompile kernels/math math.f90 calloc.f90
-libfcompile kernels/sph/ sph.f90
-libfcompile kernels/fft/ fourier_transform.f90
-libfcompile kernels/legepoly/ lege_poly.f90
-libfcompile kernels/sphsvt/mod/cleb/ cleb.f90
-libfcompile kernels/sphsvt/mod/sphbase/ sphbase.f90
-libfcompile kernels/sphsvt/ sphsvt.f90
-libfcompile kernels/sphsvt2/ sphsvt2.f90
-libfcompile kernels/equations/ equations.f90
-libfcompile kernels/radgrid/ radial_grid.f90
-libfcompile kernels/latgrid/mod/ grid_ops.f90
-libfcompile kernels/latgrid/ lateral_grid.f90
-libfcompile kernels/latgrid2/ lateral_grid2.f90
-libfcompile kernels/object/ physicalobject.f90
+mathpath=kernels/math
+fftpath=kernels/latgrid/mod/fft
+legepath=kernels/latgrid/mod/legepoly
+gridpath=kernels/latgrid/mod/grid_ops
+sphidxpath=kernels/sph
+sphsvtpath=kernels/latgrid/mod/sphsvt
+latgridpath=kernels/latgrid
+radgridpath=kernels/radgrid
+eqspath=kernels/equations
+iopath=kernels/binaryio
+objpath=kernels/object
+oceanpath=code/ocean
+codepath=code/codes
 
 ###########################################################################################
-####                             COMPILING MODEL AND LINKING                           ####
+####                                  DIRS STRUCTURE                                   ####
 ###########################################################################################
-libfcompile code/ocean/ ocean.f90 ocean_constants.f90
-$fcompile -D$code_type code/codes/BielyKralik.f90 *.o *.a -o "Test_"$code_type".out" -lfftw3 -lm
-#
-#$fcompile code/codes/Test_shtns.f90 *.o *.a -o Test_shtns.out -lfftw3 -lm -lc
+lvl0=( "${mathpath}/smod/codelets" 
+       "${fftpath}/smod/codelets" 
+       "${legepath}/smod/codelets/bwd" 
+       "${legepath}/smod/codelets/fwd" 
+       "${gridpath}/smod/codelets" 
+       "${sphsvtpath}/smod/codelets" 
+       "${eqspath}/smod/codelets" 
+       "${objpath}/smod/codelets" )
+
+lvl1=( "${mathpath}/smod" 
+       "${fftpath}/smod/init" 
+       "${fftpath}/smod/cores" 
+       "${fftpath}/smod/transform" 
+       "${legepath}/smod/init" 
+       "${legepath}/smod/indexing" 
+       "${legepath}/smod/transform" 
+       "${gridpath}/smod/cores" 
+       "${sphidxpath}/smod" 
+       "${sphsvtpath}/smod/init" 
+       "${sphsvtpath}/smod/cleb" 
+       "${sphsvtpath}/smod/transform" 
+       "${latgridpath}/smod" 
+       "${radgridpath}/smod/init" 
+       "${radgridpath}/smod/differences" 
+       "${radgridpath}/smod/integration" 
+       "${radgridpath}/smod/interpolation" 
+       "${eqspath}/smod/init" 
+       "${eqspath}/smod/cores" 
+       "${iopath}/smod" 
+       "${objpath}/smod/init" 
+       "${objpath}/smod/forces" 
+       "${objpath}/smod/matrices" 
+       "${objpath}/smod/output" 
+       "${objpath}/smod/solvers" 
+       "${objpath}/smod/variables/codelets0" 
+       "${objpath}/smod/variables/codelets1" 
+       "${objpath}/smod/variables" 
+       "${oceanpath}/smod/init/smod" 
+       "${oceanpath}/smod/init" 
+       "${oceanpath}/smod/iter" 
+       "${oceanpath}/smod/nonlin" 
+       "${oceanpath}/smod/output" )
+
+###########################################################################################
+####                               1. COMPILING INTERFACES                             ####
+###########################################################################################
+$fcompile -c ${mathpath}/calloc.f90
+$fcompile -c ${mathpath}/math.f90
+$fcompile -c ${fftpath}/fourier_transform.f90
+$fcompile -c ${legepath}/lege_poly.f90
+$fcompile -c ${gridpath}/grid_ops.f90
+$fcompile -c ${sphidxpath}/sph.f90
+$fcompile -c ${sphsvtpath}/sphsvt.f90
+$fcompile -c ${latgridpath}/lateral_grid.f90
+$fcompile -c ${radgridpath}/radial_grid.f90
+$fcompile -c ${eqspath}/equations.f90
+$fcompile -c ${iopath}/binaryio.f90
+$fcompile -c ${objpath}/physicalobject.f90
+$fcompile -c ${oceanpath}/ocean_constants.f90
+$fcompile -c ${oceanpath}/ocean.f90
+
+###########################################################################################
+####                        2. COMPILING LVL0 IMPLEMENTATIONS                          ####
+###########################################################################################
+if [ "$kernel" = "kernelC" ]
+    then
+        compile_lvl C lvl0
+    else
+        compile_lvl F lvl0
+fi
+
+###########################################################################################
+####                        3. COMPILING LVL1 IMPLEMENTATIONS                          ####
+###########################################################################################
+compile_lvl F lvl1
+
+###########################################################################################
+####                                 4. LINKING                                        ####
+###########################################################################################
+$fcompile -flto=auto ${codepath}/BielyKralik.f90 *.o -o "Test_"$code_type".out"
+
+###########################################################################################
+####                             PREPARING THE DIRECTORIES                             ####
+###########################################################################################
+if [ "$code_type" != "wallclock" ]; then
+    rm -rf data || true
+    
+    mkdir -p data/data_ocean_temp \
+             data/data_ocean_veloc \
+             data/data_ocean_fluxu \
+             data/data_ocean_fluxd
+fi
 
 ###########################################################################################
 ####                                       CLEANING                                    ####
 ###########################################################################################
-libfclean
+libclean

@@ -1,0 +1,45 @@
+submodule (fourier_transform) fx3a
+  implicit none; contains
+  
+  module procedure fxzm3a
+    integer        :: i0, i1, i2, i3, i4
+    real(kind=dbl) :: x0re, x0im, x1re, x1im, x2re, x2im, t1re, t1im, t2re, t2im
+    
+    do i4 = 0, k-1
+      i0 = 2 * i4
+      
+      t1re = t(1,i0  )
+      t1im = t(2,i0  )
+      t2re = t(1,i0+1)
+      t2im = t(2,i0+1)
+      
+      do i3 = 1, l/3
+        do i2 = 1, m
+          do i1 = 1, 4
+            !$omp simd
+            do i0 = 1, ndbl
+              x0re =        t1re * x(i0,i1,i2,1,i3,1,i4) - t1im * x(i0,i1,i2,2,i3,1,i4)
+              x0im =        t1re * x(i0,i1,i2,2,i3,1,i4) + t1im * x(i0,i1,i2,1,i3,1,i4)
+              x1re = x0re - t2re * x(i0,i1,i2,1,i3,2,i4) + t2im * x(i0,i1,i2,2,i3,2,i4)
+              x1im = x0im - t2re * x(i0,i1,i2,2,i3,2,i4) - t2im * x(i0,i1,i2,1,i3,2,i4)
+              
+              x0re = 2 * x0re                  -       x1re
+              x0im = 2 * x0im                  -       x1im
+              x2re =     x(i0,i1,i2,1,i3,0,i4) + C31 * x0re
+              x2im =     x(i0,i1,i2,2,i3,0,i4) + C31 * x0im
+              
+              x(i0,i1,i2,1,i3,0,i4) =     x0re +       x(i0,i1,i2,1,i3,0,i4)
+              x(i0,i1,i2,2,i3,0,i4) =     x0im +       x(i0,i1,i2,2,i3,0,i4)
+              x(i0,i1,i2,1,i3,2,i4) =     x2re + C32 * x1im
+              x(i0,i1,i2,2,i3,2,i4) =     x2im - C32 * x1re
+              x(i0,i1,i2,1,i3,1,i4) = 2 * x2re -       x(i0,i1,i2,1,i3,2,i4)
+              x(i0,i1,i2,2,i3,1,i4) = 2 * x2im -       x(i0,i1,i2,2,i3,2,i4)
+            end do
+          end do
+        end do
+      end do
+    end do
+    
+  end procedure fxzm3a
+  
+end submodule fx3a

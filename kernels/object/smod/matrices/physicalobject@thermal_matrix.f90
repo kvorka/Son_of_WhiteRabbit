@@ -6,19 +6,20 @@ submodule (physicalobject) thermal_matrix
     
     !$omp parallel do
     do ij = 0, this%jmax
-      call this%temp(ij)%fill_sub( this%mat_temp_fn( ij, this%cf   ), &
-                                 & this%mat_temp_fn( ij, this%cf-1 )  )
+      call this%mat_temp_sub( ij, this%cf  , this%temp(ij)%U )
+      call this%mat_temp_sub( ij, this%cf-1, this%temp(ij)%M )
+      
+      call this%temp(ij)%luDecompose_sub()
     end do
     !$omp end parallel do
     
   end procedure prepare_mat_temp_sub
   
-  module procedure mat_temp_fn
+  module procedure mat_temp_sub
     integer        :: ir, is
     real(kind=dbl) :: fac
     
-    allocate(matica(7,2*this%nd+1) )
-      call zero_rarray_sub( 7*(2*this%nd+1), matica )
+    matica = zero
     
     ir = 1
       is = 1
@@ -59,6 +60,6 @@ submodule (physicalobject) thermal_matrix
             matica(4,is) = this%rad_grid%c(ir,+1)
         end select
     
-  end procedure mat_temp_fn
+  end procedure mat_temp_sub
   
 end submodule thermal_matrix

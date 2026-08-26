@@ -1,8 +1,9 @@
 program BielyKralik
+  use omp_lib
   use ocean
   implicit none
   
-#if defined (convection)
+#if defined (convection) || defined(benchmark)
   type(T_ocean) :: oceanconv
   
   call oceanconv%init_sub()

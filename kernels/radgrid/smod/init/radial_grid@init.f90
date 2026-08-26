@@ -2,23 +2,43 @@ submodule (radial_grid) init
   implicit none ; contains
   
   module procedure init_grid_sub
-    integer :: i
+    integer        :: ir
+    real(kind=qbl) :: pi_nr, cos_pi_nr, rdu2
     
+    !! Number of main discretization points
     this%nd = nr
     
-    allocate( this%r(this%nd), this%rr(this%nd+1) )
+    !! Useful constants in quadruple precision
+    pi_nr     = qpi / ( 2 * nr )
+    cos_pi_nr = qone / ( 2 * cos( pi_nr ) )
+    rdu2      = ( rd + ru ) / 2._qbl
     
-    forall ( i=1:(this%nd  ) ) this%r(i)  = ( rd + ru ) / 2 - cos( (2*i-1) * pi / (2*this%nd) ) / cos( pi/(2*this%nd) ) / 2
-    forall ( i=1:(this%nd+1) ) this%rr(i) = ( rd + ru ) / 2 - cos( (  i-1) * pi / (  this%nd) ) / cos( pi/(2*this%nd) ) / 2
-    
+    !! Prepare the main grid
+    allocate( this%r(nr) )
+      
+      !$omp simd
+      do ir = 1, nr
+        this%r(ir) = q2r_fn( rdu2 - cos( (2*ir-1) * pi_nr ) * cos_pi_nr )
+      end do
+      
+    !! Prepare the secondary grid with two ghost points
+    allocate( this%rr(nr+1) )
+      
+      !$omp simd
+      do ir = 1, nr+1 
+        this%rr(ir) = q2r_fn( rdu2 - cos( 2*(ir-1) * pi_nr ) * cos_pi_nr )
+      end do
+      
+    !! Save the volume of the shell for
+    !! future use
     this%volume = 4 * pi * ( ru**3 - rd**3 ) / 3
     
   end procedure init_grid_sub
   
   module procedure deallocate_grid_sub
     
-    if ( allocated(this%r)  ) deallocate( this%r  )
-    if ( allocated(this%rr) ) deallocate( this%rr )
+    deallocate( this%r  )
+    deallocate( this%rr )
     
   end procedure deallocate_grid_sub
   

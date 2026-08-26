@@ -1,21 +1,81 @@
 #!/bin/bash
 ###########################################################################################
-####                                  REMOVE OLD FILES                                 ####
+####                                MEMORY ALIGNEMENT                                  ####
+####                               mem16, mem32, mem64                                 ####
+####                                                                                   ####
+####                                      KERNEL                                       ####
+####                  kernelC (only fma with mem32 and mem64), kernelF                 ####
+####                                                                                   ####
+####                                    COMPILER                                       ####
+####                                  gfortran, ifx                                    ####
+###########################################################################################
+code_type="output"
+memory="mem32"
+kernel="kernelC"
+compiler="gfortran"
+
+###########################################################################################
+####                                PATHS TO LIBRARIES                                 ####
+###########################################################################################
+mathpath=kernels/math
+sphidxpath=kernels/sph
+iopath=kernels/binaryio
+oceanpath=code/ocean
+outputpath=kernels/output
+codepath=code/codes
+
+###########################################################################################
+####                                  DIRS STRUCTURE                                   ####
+###########################################################################################
+lvl0=( "${mathpath}/smod/codelets" )
+
+lvl1=( "${mathpath}/smod" \
+       "${sphidxpath}/smod" \
+       "${iopath}/smod" \
+       "${outputpath}/smod" )
+
+###########################################################################################
+####                              PREPARING THE COMPILER                               ####
+###########################################################################################
+source ./shell/compiler.sh
+
+###########################################################################################
+####                               1. COMPILING INTERFACES                             ####
+###########################################################################################
+$fcompile -c ${mathpath}/calloc.f90
+$fcompile -c ${mathpath}/math.f90
+$fcompile -c ${sphidxpath}/sph.f90
+$fcompile -c ${iopath}/binaryio.f90
+$fcompile -c ${oceanpath}/ocean_constants.f90
+$fcompile -c ${outputpath}/output_paths.f90
+$fcompile -c ${outputpath}/output_mod.f90
+
+###########################################################################################
+####                        2. COMPILING LVL0 IMPLEMENTATIONS                          ####
+###########################################################################################
+if [ "$kernel" = "kernelC" ]
+    then
+        compile_lvl C lvl0
+    else
+        compile_lvl F lvl0
+fi
+
+###########################################################################################
+####                        3. COMPILING LVL1 IMPLEMENTATIONS                          ####
+###########################################################################################
+compile_lvl F lvl1
+
+###########################################################################################
+####                                 4. LINKING                                        ####
+###########################################################################################
+$fcompile -flto=auto ${codepath}/OutputOcean.f90 *.o -o Test_output.out
+
+###########################################################################################
+####                              REMOVING OLD FILES                                   ####
 ###########################################################################################
 rm -f temp_averaged.spec velc_averaged.spec flux_averaged.spec || true
 
 ###########################################################################################
-####                COMPILATION OF THE BASELINE, LINKING AND CLEANING                  ####
+####                                  CLEANING                                         ####
 ###########################################################################################
-source ./kernels/shell/compiler.sh
-
-libfcompile kernels/math/math math.f90
-libfcompile kernels/math/sph/ sph.f90
-
-$fcompile -c code/ocean/ocean_constants.f90
-$fcompile -c output/mod/Paths.f90
-$fcompile -c output/mod/OutputMod.f90
-
-$fcompile output/OutputOcean.f90 *.o -o code_out
-
-libfclean
+libclean

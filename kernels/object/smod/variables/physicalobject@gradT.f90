@@ -2,7 +2,7 @@ submodule (physicalobject) gradT
   implicit none; contains
   
   module procedure gradT_ptp_rr_jm_sub
-    integer                        :: ij, ijm
+    integer                        :: ij, im, ij0
     real(kind=dbl)                 :: cj1, cj2, cjr1, cjr2
     complex(kind=dbl), allocatable :: dT_dr(:)
     
@@ -13,7 +13,6 @@ submodule (physicalobject) gradT
       !ij = 0
       !  im = 0
           gradT(1,1) = czero
-          gradT(1,2) = czero
           gradT(1,3) = -sgn * dT_dr(1)
       
       do ij = 1, this%jmax
@@ -23,15 +22,18 @@ submodule (physicalobject) gradT
         cjr1 = +(ij+1) / this%rad_grid%rr(ir)
         cjr2 = -(ij  ) / this%rad_grid%rr(ir)
         
+        ij0 = jm(ij,0)
+        
         !$omp simd
-        do ijm = jm(ij,0), jm(ij,ij)
-          gradT(ijm,1) = cj1 * ( dT_dr(ijm) + cjr1 * T(ijm) )
-          gradT(ijm,2) = czero
-          gradT(ijm,3) = cj2 * ( dT_dr(ijm) + cjr2 * T(ijm) )
+        do im = 0, ij
+          gradT(ij0+im,1) = cj1 * ( dT_dr(ij0+im) + cjr1 * T(ij0+im) )
+          gradT(ij0+im,3) = cj2 * ( dT_dr(ij0+im) + cjr2 * T(ij0+im) )
         end do
       end do
       
     deallocate( dT_dr )
+    
+    call zero_carray_sub( this%jms, gradT(1,2) )
     
   end procedure gradT_ptp_rr_jm_sub
   

@@ -2,7 +2,7 @@ submodule (physicalobject) curlV
   implicit none; contains
   
   module procedure curlv_ptp_rr_jm_sub
-    integer                        :: ij, ijm
+    integer                        :: ij, im, ij0
     real(kind=dbl)                 :: cjr1, cjr2, cjr3, cjr4, crr
     complex(kind=dbl)              :: cj1, cj2
     complex(kind=dbl), allocatable :: dv(:,:)
@@ -28,11 +28,13 @@ submodule (physicalobject) curlV
       cjr3 = (ij+1) * crr
       cjr4 = (ij+2) * crr
       
+      ij0 = jm(ij,0)
+      
       !$omp simd
-      do ijm = jm(ij,0), jm(ij,ij)
-        curlv(ijm,1) = cj1 * ( dv(ijm,2) + cjr3 * v(ijm,2) )
-        curlv(ijm,2) = cj1 * ( dv(ijm,1) - cjr1 * v(ijm,1) ) + cj2 * ( dv(ijm,3) + cjr4 * v(ijm,3) )
-        curlv(ijm,3) =                                         cj2 * ( dv(ijm,2) - cjr2 * v(ijm,2) )
+      do im = 0, ij
+        curlv(ij0+im,1) = cj1 * ( dv(ij0+im,2) + cjr3 * v(ij0+im,2) )
+        curlv(ij0+im,2) = cj1 * ( dv(ij0+im,1) - cjr1 * v(ij0+im,1) ) + cj2 * ( dv(ij0+im,3) + cjr4 * v(ij0+im,3) )
+        curlv(ij0+im,3) =                                               cj2 * ( dv(ij0+im,2) - cjr2 * v(ij0+im,2) )
       end do
     end do
     

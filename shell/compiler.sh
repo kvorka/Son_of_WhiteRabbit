@@ -1,41 +1,44 @@
 #!/bin/bash
 ###########################################################################################
-####                               INSTRUCTIONS SET UP                                 ####
-####                                avx, avx2, avx512                                  ####
-###########################################################################################
-instructions="avx2"
-
-###########################################################################################
 ####                                 COMPILER SET UP                                   ####
 ###########################################################################################
-fcompile="gfortran-12 -Ofast \
-                      -march=native \
-                      -mprefer-vector-width=512 \
-                      -fdefault-real-8 \
-                      -fno-bounds-check \
-                      -flto=auto \
-                      -fwhole-program \
-                      -fopenmp \
-                      -D$instructions \
-                      -cpp"
+case $compiler in
+    ifx)
+        source ./shell/ifx.sh
+    ;;
+    
+    gfortran)
+        source ./shell/gfortran.sh
+    ;;
+esac
 
 ###########################################################################################
-####                                  COMPILER FUNCTION                                ####
+####                                COMPILE DIR STRUCTURE                              ####
 ###########################################################################################
-function libfcompile() {
-    if [ ! -z "$3" ]
-      then
-        $fcompile -c $1/$3
+function compile_lvl() {
+    
+    local -n dirs=$2
+    
+    if [ "$1" == "C" ]
+        then        
+            for dir in "${dirs[@]}"
+                do
+                    find "$dir" -maxdepth 1 -name "*.c" -exec $ccompile -c {} + &
+                done
+        else
+            for dir in "${dirs[@]}"
+                do
+                    find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
+                done
     fi
     
-    $fcompile -c $1/$2
-    $fcompile -c $(find $1/smod/. -type f) &
-    wait 
+    wait
+    
 }
 
 ###########################################################################################
 ####                                  CLEANING FUNCTION                                ####
 ###########################################################################################
-function libfclean() {
-    rm *.smod *.mod *.o *.a || true
+function libclean() {
+    rm *.smod *.mod *.o || true
 }

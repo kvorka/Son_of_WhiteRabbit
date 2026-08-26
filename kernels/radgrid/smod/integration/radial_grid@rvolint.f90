@@ -1,36 +1,50 @@
 submodule (radial_grid) rvolint
   implicit none; contains
   
-  module procedure volumetric_integral_real_fn
-    integer                     :: i
-    real(kind=dbl), allocatable :: field_help(:)
+  module procedure intV_fn
+    integer        :: ir
+    real(kind=dbl) :: cr11, cr12, cr21, cr22, dr
     
-    allocate( field_help(2:this%nd) )
+    !! Set the integral to zero
+    intV = czero
+    
+    !! Check, whether we are on the main or secondary grid and start
+    !! the integration procedure. The data are always interpolated
+    !! into the middle of the main radial cells.
+    if ( size(field) == this%nd+1 ) then
       
-      if ( size(field) == this%nd+1 ) then
-        !$omp parallel do
-        do i = 2, this%nd
-          field_help(i) = (( this%c(i-1,-1) * this%rr(i-1)**2 * field(i-1) + this%c(i-1,+1) * this%rr(i  )**2 * field(i  ) ) + &
-                          &( this%c(i  ,-1) * this%rr(i  )**2 * field(i  ) + this%c(i  ,+1) * this%rr(i+1)**2 * field(i+1) )   ) / 2
-        end do
-        !$omp end parallel do
-      else
-        !$omp parallel do
-        do i = 2, this%nd
-          field_help(i) = ( field(i-1) * this%r(i-1)**2 + field(i) * this%r(i)**2 ) / 2
-        end do
-        !$omp end parallel do
-      end if
+      !$omp parallel do private (dr,cr11,cr12,cr21,cr22) reduction (+:intV)
+      do ir = 2, this%nd
+        dr = this%r(ir) - this%r(ir-1)
+        
+        cr11 = this%c(ir-1,-1) * this%rr(ir-1)**2
+        cr12 = this%c(ir-1,+1) * this%rr(ir  )**2
+        cr21 = this%c(ir  ,-1) * this%rr(ir  )**2
+        cr22 = this%c(ir  ,+1) * this%rr(ir+1)**2
+        
+        intV = intV + dr * ( cr11 * field(ir-1) + cr12 * field(ir  ) + &
+                           & cr21 * field(ir  ) + cr22 * field(ir+1)   )
+      end do
+      !$omp end parallel do
+      
+    else
+      
+      !$omp parallel do private (dr,cr11,cr12) reduction (+:intV)
+      do ir = 2, this%nd
+        dr = this%r(ir) - this%r(ir-1)
+        
+        cr11 = this%r(ir-1)**2
+        cr12 = this%r(ir  )**2
+        
+        intV = intV + dr * ( cr11 * field(ir-1) + cr12 * field(ir) )
+      end do
+      !$omp end parallel do
+      
+    end if
     
-      volumetric_integral_real_fn = zero
-        !$omp parallel do reduction (+:volumetric_integral_real_fn)
-        do i = 2, this%nd
-          volumetric_integral_real_fn = volumetric_integral_real_fn + ( this%r(i) - this%r(i-1) ) * field_help(i)
-        end do
-        !$omp end parallel do
+    !! Account for avereging into the middle of the cells
+    intV = intV / 2
     
-    deallocate( field_help )
-    
-  end procedure volumetric_integral_real_fn
+  end procedure intV_fn
   
 end submodule rvolint

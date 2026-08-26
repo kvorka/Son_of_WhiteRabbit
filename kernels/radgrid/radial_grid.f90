@@ -9,17 +9,11 @@ module radial_grid
     
     contains
     
-    procedure :: init_sub       => init_grid_sub
-    procedure :: deallocate_sub => deallocate_grid_sub
-    procedure :: d, c
-    procedure :: dd, cc, drr
-    procedure :: interpolation_fn
-    procedure :: volumetric_integral_real_fn, volumetric_integral_cmplx_fn
-    procedure :: radial_integral_real_fn, radial_integral_cmplx_fn
+    procedure, pass :: init_sub       => init_grid_sub
+    procedure, pass :: deallocate_sub => deallocate_grid_sub
     
-    generic :: intV_fn => volumetric_integral_real_fn, volumetric_integral_cmplx_fn
-    generic :: intR_fn => radial_integral_real_fn    , radial_integral_cmplx_fn
-      
+    procedure, pass :: d, c, dd, cc, drr, interpolation_sub, intV_fn
+    
   end type T_radialGrid
   
   interface
@@ -58,33 +52,19 @@ module radial_grid
       integer,             intent(in) :: i, p
     end function drr
     
-    module real(kind=dbl) function radial_integral_real_fn(this, field)
+    module function intV_fn(this, field) result(intV)
       class(T_radialGrid), intent(in) :: this
       real(kind=dbl),      intent(in) :: field(:)
-    end function radial_integral_real_fn
+      real(kind=dbl)                  :: intV
+    end function intV_fn
     
-    module real(kind=dbl) function volumetric_integral_real_fn(this, field)
-      class(T_radialGrid), intent(in) :: this
-      real(kind=dbl),      intent(in) :: field(:)
-    end function volumetric_integral_real_fn
-    
-    module complex(kind=dbl) function radial_integral_cmplx_fn(this, field)
-      class(T_radialGrid), intent(in) :: this
-      complex(kind=dbl),   intent(in) :: field(:)
-    end function radial_integral_cmplx_fn
-    
-    module complex(kind=dbl) function volumetric_integral_cmplx_fn(this, field)
-      class(T_radialGrid), intent(in) :: this
-      complex(kind=dbl),   intent(in) :: field(:)
-    end function volumetric_integral_cmplx_fn
-    
-    module function interpolation_fn(this, dimOut, i, rr1, field) result(resField)
-      class(T_radialGrid), intent(in) :: this
-      integer,             intent(in) :: i, dimOut
-      real(kind=dbl),      intent(in) :: rr1(:)
-      complex(kind=dbl),   intent(in) :: field(:,:)
-      complex(kind=dbl), allocatable  :: resField(:)
-    end function interpolation_fn
+    module subroutine interpolation_sub(this, jmdim, ir, field, nrdim1, jmdim1, rr1, field1)
+      class(T_radialGrid), intent(in)  :: this
+      integer,             intent(in)  :: ir, jmdim, nrdim1, jmdim1
+      real(kind=dbl),      intent(in)  :: rr1(nrdim1)
+      complex(kind=dbl),   intent(in)  :: field1(jmdim1,nrdim1)
+      complex(kind=dbl),   intent(out) :: field(jmdim)
+    end subroutine interpolation_sub
   end interface
   
 end module radial_grid

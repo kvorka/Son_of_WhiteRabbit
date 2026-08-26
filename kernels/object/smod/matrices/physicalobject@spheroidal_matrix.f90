@@ -6,19 +6,20 @@ submodule (physicalobject) spheroidal_matrix
     
     !$omp parallel do
     do ij = 0, this%jmax
-      call this%mech(ij)%fill_sub( this%mat_mech_fn( ij, this%cf   ), &
-                                 & this%mat_mech_fn( ij, this%cf-1 )  )
+      call this%mat_mech_sub( ij, this%cf  , this%mech(ij)%U )
+      call this%mat_mech_sub( ij, this%cf-1, this%mech(ij)%M )
+      
+      call this%mech(ij)%luDecompose_sub()
     end do
     !$omp end parallel do
     
   end procedure prepare_mat_mech_sub
   
-  module procedure mat_mech_fn
+  module procedure mat_mech_sub
     integer        :: ir, is
     real(kind=dbl) :: facrr, facr, facj1, facj2, facpr1, facpr2, facvr1, facvr2
     
-    allocate( matica(18,5*this%nd+2) )
-      call zero_rarray_sub( 18*(5*this%nd+2), matica )
+    matica = zero
     
     facj1 = -sqrt( ( j   ) / ( 2*j+one ) )
     facj2 = +sqrt( ( j+1 ) / ( 2*j+one ) )
@@ -93,6 +94,6 @@ submodule (physicalobject) spheroidal_matrix
         matica( 5,is+1) = this%rad_grid%c(ir,-1)
         matica(10,is+1) = this%rad_grid%c(ir,+1)
     
-  end procedure mat_mech_fn
+  end procedure mat_mech_sub
   
 end submodule spheroidal_matrix

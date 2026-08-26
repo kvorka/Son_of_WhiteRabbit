@@ -16,11 +16,9 @@ submodule (physicalobject) dTemp_j
         
         call this%temp4_rr_jm_sub( ir-1, temp1, temp2, temp3, temp4 )
         
-        do concurrent ( ijm = 1:this%jms )
-          dT_dr_r(ijm) = fac1 * temp1(ijm) + &
-                       & fac2 * temp2(ijm) + &
-                       & fac3 * temp3(ijm) + &
-                       & fac4 * temp4(ijm)
+        !$omp simd
+        do ijm = 1, this%jms
+          dT_dr_r(ijm) = fac1 * temp1(ijm) + fac2 * temp2(ijm) + fac3 * temp3(ijm) + fac4 * temp4(ijm)
         end do
       
       deallocate( temp1, temp2, temp3, temp4 )
@@ -30,10 +28,9 @@ submodule (physicalobject) dTemp_j
         
         call this%temp3_rr_jm_sub( ir, temp2, temp3, temp4 )
         
-        do concurrent ( ijm = 1:this%jms )
-          dT_dr_r(ijm) = fac2 * temp2(ijm) + &
-                       & fac3 * temp3(ijm) + &
-                       & fac4 * temp4(ijm)
+        !$omp simd
+        do ijm = 1, this%jms
+          dT_dr_r(ijm) = fac2 * temp2(ijm) + fac3 * temp3(ijm) + fac4 * temp4(ijm)
         end do
       
       deallocate( temp2, temp3, temp4 )
@@ -43,10 +40,9 @@ submodule (physicalobject) dTemp_j
       
         call this%temp3_rr_jm_sub( ir-1, temp1, temp2, temp3 )
         
-        do concurrent ( ijm = 1:this%jms )
-          dT_dr_r(ijm) = fac1 * temp1(ijm) + &
-                       & fac2 * temp2(ijm) + &
-                       & fac3 * temp3(ijm)
+        !$omp simd
+        do ijm = 1, this%jms
+          dT_dr_r(ijm) = fac1 * temp1(ijm) + fac2 * temp2(ijm) + fac3 * temp3(ijm)
         end do
       
       deallocate( temp1, temp2, temp3 )
@@ -68,12 +64,8 @@ submodule (physicalobject) dTemp_j
       
       call this%temp3_rr_jm_sub( ir-1, dT, T, temp3 )
       
-      do concurrent ( ijm = 1:this%jms )
-        dT(ijm) = fac1 * dT(ijm) + &
-                & fac2 * T(ijm)  + &
-                & fac3 * temp3(ijm)
-      end do
-    
+      call copy4_carray_sub( this%jms, fac3, fac2, fac1, temp3, T, dT )
+      
     deallocate( temp3 )
     
   end procedure dT_dr_rr_jm_sub

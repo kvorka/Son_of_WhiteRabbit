@@ -22,6 +22,10 @@ submodule (physicalobject) solver_all
     end do
     !$omp end parallel do
     
+    call this%prepare_mat_temp_sub()
+    call this%prepare_mat_torr_sub()
+    call this%prepare_mat_mech_sub()
+    
   end procedure init_eq_all_sub
   
   module procedure solve_all_sub

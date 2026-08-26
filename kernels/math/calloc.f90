@@ -1,14 +1,22 @@
 module calloc
   use iso_c_binding
+  use iso_fortran_env, only : real128
   implicit none; public
   
-#if defined (avx512)
-  integer, parameter :: alig = 64      !memory alignement: AVX512
-#elif defined (avx2)
-  integer, parameter :: alig = 32      !memory alignement: AVX2
-#else
-  integer, parameter :: alig = 16      !memory alignement: AVX
+#if defined (mem64)
+  integer, parameter :: alig = 64  !! memory alignement: AVX512
+  integer, parameter :: ndbl = 8   !! number of doubles in one reg. AVX512
+#elif defined (mem32)
+  integer, parameter :: alig = 32  !! memory alignement: AVX
+  integer, parameter :: ndbl = 4   !! number of doubles in one reg. AVX
+#elif defined (mem16)
+  integer, parameter :: alig = 16  !! memory alignement: SSE
+  integer, parameter :: ndbl = 2   !! number of doubles in one reg. SSE
 #endif
+  
+  integer, parameter :: dbl = c_double
+  integer, parameter :: qbl = real128
+  integer, parameter :: size_c_dbl = int( c_sizeof(0._dbl) )
   
   interface
     type(c_ptr) function fortmalloc(alignmt, n) bind(C, name='aligned_alloc')
