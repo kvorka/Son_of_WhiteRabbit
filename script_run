@@ -123,18 +123,19 @@ compile_lvl F lvl1
 ###########################################################################################
 ####                                 4. LINKING                                        ####
 ###########################################################################################
-$fcompile -flto=auto ${codepath}/BielyKralik.f90 *.o -o "Test_"$code_type".out"
+$fcompile ${codepath}/BielyKralik.f90 *.o -o "Test_"$code_type".out"
 
 ###########################################################################################
 ####                             PREPARING THE DIRECTORIES                             ####
 ###########################################################################################
-if [ "$code_type" != "wallclock" ]; then
-    rm -rf data || true
-    
-    mkdir -p data/data_ocean_temp \
-             data/data_ocean_veloc \
-             data/data_ocean_fluxu \
-             data/data_ocean_fluxd
+if [ "$code_type" != "wallclock" ]
+    then
+        rm -rf data || true
+        
+        mkdir -p data/data_ocean_temp \
+                 data/data_ocean_veloc \
+                 data/data_ocean_fluxu \
+                 data/data_ocean_fluxd
 fi
 
 ###########################################################################################

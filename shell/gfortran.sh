@@ -9,7 +9,7 @@ fcompile="gfortran-12 -Ofast \
                       -fstrict-aliasing \
                       -fomit-frame-pointer \
                       -fno-stack-protector \
-                      -flto \
+                      -flto=auto \
                       -fwhole-program \
                       -fopenmp \
                       -D$memory \
@@ -23,7 +23,7 @@ ccompile="gcc-12 -Ofast \
                  -fstrict-aliasing \
                  -fomit-frame-pointer \
                  -fno-stack-protector \
-                 -flto \
+                 -flto=auto \
                  -fwhole-program \
                  -fopenmp \
                  -D$memory \

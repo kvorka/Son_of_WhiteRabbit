@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <immintrin.h>
 
 extern inline __attribute__((always_inline))

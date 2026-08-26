@@ -3,13 +3,13 @@
 ####                                     IFX SET UP                                    ####
 ###########################################################################################
 fcompile="ifx -O3 \
+              -ipo \
               -xHost \
               -fp-model fast=2 \
               -funroll-loops \
               -fomit-frame-pointer \
               -fno-stack-protector \
-              -align array32byte \
-              -qopt-zmm-usage=low \
+              -qopt-zmm-usage=high \
               -qopenmp \
               -D$memory \
               -D$kernel \
@@ -17,13 +17,13 @@ fcompile="ifx -O3 \
               -cpp"
 
 ccompile="icx -O3 \
+              -ipo \
               -xHost \
-              -fp-model=fast \
+              -fp-model=2 \
               -fno-alias \
               -funroll-loops \
               -fomit-frame-pointer \
               -fno-stack-protector \
-              -qopt-zmm-usage=low \
               -qopenmp \
               -D$memory \
               -std=c11"
