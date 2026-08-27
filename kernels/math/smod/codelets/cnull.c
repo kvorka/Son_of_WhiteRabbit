@@ -14,13 +14,7 @@ void zero_carray_c( const int length,
     const int n2 = 2 * length;
     
     // Casting memory addresses
-    double *parr = ( double * ) arr;
-    
-    // Other memory addresses
-    double *p0 = parr +  0;
-    double *p1 = parr +  4;
-    double *p2 = parr +  8;
-    double *p3 = parr + 12;
+    double *pa = ( double * ) arr;
     
     // Iterator
     int i = 0;
@@ -33,24 +27,21 @@ void zero_carray_c( const int length,
         
         for ( ; i <= n2-16; i += 16 ) {
             
-            _mm256_storeu_pd( p0, rzero );
-            _mm256_storeu_pd( p1, rzero );
-            _mm256_storeu_pd( p2, rzero );
-            _mm256_storeu_pd( p3, rzero );
+            _mm256_storeu_pd( pa +  0, rzero );
+            _mm256_storeu_pd( pa +  4, rzero );
+            _mm256_storeu_pd( pa +  8, rzero );
+            _mm256_storeu_pd( pa + 12, rzero );
             
-            p0 += 16;
-            p1 += 16;
-            p2 += 16;
-            p3 += 16;
+            pa += 16;
             
         }
         
         // Remainer loop
         for ( ; i <= n2-4; i += 4 ) {
             
-            _mm256_storeu_pd( p0, rzero );
+            _mm256_storeu_pd( pa, rzero );
             
-            p0 += 4;
+            pa += 4;
             
         }
         
@@ -59,7 +50,7 @@ void zero_carray_c( const int length,
     // Last SSE step if needed
     if ( i <= n2-2 ) {
         
-        _mm_storeu_pd( p0, _mm_setzero_pd() );
+        _mm_storeu_pd( pa, _mm_setzero_pd() );
         
     }
     
@@ -71,13 +62,7 @@ void zero_carray_c( const int length,
     const int n2 = 2 * length;
     
     // Casting memory addresses
-    double *parr = ( double * ) arr;
-    
-    // Other memory addresses
-    double *p0 = parr +  0;
-    double *p1 = parr +  8;
-    double *p2 = parr + 16;
-    double *p3 = parr + 24;
+    double *pa = ( double * ) arr;
     
     // Iterator
     int i = 0;
@@ -90,24 +75,21 @@ void zero_carray_c( const int length,
         
         for ( ; i <= n2-32; i += 32 ) {
             
-            _mm512_storeu_pd( p0, rzero );
-            _mm512_storeu_pd( p1, rzero );
-            _mm512_storeu_pd( p2, rzero );
-            _mm512_storeu_pd( p3, rzero );
+            _mm512_storeu_pd( pa +  0, rzero );
+            _mm512_storeu_pd( pa +  8, rzero );
+            _mm512_storeu_pd( pa + 16, rzero );
+            _mm512_storeu_pd( pa + 24, rzero );
             
-            p0 += 32;
-            p1 += 32;
-            p2 += 32;
-            p3 += 32;
+            pa += 32;
             
         }
         
         // Remainer loop
         for ( ; i <= n2-8; i += 8 ) {
             
-            _mm512_storeu_pd( p0, rzero );
+            _mm512_storeu_pd( pa, rzero );
             
-            p0 += 8;
+            pa += 8;
             
         }
         
@@ -121,9 +103,9 @@ void zero_carray_c( const int length,
         
         for ( ; i <= n2-2; i += 2 ) {
             
-            _mm_storeu_pd( p0, rzero );
+            _mm_storeu_pd( pa, rzero );
             
-            p0 += 2;
+            pa += 2;
             
         }
         

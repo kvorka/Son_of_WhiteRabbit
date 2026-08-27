@@ -26,7 +26,8 @@ module physicalobject
                      & temp_r_fn, dT_dr_r_fn, dT_dr_r_jm_sub, velc_rr_jml_sub, dv_dr_ptp_rr_jm_sub, velc3_ptp_rr_jm_sub,    &
                      & curlv_ptp_rr_jm_sub, init_eq_all_sub, mat_temp_sub, mat_mech_sub, mat_torr_sub, prepare_mat_mech_sub,   &
                      & prepare_mat_temp_sub, prepare_mat_torr_sub, solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub, &
-                     & solve_all_sub, init_nl_all_sub, hdiff_fn, buoy_rr_jml_sub, vypis_sub, reynolds_fn, nuss_fn, deallocEqs_sub
+                     & solve_all_sub, init_nl_all_sub, hdiff_fn, buoy_rr_jml_sub, grad_ptp_sub, curl_ptp_sub, vypis_sub, &
+                     & reynolds_fn, nuss_fn, deallocEqs_sub
     
   end type T_physicalObject
   
@@ -140,6 +141,21 @@ module physicalobject
       complex(kind=dbl),       intent(inout) :: nsph1(this%jms), nsph2(this%jms)
     end subroutine buoy_rr_jml_sub
     
+    !! Interfaces :: operators
+    module subroutine grad_ptp_sub(this, sgn, ir, T, dT_dr, gradT)
+      class(T_physicalObject), intent(in)  :: this
+      integer,                 intent(in)  :: ir, sgn
+      complex(kind=dbl),       intent(in)  :: T(this%jms), dT_dr(this%jms)
+      complex(kind=dbl),       intent(out) :: gradT(this%jms,3)
+    end subroutine grad_ptp_sub
+    
+    module subroutine curl_ptp_sub(this, ir, v, dv_dr, curlv)
+      class(T_physicalObject), intent(in)  :: this
+      integer,                 intent(in)  :: ir
+      complex(kind=dbl),       intent(in)  :: v(this%jms,3), dv_dr(this%jms,3)
+      complex(kind=dbl),       intent(out) :: curlv(this%jms,3)
+    end subroutine curl_ptp_sub
+    
     !! Interfaces :: matrices
     module subroutine prepare_mat_temp_sub(this)
       class(T_physicalObject), intent(inout) :: this
@@ -229,6 +245,13 @@ module physicalobject
       complex(kind=dbl), intent(in)    :: arr1(*), arr2(*)
       complex(kind=dbl), intent(inout) :: arr_to(*)
     end subroutine copy4_carray_sub
+    
+    module subroutine copy5_carray_sub(length, fac1, fac2, fac3, fac4, arr1, arr2, arr3, arr_to) bind(C, name="copy5_carray_c")
+      integer, value,    intent(in)    :: length
+      real(kind=dbl),    intent(in)    :: fac1, fac2, fac3, fac4
+      complex(kind=dbl), intent(in)    :: arr1(*), arr2(*), arr3(*)
+      complex(kind=dbl), intent(inout) :: arr_to(*)
+    end subroutine copy5_carray_sub
 #else
     module subroutine copy4_carray_sub(length, fac1, fac2, fac3, arr1, arr2, arr_to)
       integer,           intent(in)    :: length
@@ -236,6 +259,13 @@ module physicalobject
       complex(kind=dbl), intent(in)    :: arr1(length), arr2(length)
       complex(kind=dbl), intent(inout) :: arr_to(length)
     end subroutine copy4_carray_sub
+    
+    module subroutine copy5_carray_sub(length, fac1, fac2, fac3, fac4, arr1, arr2, arr3, arr_to)
+      integer,           intent(in)    :: length
+      real(kind=dbl),    intent(in)    :: fac1, fac2, fac3, fac4
+      complex(kind=dbl), intent(in)    :: arr1(length), arr2(length), arr3(length)
+      complex(kind=dbl), intent(inout) :: arr_to(length)
+    end subroutine copy5_carray_sub
 #endif
   end interface
 

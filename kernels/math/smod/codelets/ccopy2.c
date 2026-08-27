@@ -16,19 +16,8 @@ void copy2_carray_c( const int length,
     const int n2 = 2 * length;
     
     // Casting memory addresses
-    const double *pfrom = ( const double * ) arr_from;
-          double *pto   = (       double * ) arr_to;
-    
-    // Other memory addresses
-    const double *pf0 = pfrom +  0;
-    const double *pf1 = pfrom +  4;
-    const double *pf2 = pfrom +  8;
-    const double *pf3 = pfrom + 12;
-    
-    double *pt0 = pto +  0;
-    double *pt1 = pto +  4;
-    double *pt2 = pto +  8;
-    double *pt3 = pto + 12;
+    const double *pf = ( const double * ) arr_from;
+          double *pt = (       double * ) arr_to;
     
     // Iterator
     int i = 0;
@@ -44,40 +33,33 @@ void copy2_carray_c( const int length,
         
         for ( ; i <= n2-16; i += 16 ) {
             
-            r0 = _mm256_loadu_pd( pf0 );
-            r1 = _mm256_loadu_pd( pf1 );
-            r2 = _mm256_loadu_pd( pf2 );
-            r3 = _mm256_loadu_pd( pf3 );
+            r0 = _mm256_loadu_pd( pf +  0 );
+            r1 = _mm256_loadu_pd( pf +  4 );
+            r2 = _mm256_loadu_pd( pf +  8 );
+            r3 = _mm256_loadu_pd( pf + 12 );
             
             r0 = _mm256_mul_pd( rfac, r0 );
             r1 = _mm256_mul_pd( rfac, r1 );
             r2 = _mm256_mul_pd( rfac, r2 );
             r3 = _mm256_mul_pd( rfac, r3 );
             
-            _mm256_storeu_pd( pt0, r0 );
-            _mm256_storeu_pd( pt1, r1 );
-            _mm256_storeu_pd( pt2, r2 );
-            _mm256_storeu_pd( pt3, r3 );
+            _mm256_storeu_pd( pt +  0, r0 );
+            _mm256_storeu_pd( pt +  4, r1 );
+            _mm256_storeu_pd( pt +  8, r2 );
+            _mm256_storeu_pd( pt + 12, r3 );
             
-            pf0 += 16;
-            pf1 += 16;
-            pf2 += 16;
-            pf3 += 16;
-            
-            pt0 += 16;
-            pt1 += 16;
-            pt2 += 16;
-            pt3 += 16;
+            pf += 16;
+            pt += 16;
             
         }
         
         // Remainder loop
         for ( ; i <= n2-4; i += 4 ) {
             
-            _mm256_storeu_pd( pt0, _mm256_mul_pd( rfac, _mm256_loadu_pd( pf0 ) ) );
+            _mm256_storeu_pd( pt, _mm256_mul_pd( rfac, _mm256_loadu_pd( pf ) ) );
             
-            pf0 += 4;
-            pt0 += 4;
+            pf += 4;
+            pt += 4;
             
         }
         
@@ -86,7 +68,7 @@ void copy2_carray_c( const int length,
     // Last SSE step if needed
     if ( i <= n2-2 ) {
         
-        _mm_storeu_pd( pt0, _mm_mul_pd( _mm_load1_pd( fac ), _mm_loadu_pd( pf0 ) ) );
+        _mm_storeu_pd( pt, _mm_mul_pd( _mm_load1_pd( fac ), _mm_loadu_pd( pf ) ) );
         
     }
     
@@ -98,19 +80,8 @@ void copy2_carray_c( const int length,
     const int n2 = 2 * length;
     
     // Casting memory addresses
-    const double *pfrom = ( const double * ) arr_from;
-          double *pto   = (       double * ) arr_to;
-    
-    // Other memory addresses
-    const double *pf0 = pfrom +  0;
-    const double *pf1 = pfrom +  8;
-    const double *pf2 = pfrom + 16;
-    const double *pf3 = pfrom + 24;
-    
-    double *pt0 = pto +  0;
-    double *pt1 = pto +  8;
-    double *pt2 = pto + 16;
-    double *pt3 = pto + 24;
+    const double *pf = ( const double * ) arr_from;
+          double *pt = (       double * ) arr_to;
     
     // Iterator
     int i = 0;
@@ -126,40 +97,33 @@ void copy2_carray_c( const int length,
         
         for ( ; i <= n2-32; i += 32 ) {
             
-            r0 = _mm512_loadu_pd( pf0 );
-            r1 = _mm512_loadu_pd( pf1 );
-            r2 = _mm512_loadu_pd( pf2 );
-            r3 = _mm512_loadu_pd( pf3 );
+            r0 = _mm512_loadu_pd( pf +  0 );
+            r1 = _mm512_loadu_pd( pf +  8 );
+            r2 = _mm512_loadu_pd( pf + 16 );
+            r3 = _mm512_loadu_pd( pf + 24 );
             
             r0 = _mm512_mul_pd( rfac, r0 );
             r1 = _mm512_mul_pd( rfac, r1 );
             r2 = _mm512_mul_pd( rfac, r2 );
             r3 = _mm512_mul_pd( rfac, r3 );
             
-            _mm512_storeu_pd( pt0, r0 );
-            _mm512_storeu_pd( pt1, r1 );
-            _mm512_storeu_pd( pt2, r2 );
-            _mm512_storeu_pd( pt3, r3 );
+            _mm512_storeu_pd( pt +  0, r0 );
+            _mm512_storeu_pd( pt +  8, r1 );
+            _mm512_storeu_pd( pt + 16, r2 );
+            _mm512_storeu_pd( pt + 24, r3 );
             
-            pf0 += 32;
-            pf1 += 32;
-            pf2 += 32;
-            pf3 += 32;
-            
-            pt0 += 32;
-            pt1 += 32;
-            pt2 += 32;
-            pt3 += 32;
+            pf += 32;
+            pt += 32;
             
         }
         
         // Remainder loop
         for ( ; i <= n2-8; i += 8 ) {
             
-            _mm512_storeu_pd( pt0, _mm512_mul_pd( rfac, _mm512_loadu_pd( pf0 ) ) );
+            _mm512_storeu_pd( pt, _mm512_mul_pd( rfac, _mm512_loadu_pd( pf ) ) );
             
-            pf0 += 8;
-            pt0 += 8;
+            pf += 8;
+            pt += 8;
             
         }
         
@@ -172,10 +136,10 @@ void copy2_carray_c( const int length,
         
         for ( ; i <= n2-2; i += 2 ) {
             
-            _mm_storeu_pd( pt0, _mm_mul_pd( rfac, _mm_loadu_pd( pf0 ) ) );
+            _mm_storeu_pd( pt, _mm_mul_pd( rfac, _mm_loadu_pd( pf ) ) );
             
-            pf0 += 2;
-            pt0 += 2;
+            pf += 2;
+            pt += 2;
             
         }
         

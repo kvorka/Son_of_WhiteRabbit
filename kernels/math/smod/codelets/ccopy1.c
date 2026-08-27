@@ -15,13 +15,7 @@ void copy1_carray_c( const int length,
     const int n2 = 2 * length;
     
     // Casting memory addresses
-    double *parr = ( double * ) arr;
-    
-    // Memory addresses to be used
-    double *p0 = parr +  0;
-    double *p1 = parr +  4;
-    double *p2 = parr +  8;
-    double *p3 = parr + 12;
+    double *pa = ( double * ) arr;
     
     // Iterator
     int i = 0;
@@ -37,34 +31,31 @@ void copy1_carray_c( const int length,
         
         for ( ; i <= n2-16; i += 16 ) {
             
-            r0 = _mm256_loadu_pd( p0 );
-            r1 = _mm256_loadu_pd( p1 );
-            r2 = _mm256_loadu_pd( p2 );
-            r3 = _mm256_loadu_pd( p3 );
+            r0 = _mm256_loadu_pd( pa +  0 );
+            r1 = _mm256_loadu_pd( pa +  4 );
+            r2 = _mm256_loadu_pd( pa +  8 );
+            r3 = _mm256_loadu_pd( pa + 12 );
             
             r0 = _mm256_mul_pd( rfac, r0 );
             r1 = _mm256_mul_pd( rfac, r1 );
             r2 = _mm256_mul_pd( rfac, r2 );
             r3 = _mm256_mul_pd( rfac, r3 );
             
-            _mm256_storeu_pd( p0, r0 );
-            _mm256_storeu_pd( p1, r1 );
-            _mm256_storeu_pd( p2, r2 );
-            _mm256_storeu_pd( p3, r3 );
+            _mm256_storeu_pd( pa +  0, r0 );
+            _mm256_storeu_pd( pa +  4, r1 );
+            _mm256_storeu_pd( pa +  8, r2 );
+            _mm256_storeu_pd( pa + 12, r3 );
             
-            p0 += 16;
-            p1 += 16;
-            p2 += 16;
-            p3 += 16;
+            pa += 16;
             
         }
         
         // Remainder loop
         for ( ; i <= n2-4; i += 4 ) {
             
-            _mm256_storeu_pd( p0, _mm256_mul_pd( rfac, _mm256_loadu_pd( p0 ) ) );
+            _mm256_storeu_pd( pa, _mm256_mul_pd( rfac, _mm256_loadu_pd( pa ) ) );
             
-            p0 += 4;
+            pa += 4;
             
         }
         
@@ -73,7 +64,7 @@ void copy1_carray_c( const int length,
     // Last SSE step if needed
     if ( i <= n2-2 ) {
         
-        _mm_storeu_pd( p0, _mm_mul_pd( _mm_load1_pd( fac ), _mm_loadu_pd( p0 ) ) );
+        _mm_storeu_pd( pa, _mm_mul_pd( _mm_load1_pd( fac ), _mm_loadu_pd( pa ) ) );
         
     }
     
@@ -85,13 +76,7 @@ void copy1_carray_c( const int length,
     const int n2 = 2 * length;
     
     // Casting memory addresses
-    double *parr = ( double * ) arr;
-    
-    // Memory addresses to be used
-    double *p0 = parr +  0;
-    double *p1 = parr +  8;
-    double *p2 = parr + 16;
-    double *p3 = parr + 24;
+    double *pa = ( double * ) arr;
     
     // Iterator
     int i = 0;
@@ -107,34 +92,31 @@ void copy1_carray_c( const int length,
         
         for ( ; i <= n2-32; i += 32 ) {
             
-            r0 = _mm512_loadu_pd( p0 );
-            r1 = _mm512_loadu_pd( p1 );
-            r2 = _mm512_loadu_pd( p2 );
-            r3 = _mm512_loadu_pd( p3 );
+            r0 = _mm512_loadu_pd( pa +  0 );
+            r1 = _mm512_loadu_pd( pa +  8 );
+            r2 = _mm512_loadu_pd( pa + 16 );
+            r3 = _mm512_loadu_pd( pa + 24 );
             
             r0 = _mm512_mul_pd( rfac, r0 );
             r1 = _mm512_mul_pd( rfac, r1 );
             r2 = _mm512_mul_pd( rfac, r2 );
             r3 = _mm512_mul_pd( rfac, r3 );
             
-            _mm512_storeu_pd( p0, r0 );
-            _mm512_storeu_pd( p1, r1 );
-            _mm512_storeu_pd( p2, r2 );
-            _mm512_storeu_pd( p3, r3 );
+            _mm512_storeu_pd( pa +  0, r0 );
+            _mm512_storeu_pd( pa +  8, r1 );
+            _mm512_storeu_pd( pa + 16, r2 );
+            _mm512_storeu_pd( pa + 24, r3 );
             
-            p0 += 32;
-            p1 += 32;
-            p2 += 32;
-            p3 += 32;
+            pa += 32;
             
         }
         
         // Remainder loop
         for ( ; i <= n2-8; i += 8 ) {
             
-            _mm512_storeu_pd( p0, _mm512_mul_pd( rfac, _mm512_loadu_pd( p0 ) ) );
+            _mm512_storeu_pd( pa, _mm512_mul_pd( rfac, _mm512_loadu_pd( pa ) ) );
             
-            p0 += 8;
+            pa += 8;
             
         }
         
@@ -147,9 +129,9 @@ void copy1_carray_c( const int length,
         
         for ( ; i <= n2-2; i += 2 ) {
             
-            _mm_storeu_pd( p0, _mm_mul_pd( rfac, _mm_loadu_pd( p0 ) ) );
+            _mm_storeu_pd( pa, _mm_mul_pd( rfac, _mm_loadu_pd( pa ) ) );
             
-            p0 += 2;
+            pa += 2;
             
         }
         
