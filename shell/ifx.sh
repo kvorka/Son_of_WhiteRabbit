@@ -21,7 +21,6 @@ ccompile="icx -O3 \
               -xHost \
               -fp-model=2 \
               -fno-alias \
-              -funroll-loops \
               -fomit-frame-pointer \
               -fno-stack-protector \
               -qopenmp \

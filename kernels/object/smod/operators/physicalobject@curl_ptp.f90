@@ -2,7 +2,7 @@ submodule (physicalobject) curl_ptp
   implicit none; contains
   
   module procedure curl_ptp_sub
-    integer        :: ij, im, ij0
+    integer        :: ij, ij0
     real(kind=dbl) :: crr, cj1, cj2, cjr1, cjr2, cjr3, cjr4
     
     crr = 1 / this%rad_grid%rr(ir)
@@ -14,8 +14,8 @@ submodule (physicalobject) curl_ptp
         curlv(1,3) = czero
     
     do ij = 1, this%jmax
-      cj1 = sqrt( (ij+1) / (2*ij+one) )
-      cj2 = sqrt( (ij  ) / (2*ij+one) )
+      cj1 = sqrt( ( ij+1 ) / ( 2*ij + one ) )
+      cj2 = sqrt( ( ij   ) / ( 2*ij + one ) )
       
       cjr1 = (ij-1) * crr
       cjr2 = (ij  ) * crr
@@ -24,16 +24,9 @@ submodule (physicalobject) curl_ptp
       
       ij0 = jm(ij,0)
       
-      !$omp simd
-      do im = 0, ij
-        curlv(ij0+im,1) = cj1 * ( dv_dr(ij0+im,2) + cjr3 * v(ij0+im,2) )
-        curlv(ij0+im,2) = cj1 * ( dv_dr(ij0+im,1) - cjr1 * v(ij0+im,1) ) + cj2 * ( dv_dr(ij0+im,3) + cjr4 * v(ij0+im,3) )
-        curlv(ij0+im,3) =                                                  cj2 * ( dv_dr(ij0+im,2) - cjr2 * v(ij0+im,2) )
-        
-        curlv(ij0+im,1) = cunit * curlv(ij0+im,1)
-        curlv(ij0+im,2) = cunit * curlv(ij0+im,2)
-        curlv(ij0+im,3) = cunit * curlv(ij0+im,3)
-      end do
+      call curl_ptp_j_sub( ij+1, cj1, cjr1, cjr3, cj2, cjr2, cjr4, &
+                         & dv_dr(ij0,1), dv_dr(ij0,2), dv_dr(ij0,3), v(ij0,1), v(ij0,2), v(ij0,3), &
+                         & curlv(ij0,1), curlv(ij0,2), curlv(ij0,3)  )
     end do
     
   end procedure curl_ptp_sub

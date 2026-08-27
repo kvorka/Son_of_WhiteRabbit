@@ -14,7 +14,7 @@
 ####                                 gfortran, ifx                                     ####
 ###########################################################################################
 code_type="benchmark"
-memory="mem32"
+memory="mem64"
 kernel="kernelC"
 instructions="fma"
 compiler="gfortran"

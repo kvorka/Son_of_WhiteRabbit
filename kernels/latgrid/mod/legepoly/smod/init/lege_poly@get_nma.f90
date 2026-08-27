@@ -8,7 +8,7 @@ submodule (lege_poly) get_nma
       do m = 0, this%jmax
         this%nrma = this%nrma+1
         
-        if ( m < this%jmax) then
+        if ( m < this%jmax ) then
           do j = 1, (this%jmax-1-m)/2
             this%nrma = this%nrma+1
           end do
@@ -17,10 +17,10 @@ submodule (lege_poly) get_nma
         end if
       end do
     
-    allocate( this%mamj(0:this%jmax+1) )
+    allocate( this%mamj(0:this%jmax) )
     
     ma = 0
-        
+    
     do m = 0, this%jmax
       !j = m
         ma = ma+1
@@ -34,8 +34,6 @@ submodule (lege_poly) get_nma
         ma = ma+1
       end if
     end do
-    
-    this%mamj(this%jmax+1) = ma+1
     
   end procedure get_nma_sub
 

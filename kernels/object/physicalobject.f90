@@ -252,6 +252,21 @@ module physicalobject
       complex(kind=dbl), intent(in)    :: arr1(*), arr2(*), arr3(*)
       complex(kind=dbl), intent(inout) :: arr_to(*)
     end subroutine copy5_carray_sub
+    
+    module subroutine grad_pp_j_sub(length, fac1, fac2, fac3, fac4, darr, arr, grad1, grad3) bind(C, name="grad_pp_j_c")
+      integer, value,    intent(in)  :: length
+      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4
+      complex(kind=dbl), intent(in)  :: darr(*), arr(*)
+      complex(kind=dbl), intent(out) :: grad1(*), grad3(*)
+    end subroutine grad_pp_j_sub
+    
+    module subroutine curl_ptp_j_sub(length, fac1, fac2, fac3, fac4, fac5, fac6, darr1, darr2, darr3, arr1, arr2, arr3, &
+                                    & curl1, curl2, curl3) bind(C, name="curl_ptp_j_c")
+      integer, value,    intent(in)  :: length
+      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4, fac5, fac6
+      complex(kind=dbl), intent(in)  :: darr1(*), darr2(*), darr3(*), arr1(*), arr2(*), arr3(*)
+      complex(kind=dbl), intent(out) :: curl1(*), curl2(*), curl3(*)
+    end subroutine curl_ptp_j_sub
 #else
     module subroutine copy4_carray_sub(length, fac1, fac2, fac3, arr1, arr2, arr_to)
       integer,           intent(in)    :: length
@@ -266,6 +281,21 @@ module physicalobject
       complex(kind=dbl), intent(in)    :: arr1(length), arr2(length), arr3(length)
       complex(kind=dbl), intent(inout) :: arr_to(length)
     end subroutine copy5_carray_sub
+    
+    module subroutine grad_pp_j_sub(length, fac1, fac2, fac3, fac4, darr, arr, grad1, grad3)
+      integer,           intent(in)  :: length
+      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4
+      complex(kind=dbl), intent(in)  :: darr(length), arr(length)
+      complex(kind=dbl), intent(out) :: grad1(length), grad3(length)
+    end subroutine grad_pp_j_sub
+    
+    module subroutine curl_ptp_j_sub(length, fac1, fac2, fac3, fac4, fac5, fac6, darr1, darr2, darr3, arr1, arr2, arr3, &
+                                    & curl1, curl2, curl3)
+      integer,           intent(in)  :: length
+      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4, fac5, fac6
+      complex(kind=dbl), intent(in)  :: darr1(length), darr2(length), darr3(length), arr1(length), arr2(length), arr3(length)
+      complex(kind=dbl), intent(out) :: curl1(length), curl2(length), curl3(length)
+    end subroutine curl_ptp_j_sub
 #endif
   end interface
 

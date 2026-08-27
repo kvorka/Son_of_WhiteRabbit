@@ -2,6 +2,7 @@ submodule (physicalobject) ccopy5
   implicit none; contains
   
   module procedure copy5_carray_sub
+    integer :: i
     
     !$omp simd
     do i = 1, length
