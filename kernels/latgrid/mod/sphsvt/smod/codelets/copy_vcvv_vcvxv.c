@@ -3,7 +3,7 @@
 #include <emmintrin.h>
 
 extern inline __attribute__((always_inline))
-void copy_vcvv_vcvxv_c( const int n,
+void copy_vgradT_vcurlv_c( const int n,
                         const double complex *restrict v,
                         const double complex *restrict q,
                         const double complex *restrict curlv,

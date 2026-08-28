@@ -13,4 +13,10 @@ submodule (sph) indexing
     
   end procedure jml
   
+  module procedure mj
+    
+    mj = (ijmax+1)*im - im*(im+1)/2 + ij + 1
+    
+  end procedure mj
+  
 end submodule indexing

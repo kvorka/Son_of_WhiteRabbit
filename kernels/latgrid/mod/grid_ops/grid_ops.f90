@@ -3,11 +3,11 @@ module grid_ops
   implicit none
   
   interface
-    module subroutine grid_op_vcvv_vcvxv_sub(nfour, grid, gtmp)
+    module subroutine grid_op_vgradT_vcurlv_sub(nfour, grid, gtmp)
       integer,        intent(in)    :: nfour
       real(kind=dbl), intent(inout) :: grid(ndbl,4,0:*)
       real(kind=dbl), intent(out)   :: gtmp(ndbl,4,0:*)
-    end subroutine grid_op_vcvv_vcvxv_sub
+    end subroutine grid_op_vgradT_vcurlv_sub
   end interface
   
   interface

@@ -33,7 +33,7 @@ submodule (ocean) nonlin
       curlv(2,1) = curlv(2,1) + cs4pi * ( 2 / this%Ek )
       
       !! Compute nonlinear terms
-      call this%lat_grid%vcvv_vcvxv_sub( gradT, curlv, v, this%ntemp(1,ir), this%nsph1(1,ir), &
+      call this%lat_grid%vgradT_vcurlv_sub( gradT, curlv, v, this%ntemp(1,ir), this%nsph1(1,ir), &
                                                        &  this%ntorr(1,ir), this%nsph2(1,ir)  )
       
       !! Add the buoyancy force with Newtonian gravity profile

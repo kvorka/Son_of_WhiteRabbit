@@ -59,11 +59,11 @@ module sphsvt
       complex(kind=dbl), intent(out) :: cc(*)
     end subroutine eee2xyz_sub
     
-    module subroutine copy_vcvv_vcvxv_sub(n, v, q, curlv, ca) bind(C, name="copy_vcvv_vcvxv_c")
+    module subroutine copy_vgradT_vcurlv_sub(n, v, q, curlv, ca) bind(C, name="copy_vgradT_vcurlv_c")
       integer, value,    intent(in)  :: n
       complex(kind=dbl), intent(in)  :: v(*), q(*), curlv(*)
       complex(kind=dbl), intent(out) :: ca(*)
-    end subroutine copy_vcvv_vcvxv_sub
+    end subroutine copy_vgradT_vcurlv_sub
 #else
     module subroutine cadj3_carray_sub(n, fac, arr_from, arr_to)
       integer,           intent(in)    :: n
@@ -78,11 +78,11 @@ module sphsvt
       complex(kind=dbl), intent(out) :: cc(3,n)
     end subroutine eee2xyz_sub
     
-    module subroutine copy_vcvv_vcvxv_sub(n, v, q, curlv, ca)
+    module subroutine copy_vgradT_vcurlv_sub(n, v, q, curlv, ca)
       integer,           intent(in)  :: n
       complex(kind=dbl), intent(in)  :: v(n,3), q(n,3), curlv(n,3)
       complex(kind=dbl), intent(out) :: ca(3,3,n)
-    end subroutine copy_vcvv_vcvxv_sub
+    end subroutine copy_vgradT_vcurlv_sub
 #endif
   end interface
   

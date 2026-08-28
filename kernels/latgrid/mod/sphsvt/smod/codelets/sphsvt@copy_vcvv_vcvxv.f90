@@ -1,7 +1,7 @@
-submodule (sphsvt) copy_vcvv_vcvxv
+submodule (sphsvt) copy_vgradT_vcurlv
   implicit none; contains
   
-  module procedure copy_vcvv_vcvxv_sub
+  module procedure copy_vgradT_vcurlv_sub
     integer :: i
     
     !$omp simd
@@ -19,6 +19,6 @@ submodule (sphsvt) copy_vcvv_vcvxv
       ca(3,3,i) = curlv(i,3)
     end do
     
-  end procedure copy_vcvv_vcvxv_sub
+  end procedure copy_vgradT_vcurlv_sub
   
-end submodule copy_vcvv_vcvxv
+end submodule copy_vgradT_vcurlv

@@ -11,6 +11,10 @@ module sph
       integer, intent(in) :: ij, im, il
     end function jml
     
+    module integer function mj(ijmax, im, ij)
+      integer, intent(in) :: ijmax, im, ij
+    end function mj
+    
     module function vectnorm2_fn(np, cajml) result(vp)
       integer,           intent(in) :: np
       complex(kind=dbl), intent(in) :: cajml(*)

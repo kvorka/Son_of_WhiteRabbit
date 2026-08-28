@@ -24,7 +24,7 @@ module lateral_grid
     procedure :: deallocate_sub => deallocate_harmonics_sub
     
     procedure :: transform_sub
-    procedure :: vcvv_vcvxv_sub
+    procedure :: vgradT_vcurlv_sub
     
   end type T_lateralGrid
   
@@ -53,11 +53,11 @@ module lateral_grid
       end interface
     end subroutine transform_sub
     
-    module subroutine vcvv_vcvxv_sub(this, q, curlv, v, ntemp, nsph1, ntorr, nsph2)
+    module subroutine vgradT_vcurlv_sub(this, q, curlv, v, ntemp, nsph1, ntorr, nsph2)
       class(T_lateralGrid), intent(in)  :: this
       complex(kind=dbl),    intent(in)  :: curlv(this%rxd%jms,3), q(this%rxd%jms,3), v(this%rxd%jms,3)
       complex(kind=dbl),    intent(out) :: ntemp(*), nsph1(*), ntorr(*), nsph2(*)
-    end subroutine vcvv_vcvxv_sub
+    end subroutine vgradT_vcurlv_sub
   end interface
   
 end module lateral_grid

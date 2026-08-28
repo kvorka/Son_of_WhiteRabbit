@@ -1,7 +1,7 @@
-submodule (grid_ops) vcvv_vcvxv
+submodule (grid_ops) vgradT_vcurlv
   implicit none; contains
   
-  module procedure grid_op_vcvv_vcvxv_sub
+  module procedure grid_op_vgradT_vcurlv_sub
     integer :: i0, i1, i3
     
     do i3 = 0, nfour-1
@@ -18,6 +18,6 @@ submodule (grid_ops) vcvv_vcvxv
       end do
     end do
     
-  end procedure grid_op_vcvv_vcvxv_sub
+  end procedure grid_op_vgradT_vcurlv_sub
   
-end submodule vcvv_vcvxv
+end submodule vgradT_vcurlv
