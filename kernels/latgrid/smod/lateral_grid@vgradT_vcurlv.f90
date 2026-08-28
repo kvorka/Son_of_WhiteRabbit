@@ -2,15 +2,13 @@ submodule (lateral_grid) vgradT_vcurlv
   implicit none; contains
   
   module procedure vgradT_vcurlv_sub
-    integer                        :: nca, ncv, ncs, ncc, ncr
+    integer                        :: nca, ncc, ncr
     complex(kind=dbl), allocatable :: cc(:), cr(:), ca(:)
     
     !! Array dimensions for transform: the temporal storage for 2grid transform
     !! needs scalar length of jms, while the actual array needs jms1 (jmax+1,jmax+1)
     !! due to transform from spectra to x,y,z vector components
     nca = 9*this%rxd%jms
-    ncv = 3*this%rxd%jms
-    ncs = 1*this%rxd%jms
     ncc = 9*this%rxd%jms1
     ncr = 4*this%rxd%jms1
     
@@ -42,12 +40,20 @@ submodule (lateral_grid) vgradT_vcurlv
     !! in cr(1,*), while vcurlvx, vcurlvy and vcurlz are in cr(2:4,*)
     call this%transform_sub( 4, 9, cc, cr, grid_op_vgradT_vcurlv_sub )
     
-    !! Another layer of transposing: from (4,mj) to (jm,4)
-    call this%rxd%scal2scal_mj_to_jm_sub( cr, 4, 1, ntemp )
-    call this%rxd%scal2vec_mj_to_jm_sub( cr, 4, 2, nsph1, ntorr, nsph2)
+    deallocate( cc )
     
-    !! Cleaning
-    deallocate( cc, cr )
+    !! Another layer of transposing: from (4,mj) to (mj,4)
+    allocate( ca(ncr) )
+    
+    call trans_carray_sub( this%rxd%jms1, 4, cr, ca )
+    
+    deallocate( cr )
+    
+    !! Now we can freely transer the data into destination fields with a changed indexation
+    call this%rxd%scal2scal_mj_to_jm_sub( ca(1), ntemp )
+    call this%rxd%scal2vec_mj_to_jm_sub( ca(this%rxd%jms1+1), nsph1, ntorr, nsph2 )
+    
+    deallocate( ca )
     
   end procedure vgradT_vcurlv_sub
   

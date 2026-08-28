@@ -25,18 +25,16 @@ module sphsvt
       complex(kind=dbl), intent(out) :: cc(3*nca,*)
     end subroutine vec2scal_jm_to_mj_sub
     
-    module subroutine scal2scal_mj_to_jm_sub(this, cr, ncr, crpadding, cjm)
+    module subroutine scal2scal_mj_to_jm_sub(this, cr, cjm)
       class(T_sphsvt),   intent(in)    :: this
-      integer,           intent(in)    :: ncr, crpadding
-      complex(kind=dbl), intent(in)    :: cr(ncr,*)
-      complex(kind=dbl), intent(inout) :: cjm(*)
+      complex(kind=dbl), intent(in)    :: cr(this%jms1)
+      complex(kind=dbl), intent(inout) :: cjm(this%jms)
     end subroutine scal2scal_mj_to_jm_sub
     
-    module subroutine scal2vec_mj_to_jm_sub(this, cr, ncr, crpadding, cjm1, cjm2, cjm3)
+    module subroutine scal2vec_mj_to_jm_sub(this, cr, cjm1, cjm2, cjm3)
       class(T_sphsvt),   intent(in)    :: this
-      integer,           intent(in)    :: ncr, crpadding
-      complex(kind=dbl), intent(inout) :: cr(ncr,*)
-      complex(kind=dbl), intent(inout) :: cjm1(*), cjm2(*), cjm3(*)
+      complex(kind=dbl), intent(inout) :: cr(this%jms1,3)
+      complex(kind=dbl), intent(inout) :: cjm1(this%jms), cjm2(this%jms), cjm3(this%jms)
     end subroutine scal2vec_mj_to_jm_sub
   end interface
   
@@ -59,6 +57,11 @@ module sphsvt
       complex(kind=dbl), intent(out) :: cc(*)
     end subroutine eee2xyz_sub
     
+    module subroutine xy2ee_sub(n, cx, cy) bind(C, name="xy2ee_c")
+      integer, value,    intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
+    end subroutine xy2ee_sub
+    
     module subroutine copy_vgradT_vcurlv_sub(n, v, q, curlv, ca) bind(C, name="copy_vgradT_vcurlv_c")
       integer, value,    intent(in)  :: n
       complex(kind=dbl), intent(in)  :: v(*), q(*), curlv(*)
@@ -77,6 +80,11 @@ module sphsvt
       complex(kind=dbl), intent(in)  :: sumPTP(n,3)
       complex(kind=dbl), intent(out) :: cc(3,n)
     end subroutine eee2xyz_sub
+    
+    module subroutine xy2ee_sub(n, cx, cy)
+      integer,           intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(n), cy(n)
+    end subroutine xy2ee_sub
     
     module subroutine copy_vgradT_vcurlv_sub(n, v, q, curlv, ca)
       integer,           intent(in)  :: n
