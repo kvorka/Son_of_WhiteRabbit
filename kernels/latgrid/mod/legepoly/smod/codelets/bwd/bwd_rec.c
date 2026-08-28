@@ -22,7 +22,7 @@ void bwd_rec_c( const int n,
     __m256d r00, r01, r02, r03,
             r04, r05, r06, r07,
             r08, r09, r10, r11,
-            r12, r13;
+            r12;
     
     // Cycle over weird degree iterator
     for ( int i4 = 0; i4 < nma; i4++ ) {
@@ -108,118 +108,120 @@ void bwd_rec_c( const int n,
         for ( int i3 = 0; i3 < n; i3++ ) {
             
             r04 = _mm256_broadcast_sd( pcc + 0 );
-            r05 = _mm256_broadcast_sd( pcc + 1 );
             
-            r06 = _mm256_load_pd( psw +  0 );
-            r07 = _mm256_load_pd( psw +  4 );
-            r08 = _mm256_load_pd( psw +  8 );
-            r09 = _mm256_load_pd( psw + 12 );
+            r05 = _mm256_load_pd( psw +  0 );
+            r06 = _mm256_load_pd( psw +  4 );
+            r07 = _mm256_load_pd( psw +  8 );
+            r08 = _mm256_load_pd( psw + 12 );
             
             #if defined ( fma )
-            r06 = _mm256_fmadd_pd( r00, r04, r06 );
-            r07 = _mm256_fmadd_pd( r01, r04, r07 );
-            r08 = _mm256_fmadd_pd( r02, r04, r08 );
-            r09 = _mm256_fmadd_pd( r03, r04, r09 );
+            r05 = _mm256_fmadd_pd( r00, r04, r05 );
+            r06 = _mm256_fmadd_pd( r01, r04, r06 );
+            r07 = _mm256_fmadd_pd( r02, r04, r07 );
+            r08 = _mm256_fmadd_pd( r03, r04, r08 );
             #else
-            r10 = _mm256_mul_pd( r00, r04 );
-            r11 = _mm256_mul_pd( r01, r04 );
-            r12 = _mm256_mul_pd( r02, r04 );
-            r13 = _mm256_mul_pd( r03, r04 );
+            r09 = _mm256_mul_pd( r00, r04 );
+            r10 = _mm256_mul_pd( r01, r04 );
+            r11 = _mm256_mul_pd( r02, r04 );
+            r12 = _mm256_mul_pd( r03, r04 );
             
+            r05 = _mm256_add_pd( r09, r05 );
             r06 = _mm256_add_pd( r10, r06 );
             r07 = _mm256_add_pd( r11, r07 );
             r08 = _mm256_add_pd( r12, r08 );
-            r09 = _mm256_add_pd( r13, r09 );
             #endif
             
-            _mm256_store_pd( psw +  0 , r06 );
-            _mm256_store_pd( psw +  4 , r07 );
-            _mm256_store_pd( psw +  8 , r08 );
-            _mm256_store_pd( psw + 12 , r09 );
+            _mm256_store_pd( psw +  0, r05 );
+            _mm256_store_pd( psw +  4, r06 );
+            _mm256_store_pd( psw +  8, r07 );
+            _mm256_store_pd( psw + 12, r08 );
             
-            r06 = _mm256_load_pd( psw + 16 );
-            r07 = _mm256_load_pd( psw + 20 );
-            r08 = _mm256_load_pd( psw + 24 );
-            r09 = _mm256_load_pd( psw + 28 );
+            r04 = _mm256_broadcast_sd( pcc + 1 );
+            
+            r05 = _mm256_load_pd( psw + 16 );
+            r06 = _mm256_load_pd( psw + 20 );
+            r07 = _mm256_load_pd( psw + 24 );
+            r08 = _mm256_load_pd( psw + 28 );
             
             #if defined ( fma )
-            r06 = _mm256_fmadd_pd( r00, r05, r06 );
-            r07 = _mm256_fmadd_pd( r01, r05, r07 );
-            r08 = _mm256_fmadd_pd( r02, r05, r08 );
-            r09 = _mm256_fmadd_pd( r03, r05, r09 );
+            r05 = _mm256_fmadd_pd( r00, r04, r05 );
+            r06 = _mm256_fmadd_pd( r01, r04, r06 );
+            r07 = _mm256_fmadd_pd( r02, r04, r07 );
+            r08 = _mm256_fmadd_pd( r03, r04, r08 );
             #else
-            r10 = _mm256_mul_pd( r00, r05 );
-            r11 = _mm256_mul_pd( r01, r05 );
-            r12 = _mm256_mul_pd( r02, r05 );
-            r13 = _mm256_mul_pd( r03, r05 );
+            r09 = _mm256_mul_pd( r00, r04 );
+            r10 = _mm256_mul_pd( r01, r04 );
+            r11 = _mm256_mul_pd( r02, r04 );
+            r12 = _mm256_mul_pd( r03, r04 );
             
+            r05 = _mm256_add_pd( r09, r05 );
             r06 = _mm256_add_pd( r10, r06 );
             r07 = _mm256_add_pd( r11, r07 );
             r08 = _mm256_add_pd( r12, r08 );
-            r09 = _mm256_add_pd( r13, r09 );
             #endif
             
-            _mm256_store_pd( psw + 16, r06 );
-            _mm256_store_pd( psw + 20, r07 );
-            _mm256_store_pd( psw + 24, r08 );
-            _mm256_store_pd( psw + 28, r09 );
+            _mm256_store_pd( psw + 16, r05 );
+            _mm256_store_pd( psw + 20, r06 );
+            _mm256_store_pd( psw + 24, r07 );
+            _mm256_store_pd( psw + 28, r08 );
             
             r04 = _mm256_broadcast_sd( pcc + 2 );
-            r05 = _mm256_broadcast_sd( pcc + 3 );
             
-            r06 = _mm256_load_pd( psw + 32 );
-            r07 = _mm256_load_pd( psw + 36 );
-            r08 = _mm256_load_pd( psw + 40 );
-            r09 = _mm256_load_pd( psw + 44 );
+            r05 = _mm256_load_pd( psw + 32 );
+            r06 = _mm256_load_pd( psw + 36 );
+            r07 = _mm256_load_pd( psw + 40 );
+            r08 = _mm256_load_pd( psw + 44 );
             
             #if defined ( fma )
-            r06 = _mm256_fmadd_pd( r00, r04, r06 );
-            r07 = _mm256_fmadd_pd( r01, r04, r07 );
-            r08 = _mm256_fmadd_pd( r02, r04, r08 );
-            r09 = _mm256_fmadd_pd( r03, r04, r09 );
+            r05 = _mm256_fmadd_pd( r00, r04, r05 );
+            r06 = _mm256_fmadd_pd( r01, r04, r06 );
+            r07 = _mm256_fmadd_pd( r02, r04, r07 );
+            r08 = _mm256_fmadd_pd( r03, r04, r08 );
             #else
-            r10 = _mm256_mul_pd( r00, r04 );
-            r11 = _mm256_mul_pd( r01, r04 );
-            r12 = _mm256_mul_pd( r02, r04 );
-            r13 = _mm256_mul_pd( r03, r04 );
+            r09 = _mm256_mul_pd( r00, r04 );
+            r10 = _mm256_mul_pd( r01, r04 );
+            r11 = _mm256_mul_pd( r02, r04 );
+            r12 = _mm256_mul_pd( r03, r04 );
             
+            r05 = _mm256_add_pd( r09, r05 );
             r06 = _mm256_add_pd( r10, r06 );
             r07 = _mm256_add_pd( r11, r07 );
             r08 = _mm256_add_pd( r12, r08 );
-            r09 = _mm256_add_pd( r13, r09 );
             #endif
             
-            _mm256_store_pd( psw + 32, r06 );
-            _mm256_store_pd( psw + 36, r07 );
-            _mm256_store_pd( psw + 40, r08 );
-            _mm256_store_pd( psw + 44, r09 );
+            _mm256_store_pd( psw + 32, r05 );
+            _mm256_store_pd( psw + 36, r06 );
+            _mm256_store_pd( psw + 40, r07 );
+            _mm256_store_pd( psw + 44, r08 );
             
-            r06 = _mm256_load_pd( psw + 48 );
-            r07 = _mm256_load_pd( psw + 52 );
-            r08 = _mm256_load_pd( psw + 56 );
-            r09 = _mm256_load_pd( psw + 60 );
+            r04 = _mm256_broadcast_sd( pcc + 3 );
+            
+            r05 = _mm256_load_pd( psw + 48 );
+            r06 = _mm256_load_pd( psw + 52 );
+            r07 = _mm256_load_pd( psw + 56 );
+            r08 = _mm256_load_pd( psw + 60 );
             
             #if defined ( fma )
-            r06 = _mm256_fmadd_pd( r00, r05, r06 );
-            r07 = _mm256_fmadd_pd( r01, r05, r07 );
-            r08 = _mm256_fmadd_pd( r02, r05, r08 );
-            r09 = _mm256_fmadd_pd( r03, r05, r09 );
+            r05 = _mm256_fmadd_pd( r00, r04, r05 );
+            r06 = _mm256_fmadd_pd( r01, r04, r06 );
+            r07 = _mm256_fmadd_pd( r02, r04, r07 );
+            r08 = _mm256_fmadd_pd( r03, r04, r08 );
             #else
-            r10 = _mm256_mul_pd( r00, r05 );
-            r11 = _mm256_mul_pd( r01, r05 );
-            r12 = _mm256_mul_pd( r02, r05 );
-            r13 = _mm256_mul_pd( r03, r05 );
+            r09 = _mm256_mul_pd( r00, r04 );
+            r10 = _mm256_mul_pd( r01, r04 );
+            r11 = _mm256_mul_pd( r02, r04 );
+            r12 = _mm256_mul_pd( r03, r04 );
             
+            r05 = _mm256_add_pd( r09, r05 );
             r06 = _mm256_add_pd( r10, r06 );
             r07 = _mm256_add_pd( r11, r07 );
             r08 = _mm256_add_pd( r12, r08 );
-            r09 = _mm256_add_pd( r13, r09 );
             #endif
             
-            _mm256_store_pd( psw + 48, r06 );
-            _mm256_store_pd( psw + 52, r07 );
-            _mm256_store_pd( psw + 56, r08 );
-            _mm256_store_pd( psw + 60, r09 );
+            _mm256_store_pd( psw + 48, r05 );
+            _mm256_store_pd( psw + 52, r06 );
+            _mm256_store_pd( psw + 56, r07 );
+            _mm256_store_pd( psw + 60, r08 );
             
             pcc +=  4;
             psw += 64;
@@ -302,69 +304,72 @@ void bwd_rec_c( const int n,
         for ( int i3 = 0; i3 < n; i3++ ) {
             
             r04 = _mm512_set1_pd( *( pcc + 0 ) );
-            r05 = _mm512_set1_pd( *( pcc + 1 ) );
-            r06 = _mm512_set1_pd( *( pcc + 2 ) );
-            r07 = _mm512_set1_pd( *( pcc + 3 ) );
             
-            r08 = _mm512_load_pd( psw +  0 );
-            r09 = _mm512_load_pd( psw +  8 );
-            r10 = _mm512_load_pd( psw + 16 );
-            r11 = _mm512_load_pd( psw + 24 );
+            r05 = _mm512_load_pd( psw +  0 );
+            r06 = _mm512_load_pd( psw +  8 );
+            r07 = _mm512_load_pd( psw + 16 );
+            r08 = _mm512_load_pd( psw + 24 );
             
-            r08 = _mm512_fmadd_pd( r00, r04, r08 );
-            r09 = _mm512_fmadd_pd( r01, r04, r09 );
-            r10 = _mm512_fmadd_pd( r02, r04, r10 );
-            r11 = _mm512_fmadd_pd( r03, r04, r11 );
+            r05 = _mm512_fmadd_pd( r00, r04, r05 );
+            r06 = _mm512_fmadd_pd( r01, r04, r06 );
+            r07 = _mm512_fmadd_pd( r02, r04, r07 );
+            r08 = _mm512_fmadd_pd( r03, r04, r08 );
             
-            _mm512_store_pd( psw +  0, r08 );
-            _mm512_store_pd( psw +  8, r09 );
-            _mm512_store_pd( psw + 16, r10 );
-            _mm512_store_pd( psw + 24, r11 );
+            _mm512_store_pd( psw +  0, r05 );
+            _mm512_store_pd( psw +  8, r06 );
+            _mm512_store_pd( psw + 16, r07 );
+            _mm512_store_pd( psw + 24, r08 );
             
-            r08 = _mm512_load_pd( psw + 32 );
-            r09 = _mm512_load_pd( psw + 40 );
-            r10 = _mm512_load_pd( psw + 48 );
-            r11 = _mm512_load_pd( psw + 56 );
+            r04 = _mm512_set1_pd( *( pcc + 1 ) );
             
-            r08 = _mm512_fmadd_pd( r00, r05, r08 );
-            r09 = _mm512_fmadd_pd( r01, r05, r09 );
-            r10 = _mm512_fmadd_pd( r02, r05, r10 );
-            r11 = _mm512_fmadd_pd( r03, r05, r11 );
+            r05 = _mm512_load_pd( psw + 32 );
+            r06 = _mm512_load_pd( psw + 40 );
+            r07 = _mm512_load_pd( psw + 48 );
+            r08 = _mm512_load_pd( psw + 56 );
             
-            _mm512_store_pd( psw + 32, r08 );
-            _mm512_store_pd( psw + 40, r09 );
-            _mm512_store_pd( psw + 48, r10 );
-            _mm512_store_pd( psw + 56, r11 );
+            r05 = _mm512_fmadd_pd( r00, r04, r05 );
+            r06 = _mm512_fmadd_pd( r01, r04, r06 );
+            r07 = _mm512_fmadd_pd( r02, r04, r07 );
+            r08 = _mm512_fmadd_pd( r03, r04, r08 );
             
-            r08 = _mm512_load_pd( psw + 64 );
-            r09 = _mm512_load_pd( psw + 72 );
-            r10 = _mm512_load_pd( psw + 80 );
-            r11 = _mm512_load_pd( psw + 88 );
+            _mm512_store_pd( psw + 32, r05 );
+            _mm512_store_pd( psw + 40, r06 );
+            _mm512_store_pd( psw + 48, r07 );
+            _mm512_store_pd( psw + 56, r08 );
             
-            r08 = _mm512_fmadd_pd( r00, r06, r08 );
-            r09 = _mm512_fmadd_pd( r01, r06, r09 );
-            r10 = _mm512_fmadd_pd( r02, r06, r10 );
-            r11 = _mm512_fmadd_pd( r03, r06, r11 );
+            r04 = _mm512_set1_pd( *( pcc + 2 ) );
             
-            _mm512_store_pd( psw + 64, r08 );
-            _mm512_store_pd( psw + 72, r09 );
-            _mm512_store_pd( psw + 80, r10 );
-            _mm512_store_pd( psw + 88, r11 );
+            r05 = _mm512_load_pd( psw + 64 );
+            r06 = _mm512_load_pd( psw + 72 );
+            r07 = _mm512_load_pd( psw + 80 );
+            r08 = _mm512_load_pd( psw + 88 );
             
-            r08 = _mm512_load_pd( psw +  96 );
-            r09 = _mm512_load_pd( psw + 104 );
-            r10 = _mm512_load_pd( psw + 112 );
-            r11 = _mm512_load_pd( psw + 120 );
+            r05 = _mm512_fmadd_pd( r00, r04, r05 );
+            r06 = _mm512_fmadd_pd( r01, r04, r06 );
+            r07 = _mm512_fmadd_pd( r02, r04, r07 );
+            r08 = _mm512_fmadd_pd( r03, r04, r08 );
             
-            r08 = _mm512_fmadd_pd( r00, r07, r08 );
-            r09 = _mm512_fmadd_pd( r01, r07, r09 );
-            r10 = _mm512_fmadd_pd( r02, r07, r10 );
-            r11 = _mm512_fmadd_pd( r03, r07, r11 );
+            _mm512_store_pd( psw + 64, r05 );
+            _mm512_store_pd( psw + 72, r06 );
+            _mm512_store_pd( psw + 80, r07 );
+            _mm512_store_pd( psw + 88, r08 );
             
-            _mm512_store_pd( psw +  96, r08 );
-            _mm512_store_pd( psw + 104, r09 );
-            _mm512_store_pd( psw + 112, r10 );
-            _mm512_store_pd( psw + 120, r11 );
+            r04 = _mm512_set1_pd( *( pcc + 3 ) );
+            
+            r05 = _mm512_load_pd( psw +  96 );
+            r06 = _mm512_load_pd( psw + 104 );
+            r07 = _mm512_load_pd( psw + 112 );
+            r08 = _mm512_load_pd( psw + 120 );
+            
+            r05 = _mm512_fmadd_pd( r00, r04, r05 );
+            r06 = _mm512_fmadd_pd( r01, r04, r06 );
+            r07 = _mm512_fmadd_pd( r02, r04, r07 );
+            r08 = _mm512_fmadd_pd( r03, r04, r08 );
+            
+            _mm512_store_pd( psw +  96, r05 );
+            _mm512_store_pd( psw + 104, r06 );
+            _mm512_store_pd( psw + 112, r07 );
+            _mm512_store_pd( psw + 120, r08 );
             
             pcc +=   4;
             psw += 128;

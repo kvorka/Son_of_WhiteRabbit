@@ -23,18 +23,11 @@ submodule (lateral_grid) vgradT_vcurlv
     !! copy, the vectors are ordered as v(l-1), q(l-1), curlv(l-1), v(l), q(l) ... for
     !! best cache behaviour, at the end of the transform, a small transposition occurs
     !! and the output layout is vx, vy, vz, qx, qy, qz, curlvx, curlvy, curlvz
-    allocate( cc(ncc) )
+    allocate( cc(ncc), cr(ncr) )
     
     call this%rxd%vec2scal_jm_to_mj_sub( 3, ca, cc )
     
     deallocate( ca )
-    
-    !! Allocate output array and zero it: in this array, 1 scalar and 3 cartesian
-    !! components are being computed - the scalar is for vgradT, while the vectors
-    !! are for vcurlv
-    allocate( cr(ncr) )
-    
-    call zero_carray_sub( ncr, cr )
     
     !! After all the preparation, the transform is here: on the output, vgradT is stored
     !! in cr(1,*), while vcurlvx, vcurlvy and vcurlz are in cr(2:4,*)
@@ -42,10 +35,12 @@ submodule (lateral_grid) vgradT_vcurlv
     
     deallocate( cc )
     
-    !! Another layer of transposing: from (4,mj) to (mj,4)
+    !! Another layer of transposing: from (4,mj) to (mj,4). If any other dimensions should
+    !! be used, like (7,mj) to (mj,7) might occur with dynamo simulations, these should be
+    !! addded to math@ctrans.f90 by hand.
     allocate( ca(ncr) )
     
-    call trans_carray_sub( this%rxd%jms1, 4, cr, ca )
+    call trans_carray_sub( 4, this%rxd%jms1, cr, ca )
     
     deallocate( cr )
     

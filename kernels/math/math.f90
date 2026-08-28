@@ -41,10 +41,10 @@ module math
       real(kind=dbl), intent(in) :: x
     end function r2c_fn
     
-    module subroutine trans_carray_sub(length1, length2, arr_from, arr_to)
-      integer,           intent(in)  :: length1, length2
-      complex(kind=dbl), intent(in)  :: arr_from(length2,length1)
-      complex(kind=dbl), intent(out) :: arr_to(length1,length2)
+    module subroutine trans_carray_sub(n, length, arr_from, arr_to)
+      integer,           intent(in)  :: n, length
+      complex(kind=dbl), intent(in)  :: arr_from(n,length)
+      complex(kind=dbl), intent(out) :: arr_to(length,n)
     end subroutine trans_carray_sub
     
     module subroutine alloc_aligned_sub( n, c_arr, f_arr )

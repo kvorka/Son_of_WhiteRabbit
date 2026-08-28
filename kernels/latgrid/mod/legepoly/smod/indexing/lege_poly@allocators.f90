@@ -4,7 +4,7 @@ submodule (lege_poly) allocators
   module procedure allocate_rscalars_sub
     integer :: n, i
     
-    n = 4*ns*this%nrma
+    n = 4 * ns * this%nrma
     
     c_rscal = fortmalloc( 32, n * size_c_dbl )
     call c_f_pointer( c_rscal, rscal, [n] )

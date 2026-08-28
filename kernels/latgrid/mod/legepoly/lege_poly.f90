@@ -94,6 +94,20 @@ module lege_poly
   
   interface
 #if defined ( kernelC )
+    module subroutine bwd_idx_sub(n, cff, cab, rcab) bind(C, name="bwd_idx_c")
+      integer, value,    intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff(*)
+      complex(kind=dbl), intent(in)  :: cab(*)
+      real(kind=dbl),    intent(out) :: rcab(*)
+    end subroutine bwd_idx_sub
+    
+    module subroutine fwd_idx_sub(n, cff, rcab, cab) bind(C, name="fwd_idx_c")
+      integer, value,    intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff(2)
+      real(kind=dbl),    intent(in)  :: rcab(2,n,4)
+      complex(kind=dbl), intent(out) :: cab(n,2)
+    end subroutine fwd_idx_sub
+    
     module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork) bind(C, name="bwd_set_c")
       integer, value, intent(in)    :: n, ma1
       real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), cc(*)
@@ -132,6 +146,20 @@ module lege_poly
       real(kind=dbl), intent(inout) :: pmj1(*), pmj(*), cr(*)
     end subroutine fwd_rec_sub
 #else
+    module subroutine bwd_idx_sub(n, cff, cab, rcab)
+      integer,           intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff(2)
+      complex(kind=dbl), intent(in)  :: cab(n,3)
+      real(kind=dbl),    intent(out) :: rcab(2,n,2)
+    end subroutine bwd_idx_sub
+    
+    module subroutine fwd_idx_sub(n, cff, rcab, cab)
+      integer,           intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff(2)
+      real(kind=dbl),    intent(in)  :: rcab(2,n,4)
+      complex(kind=dbl), intent(out) :: cab(n,2)
+    end subroutine fwd_idx_sub
+    
     module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork)
       integer,        intent(in)    :: n, ma1
       real(kind=dbl), intent(in)    :: cff, cosx(ndbl,4), sinx(ndbl,4), cc(4,n)
