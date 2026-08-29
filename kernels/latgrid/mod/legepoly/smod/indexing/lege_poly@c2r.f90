@@ -2,50 +2,37 @@ submodule (lege_poly) c2r
   implicit none; contains
   
   module procedure c2r_mj_to_mj_sub
-    integer :: in, im, ij, imj, ima
+    integer :: im, ij, imj, ima
     
     im = 0
       !ij == im
         ima = 1
         imj = 1
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,1,ima) = this%emj(imj+1) * cab(in,imj+1)%re
-          rcab(2,in,1,ima) = this%emj(imj+1) * cab(in,imj+1)%im
-          rcab(1,in,2,ima) =                   cab(in,imj  )%re
-          rcab(2,in,2,ima) =                   cab(in,imj  )%im
-        end do
+        call bwd_idx1_sub( ncab, this%emj(imj+1), cab(1,imj+1), rcab(1,ima) )
+        call bwd_idx3_sub( ncab,                  cab(1,imj  ), rcab(1,ima) )
       
       do ij = 1, (this%jmax-1)/2
         ima = ima+1
         imj = imj+2
         
-        call bwd_idx_sub( ncab, this%emj(imj), cab(1,imj-1), rcab(1,1,1,ima) )
+        call bwd_idx2_sub( ncab, this%emj(imj), cab(1,imj-1), rcab(1,ima) )
+        call bwd_idx3_sub( ncab,                cab(1,imj  ), rcab(1,ima) )
       end do
       
       !ij == this%jmax
-      if ( mod((this%jmax),2) == 0 ) then
+      if ( mod(this%jmax,2) == 0 ) then
         ima = ima+1
         imj = imj+2
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,1,ima) = this%emj(imj) * cab(in,imj-1)%re
-          rcab(2,in,1,ima) = this%emj(imj) * cab(in,imj-1)%im
-          rcab(1,in,2,ima) =                 cab(in,imj  )%re
-          rcab(2,in,2,ima) =                 cab(in,imj  )%im
-        end do
+        call bwd_idx1_sub( ncab, this%emj(imj), cab(1,imj-1), rcab(1,ima) )
+        call bwd_idx3_sub( ncab,                cab(1,imj  ), rcab(1,ima) )
       
       else
         ima = ima+1
         imj = imj+1
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,1,ima) = this%emj(imj+1) * cab(in,imj)%re
-          rcab(2,in,1,ima) = this%emj(imj+1) * cab(in,imj)%im
-        end do
+        call bwd_idx1_sub( ncab, this%emj(imj+1), cab(1,imj), rcab(1,ima) )
       end if
     
     do im = 1, this%jmax-1
@@ -53,19 +40,15 @@ submodule (lege_poly) c2r
         ima = ima+1
         imj = imj+1
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,1,ima) = this%emj(imj+im+1) * cab(in,imj+1)%re
-          rcab(2,in,1,ima) = this%emj(imj+im+1) * cab(in,imj+1)%im
-          rcab(1,in,2,ima) =                      cab(in,imj  )%re
-          rcab(2,in,2,ima) =                      cab(in,imj  )%im
-        end do
+        call bwd_idx1_sub( ncab, this%emj(imj+im+1), cab(1,imj+1), rcab(1,ima) )
+        call bwd_idx3_sub( ncab,                     cab(1,imj  ), rcab(1,ima) )
       
       do ij = 1, (this%jmax-1-im)/2
         ima = ima+1
         imj = imj+2
         
-        call bwd_idx_sub( ncab, this%emj(imj+im), cab(1,imj-1), rcab(1,1,1,ima) )
+        call bwd_idx2_sub( ncab, this%emj(imj+im), cab(1,imj-1), rcab(1,ima) )
+        call bwd_idx3_sub( ncab,                   cab(1,imj  ), rcab(1,ima) )
       end do
       
       !ij == this%jmax
@@ -73,23 +56,14 @@ submodule (lege_poly) c2r
         ima = ima+1
         imj = imj+2
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,1,ima) = this%emj(imj+im) * cab(in,imj-1)%re
-          rcab(2,in,1,ima) = this%emj(imj+im) * cab(in,imj-1)%im
-          rcab(1,in,2,ima) =                    cab(in,imj  )%re
-          rcab(2,in,2,ima) =                    cab(in,imj  )%im
-        end do
+        call bwd_idx1_sub( ncab, this%emj(imj+im), cab(1,imj-1), rcab(1,ima) )
+        call bwd_idx3_sub( ncab,                   cab(1,imj  ), rcab(1,ima) )
       
       else
         ima = ima+1
         imj = imj+1
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,1,ima) = this%emj(imj+im+1) * cab(in,imj)%re
-          rcab(2,in,1,ima) = this%emj(imj+im+1) * cab(in,imj)%im
-        end do
+        call bwd_idx1_sub( ncab, this%emj(imj+im+1), cab(1,imj), rcab(1,ima) )
       end if
     end do
     
@@ -98,12 +72,8 @@ submodule (lege_poly) c2r
         ima = ima+1
         imj = imj+1
         
-        !$omp simd
-        do in = 1, ncab
-          rcab(1,in,2,ima) = cab(in,imj)%re
-          rcab(2,in,2,ima) = cab(in,imj)%im
-        end do
-    
+        call bwd_idx3_sub( ncab, cab(1,imj), rcab(1,ima) )
+        
   end procedure c2r_mj_to_mj_sub
   
 end submodule c2r

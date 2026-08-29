@@ -2,7 +2,12 @@ submodule (physicalobject) velc_jm
   implicit none; contains
   
   module procedure velc_rr_jml_sub
-    integer :: ij, im, ij0, isp, ist
+    integer                        :: ij, im, ij0, isp, ist
+    complex(kind=dbl), allocatable :: vpol1(:), vtorr(:), vpol2(:)
+    
+    allocate( vpol1(0:this%jmax), &
+            & vtorr(0:this%jmax), &
+            & vpol2(0:this%jmax)  )
     
     isp = 5*(ir-1)+1
     ist = 2*(ir-1)+1
@@ -14,13 +19,19 @@ submodule (physicalobject) velc_jm
     do ij = 1, this%jmax
       ij0 = 3*(ij*(ij+1)/2)-1
       
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,isp  ), vpol1(0) )
+      call copy_carray_sub( ij+1, this%torr(ij)%sol(0,ist  ), vtorr(0) )
+      call copy_carray_sub( ij+1, this%mech(ij)%sol(0,isp+1), vpol2(0) )
+      
       !$omp simd
       do im = 0, ij
-        v_jml(ij0+3*im  ) = this%mech(ij)%sol(im,isp  )
-        v_jml(ij0+3*im+1) = this%torr(ij)%sol(im,ist  )
-        v_jml(ij0+3*im+2) = this%mech(ij)%sol(im,isp+1)
+        v_jml(ij0+3*im  ) = vpol1(im)
+        v_jml(ij0+3*im+1) = vtorr(im)
+        v_jml(ij0+3*im+2) = vpol2(im)
       end do
     end do
+    
+    deallocate( vpol1, vtorr, vpol2 )
     
   end procedure velc_rr_jml_sub
   

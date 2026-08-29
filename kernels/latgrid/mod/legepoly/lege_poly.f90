@@ -66,13 +66,13 @@ module lege_poly
       class(T_legep),    intent(in)  :: this
       integer,           intent(in)  :: ncab
       complex(kind=dbl), intent(in)  :: cab(ncab,*)
-      real(kind=dbl),    intent(out) :: rcab(2,ncab,2,*)
+      real(kind=dbl),    intent(out) :: rcab(4*ncab,*)
     end subroutine c2r_mj_to_mj_sub
     
     module subroutine r2c_mj_to_mj_sub(this, ncab, cab, rcab)
       class(T_legep),    intent(in)  :: this
       integer,           intent(in)  :: ncab
-      real(kind=dbl),    intent(in)  :: rcab(2,ncab,2,*)
+      real(kind=dbl),    intent(in)  :: rcab(4*ncab,*)
       complex(kind=dbl), intent(out) :: cab(ncab,*)
     end subroutine r2c_mj_to_mj_sub
     
@@ -90,23 +90,40 @@ module lege_poly
       real(kind=dbl), intent(out)   :: pmm(*), pmj1(*), pmj(*), swork(*)
       real(kind=dbl), intent(inout) :: cr(4*nf,*)
     end subroutine fwd_legesum_sub
-  end interface
-  
-  interface
+    
 #if defined ( kernelC )
-    module subroutine bwd_idx_sub(n, cff, cab, rcab) bind(C, name="bwd_idx_c")
+    module subroutine bwd_idx1_sub(n, cff, cab, rcab) bind(C, name="bwd_idx1_c")
+      integer, value,    intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff
+      complex(kind=dbl), intent(in)  :: cab(*)
+      real(kind=dbl),    intent(out) :: rcab(*)
+    end subroutine bwd_idx1_sub
+    
+    module subroutine bwd_idx2_sub(n, cff, cab, rcab) bind(C, name="bwd_idx2_c")
       integer, value,    intent(in)  :: n
       real(kind=dbl),    intent(in)  :: cff(*)
       complex(kind=dbl), intent(in)  :: cab(*)
       real(kind=dbl),    intent(out) :: rcab(*)
-    end subroutine bwd_idx_sub
+    end subroutine bwd_idx2_sub
     
-    module subroutine fwd_idx_sub(n, cff, rcab, cab) bind(C, name="fwd_idx_c")
+    module subroutine bwd_idx3_sub(n, cab, rcab) bind(C, name="bwd_idx3_c")
       integer, value,    intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: cff(2)
-      real(kind=dbl),    intent(in)  :: rcab(2,n,4)
-      complex(kind=dbl), intent(out) :: cab(n,2)
-    end subroutine fwd_idx_sub
+      complex(kind=dbl), intent(in)  :: cab(*)
+      real(kind=dbl),    intent(out) :: rcab(*)
+    end subroutine bwd_idx3_sub
+    
+    module subroutine fwd_idx2_sub(n, cff, rcab, cab) bind(C, name="fwd_idx2_c")
+      integer, value,    intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff(*)
+      real(kind=dbl),    intent(in)  :: rcab(*)
+      complex(kind=dbl), intent(out) :: cab(*)
+    end subroutine fwd_idx2_sub
+    
+    module subroutine fwd_idx3_sub(n, rcab, cab) bind(C, name="fwd_idx3_c")
+      integer, value,    intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: rcab(*)
+      complex(kind=dbl), intent(out) :: cab(*)
+    end subroutine fwd_idx3_sub
     
     module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork) bind(C, name="bwd_set_c")
       integer, value, intent(in)    :: n, ma1
@@ -146,19 +163,38 @@ module lege_poly
       real(kind=dbl), intent(inout) :: pmj1(*), pmj(*), cr(*)
     end subroutine fwd_rec_sub
 #else
-    module subroutine bwd_idx_sub(n, cff, cab, rcab)
+    module subroutine bwd_idx1_sub(n, cff, cab, rcab)
+      integer,           intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: cff
+      complex(kind=dbl), intent(in)  :: cab(n)
+      real(kind=dbl),    intent(out) :: rcab(2,n)
+    end subroutine bwd_idx1_sub
+    
+    module subroutine bwd_idx2_sub(n, cff, cab, rcab)
       integer,           intent(in)  :: n
       real(kind=dbl),    intent(in)  :: cff(2)
       complex(kind=dbl), intent(in)  :: cab(n,3)
-      real(kind=dbl),    intent(out) :: rcab(2,n,2)
-    end subroutine bwd_idx_sub
+      real(kind=dbl),    intent(out) :: rcab(2,n)
+    end subroutine bwd_idx2_sub
     
-    module subroutine fwd_idx_sub(n, cff, rcab, cab)
+    module subroutine bwd_idx3_sub(n, cab, rcab)
       integer,           intent(in)  :: n
+      complex(kind=dbl), intent(in)  :: cab(n)
+      real(kind=dbl),    intent(out) :: rcab(2,n,2)
+    end subroutine bwd_idx3_sub
+    
+    module subroutine fwd_idx2_sub(n, cff, rcab, cab)
+      integer, value,    intent(in)  :: n
       real(kind=dbl),    intent(in)  :: cff(2)
-      real(kind=dbl),    intent(in)  :: rcab(2,n,4)
-      complex(kind=dbl), intent(out) :: cab(n,2)
-    end subroutine fwd_idx_sub
+      real(kind=dbl),    intent(in)  :: rcab(2,n,3)
+      complex(kind=dbl), intent(out) :: cab(n)
+    end subroutine fwd_idx2_sub
+    
+    module subroutine fwd_idx3_sub(n, rcab, cab)
+      integer, value,    intent(in)  :: n
+      real(kind=dbl),    intent(in)  :: rcab(2,n,2)
+      complex(kind=dbl), intent(out) :: cab(n)
+    end subroutine fwd_idx3_sub
     
     module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork)
       integer,        intent(in)    :: n, ma1
