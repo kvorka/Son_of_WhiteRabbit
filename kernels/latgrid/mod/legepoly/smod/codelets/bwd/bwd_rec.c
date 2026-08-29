@@ -303,6 +303,8 @@ void bwd_rec_c( const int n,
         // Loop over number of spectral rows
         for ( int i3 = 0; i3 < n; i3++ ) {
             
+            _mm_prefetch( ( const char* )( pcc + 16 ), _MM_HINT_T0 );
+            
             r04 = _mm512_set1_pd( *( pcc + 0 ) );
             
             r05 = _mm512_load_pd( psw +  0 );
