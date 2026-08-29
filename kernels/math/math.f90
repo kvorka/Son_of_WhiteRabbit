@@ -41,12 +41,6 @@ module math
       real(kind=dbl), intent(in) :: x
     end function r2c_fn
     
-    module subroutine trans_carray_sub(n, length, arr_from, arr_to)
-      integer,           intent(in)  :: n, length
-      complex(kind=dbl), intent(in)  :: arr_from(n,length)
-      complex(kind=dbl), intent(out) :: arr_to(length,n)
-    end subroutine trans_carray_sub
-    
     module subroutine alloc_aligned_sub( n, c_arr, f_arr )
       integer,                 intent(in)  :: n
       type(c_ptr),             intent(out) :: c_arr
@@ -89,6 +83,12 @@ module math
       complex(kind=dbl), intent(in)    :: arr_from(*)
       complex(kind=dbl), intent(inout) :: arr_to(*)
     end subroutine copy3_carray_sub
+    
+    module subroutine trans_carray_sub(n, length, arr_from, arr_to) bind(C, name="trans_carray_c")
+      integer, value,    intent(in)  :: n, length
+      complex(kind=dbl), intent(in)  :: arr_from(*)
+      complex(kind=dbl), intent(out) :: arr_to(*)
+    end subroutine trans_carray_sub
 #else
     module subroutine zero_carray_sub(length, arr)
       integer,           intent(in)  :: length
@@ -120,6 +120,12 @@ module math
       complex(kind=dbl), intent(in)    :: arr_from(length)
       complex(kind=dbl), intent(inout) :: arr_to(length)
     end subroutine copy3_carray_sub
+    
+    module subroutine trans_carray_sub(n, length, arr_from, arr_to)
+      integer,           intent(in)  :: n, length
+      complex(kind=dbl), intent(in)  :: arr_from(n,length)
+      complex(kind=dbl), intent(out) :: arr_to(length,n)
+    end subroutine trans_carray_sub
 #endif
   end interface
   

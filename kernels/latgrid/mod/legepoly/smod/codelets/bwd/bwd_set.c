@@ -96,8 +96,6 @@ void bwd_set_c( const int n,
     
     for ( int i3 = 0; i3 < n; i3++ ) {
         
-        _mm_prefetch( ( const char* )( pcc + 16 ), _MM_HINT_T0 );
-        
         r04 = _mm256_broadcast_sd( pcc + 0 );
         
         r05 = _mm256_mul_pd( r00, r04 );
@@ -235,8 +233,6 @@ void bwd_set_c( const int n,
           double *psw = swork;
     
     for ( int i3 = 0; i3 < n; i3++ ) {
-        
-        _mm_prefetch( ( const char* )( pcc + 16 ), _MM_HINT_T0 );
         
         r04 = _mm512_set1_pd( *( pcc + 0 ) );
         

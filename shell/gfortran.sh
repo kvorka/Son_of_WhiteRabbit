@@ -4,6 +4,7 @@
 ###########################################################################################
 fcompile="gfortran-12 -Ofast \
                       -march=native \
+                      -mno-vzeroupper \
                       -mprefer-vector-width=512 \
                       -fno-bounds-check \
                       -fargument-noalias-global \
@@ -20,6 +21,7 @@ fcompile="gfortran-12 -Ofast \
 
 ccompile="gcc-12 -Ofast \
                  -march=native \
+                 -mno-vzeroupper \
                  -fno-bounds-check \
                  -fstrict-aliasing \
                  -fomit-frame-pointer \

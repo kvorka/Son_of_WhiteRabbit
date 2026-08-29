@@ -89,7 +89,7 @@ module sphsvt
     module subroutine copy_vgradT_vcurlv_sub(n, v, q, curlv, ca)
       integer,           intent(in)  :: n
       complex(kind=dbl), intent(in)  :: v(n,3), q(n,3), curlv(n,3)
-      complex(kind=dbl), intent(out) :: ca(3,3,n)
+      complex(kind=dbl), intent(out) :: ca(9,n)
     end subroutine copy_vgradT_vcurlv_sub
 #endif
   end interface

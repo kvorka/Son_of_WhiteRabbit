@@ -31,16 +31,13 @@ void eee2xyz_c( const int n,
     // Main cycle unrolled by 2
     for ( ; i <= n-2; i+=2 ) {
         
-        r1 = _mm_loadu_pd( psum1 );
-        r2 = _mm_loadu_pd( psum2 );
-        r3 = _mm_loadu_pd( psum3 );
+        _mm_storeu_pd( pcc +  4, _mm_loadu_pd( psum2 + 0 ) );
+        _mm_storeu_pd( pcc + 10, _mm_loadu_pd( psum2 + 2 ) );
         
+        r1 = _mm_loadu_pd( psum1 + 0 );
         r4 = _mm_loadu_pd( psum1 + 2 );
-        r5 = _mm_loadu_pd( psum2 + 2 );
+        r3 = _mm_loadu_pd( psum3 + 0 );
         r6 = _mm_loadu_pd( psum3 + 2 );
-        
-        _mm_storeu_pd( pcc +  4, r2 );
-        _mm_storeu_pd( pcc + 10, r5 );
         
         r2 = _mm_add_pd( r1, r3 );
         r5 = _mm_add_pd( r4, r6 );
@@ -53,7 +50,7 @@ void eee2xyz_c( const int n,
         r2 = _mm_mul_pd( rsqrt2, r2 );
         r5 = _mm_mul_pd( rsqrt2, r5 );
         
-        _mm_storeu_pd( pcc,     r1 );
+        _mm_storeu_pd( pcc + 0, r1 );
         _mm_storeu_pd( pcc + 6, r4 );
         
         r2 = _mm_shuffle_pd( r2, r2, 1 );
@@ -76,11 +73,10 @@ void eee2xyz_c( const int n,
     // Tail if needed
     if ( i < n ) {
         
-        r1 = _mm_loadu_pd( psum1 );
-        r2 = _mm_loadu_pd( psum2 );
-        r3 = _mm_loadu_pd( psum3 );
+        _mm_storeu_pd( pcc + 4, _mm_loadu_pd( psum2 ) );
         
-        _mm_storeu_pd( pcc + 4, r2 );
+        r1 = _mm_loadu_pd( psum1 );
+        r3 = _mm_loadu_pd( psum3 );
         
         r2 = _mm_add_pd( r1, r3 );
         r1 = _mm_sub_pd( r1, r3 );
