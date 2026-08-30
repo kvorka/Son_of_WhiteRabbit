@@ -11,9 +11,6 @@ void copy1_carray_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles and unrolled increment
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     double *pa = ( double * ) arr;
     
@@ -29,7 +26,7 @@ void copy1_carray_c( const int length,
         // Registers to be used
         __m256d r0, r1, r2, r3;
         
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r0 = _mm256_loadu_pd( pa +  0 );
             r1 = _mm256_loadu_pd( pa +  4 );
@@ -51,7 +48,7 @@ void copy1_carray_c( const int length,
         }
         
         // Remainder loop
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             _mm256_storeu_pd( pa, _mm256_mul_pd( rfac, _mm256_loadu_pd( pa ) ) );
             
@@ -62,7 +59,7 @@ void copy1_carray_c( const int length,
     }
     
     // Last SSE step if needed
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         _mm_storeu_pd( pa, _mm_mul_pd( _mm_load1_pd( fac ), _mm_loadu_pd( pa ) ) );
         
@@ -71,9 +68,6 @@ void copy1_carray_c( const int length,
 }
 #else
 {
-    
-    // Complex is two doubles and unrolled increment
-    const int n2 = 2 * length;
     
     // Casting memory addresses
     double *pa = ( double * ) arr;
@@ -90,7 +84,7 @@ void copy1_carray_c( const int length,
         // Registers to be used
         __m512d r0, r1, r2, r3;
         
-        for ( ; i <= n2-32; i += 32 ) {
+        for ( ; i <= length-16; i += 16 ) {
             
             r0 = _mm512_loadu_pd( pa +  0 );
             r1 = _mm512_loadu_pd( pa +  8 );
@@ -112,7 +106,7 @@ void copy1_carray_c( const int length,
         }
         
         // Remainder loop
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             _mm512_storeu_pd( pa, _mm512_mul_pd( rfac, _mm512_loadu_pd( pa ) ) );
             
@@ -123,11 +117,11 @@ void copy1_carray_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac = _mm_load1_pd( fac );
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             _mm_storeu_pd( pa, _mm_mul_pd( rfac, _mm_loadu_pd( pa ) ) );
             

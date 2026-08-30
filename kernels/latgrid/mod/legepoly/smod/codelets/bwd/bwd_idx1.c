@@ -12,9 +12,6 @@ void bwd_idx1_c( const int n,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * n;
-    
     // Casting memory references
     const double *pcab = ( const double * ) cab;
     
@@ -35,7 +32,7 @@ void bwd_idx1_c( const int n,
         __m256d r00, r01, r02, r03;
         
         // Main cycle unrolled by 4
-        for ( i = 0; i <= n2-16; i += 16 ) {
+        for ( i = 0; i <= n-8; i += 8 ) {
             
             r00 = _mm256_loadu_pd( pc1 +  0 );
             r01 = _mm256_loadu_pd( pc1 +  4 );
@@ -60,13 +57,13 @@ void bwd_idx1_c( const int n,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
         // Constant registers
         const __m128d rfac1 = _mm_load1_pd( cff );
         
         // Main sse cycle
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             _mm_storeu_pd( pr1, _mm_mul_pd( rfac1, _mm_loadu_pd( pc1 ) ) );
             
@@ -80,9 +77,6 @@ void bwd_idx1_c( const int n,
 }
 #else
 {
-    
-    // Complex is two doubles
-    const int n2 = 2 * n;
     
     // Casting memory references
     const double *pcab = ( const double * ) cab;
@@ -104,7 +98,7 @@ void bwd_idx1_c( const int n,
         __m512d r00, r01;
         
         // Main cycle unrolled by 2
-        for ( i = 0; i <= n2-16; i += 16 ) {
+        for ( i = 0; i <= n-8; i += 8 ) {
             
             r00 = _mm512_loadu_pd( pc1 + 0 );
             r01 = _mm512_loadu_pd( pc1 + 8 );
@@ -123,13 +117,13 @@ void bwd_idx1_c( const int n,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
         // Constant registers
         const __m128d rfac1 = _mm_load1_pd( cff );
         
         // Main sse cycle
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             _mm_storeu_pd( pr1, _mm_mul_pd( rfac1, _mm_loadu_pd( pc1 ) ) );
             

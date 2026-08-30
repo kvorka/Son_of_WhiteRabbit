@@ -108,10 +108,10 @@ submodule (ocean) init_state
   module procedure init_state_ocean_sub
     real(kind=dbl) :: ab_help, cf_help
     
-    if ( .not. init_through_file_ocean ) then
-      call init_conduction_sub(this)
-    else
+    if ( init_through_file_ocean ) then
       call init_fromFile_sub(this)
+    else
+      call init_conduction_sub(this)
     end if
     
     !! First step with implicit stepping

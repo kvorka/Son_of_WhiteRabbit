@@ -3,6 +3,7 @@ submodule (ocean) timescheme
   
   module procedure time_scheme_ocean_sub
     integer                        :: ik, ir, ij, ij0
+    real(kind=dbl)                 :: grr
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:)
     
     this%t = this%t + this%dt
@@ -24,25 +25,31 @@ submodule (ocean) timescheme
     
     allocate( v(3*this%jms), curlv(3*this%jms), T(this%jms), gradT(3*this%jms) )
     
-    !$omp do
+    !$omp do private (grr)
     do ir = 2, this%nd
-      !! Get vorticity and temperature gradient
-      call this%curlv_ptp_rr_jm_sub( ir, v, curlv )
-      call this%gradT_ptp_rr_jm_sub( ir, T, gradT, -1 )
-      
-      !! Rescale curl(v) with Prandtl number and T with Rayleigh number
-      call copy1_carray_sub( 3*this%jms, 1 / this%Pr, curlv )
-      call copy1_carray_sub(   this%jms, this%Ra,     T     )
+      !! Get vorticity and temperature gradient with scaling factors
+      call this%curlv_ptp_rr_jm_sub( ir, v, curlv, 1/this%Pr )
+      call this%gradT_ptp_rr_jm_sub( ir, T, gradT, -one )
       
       !! Add ez for Coriolis force
       curlv(2)%re = curlv(2)%re + s4pi * ( 2 / this%Ek )
       
       !! Compute nonlinear terms
-      call this%vgradT_vcurlv_sub( gradT, curlv, v, this%ntemp(1,ir), this%nsph1(1,ir), &
-                                                  & this%ntorr(1,ir), this%nsph2(1,ir)  )
+      call this%lat_grid%scvv_vcvxv_sub( v1   = v,                &
+                                         v2   = gradT,            &
+                                         v3   = curlv,            &
+                                         scal = this%ntemp(1,ir), &
+                                         pol1 = this%nsph1(1,ir), &
+                                         torr = this%ntorr(1,ir), &
+                                         pol2 = this%nsph2(1,ir)  )
       
-      !! Add the thermal buoyancy force
-      call this%buoy_rr_jml_sub( ir, T, this%nsph1(1,ir), this%nsph2(1,ir) )
+      !! Add the thermal buoyancy force with Newtonian gravity profile
+      grr = this%Ra / ( 1 - this%r_ud )**2 / this%rad_grid%rr(ir)**2
+      
+      call this%buoy_rr_jml_sub( fac  = grr,              &
+                                 src  = T,                &
+                                 pol1 = this%nsph1(1,ir), &
+                                 pol2 = this%nsph2(1,ir)  )
     end do
     !$omp end do
     

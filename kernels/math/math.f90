@@ -102,16 +102,16 @@ module math
       complex(kind=dbl), intent(inout) :: arr1(*), arr2(*)
     end subroutine swap_carray_sub
     
-    module subroutine trans_carray_sub(n, length, arr_from, arr_to) bind(C, name="trans_carray_c")
-      integer, value,    intent(in)  :: n, length
+    module subroutine trans_4_carray_sub(length, arr_from, arr_to) bind(C, name="trans_4_carray_c")
+      integer, value,    intent(in)  :: length
       complex(kind=dbl), intent(in)  :: arr_from(*)
       complex(kind=dbl), intent(out) :: arr_to(*)
-    end subroutine trans_carray_sub
+    end subroutine trans_4_carray_sub
     
-    module subroutine trshf_3_carray_sub(n, v1, v2, v3, ca) bind(C, name="trshf_3_carray_c")
-      integer, value,    intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: v1(n,3), v2(n,3), v3(n,3)
-      complex(kind=dbl), intent(out) :: ca(3,3,n)
+    module subroutine trshf_3_carray_sub(length, v1, v2, v3, ca) bind(C, name="trshf_3_carray_c")
+      integer, value,    intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: v1(*), v2(*), v3(*)
+      complex(kind=dbl), intent(out) :: ca(*)
     end subroutine trshf_3_carray_sub
     
     module subroutine gcopy_sub(n, arr_from, arr_to) bind(C, name="gcopy_c")
@@ -185,16 +185,16 @@ module math
       complex(kind=dbl), intent(inout) :: arr1(length), arr2(length)
     end subroutine swap_carray_sub
     
-    module subroutine trans_carray_sub(n, length, arr_from, arr_to)
-      integer,           intent(in)  :: n, length
-      complex(kind=dbl), intent(in)  :: arr_from(n,length)
-      complex(kind=dbl), intent(out) :: arr_to(length,n)
-    end subroutine trans_carray_sub
+    module subroutine trans_4_carray_sub(length, arr_from, arr_to)
+      integer,           intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: arr_from(4,length)
+      complex(kind=dbl), intent(out) :: arr_to(length,4)
+    end subroutine trans_4_carray_sub
     
-    module subroutine trshf_3_carray_sub(n, v1, v2, v3, ca)
-      integer,           intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: v1(n,3), v2(n,3), v3(n,3)
-      complex(kind=dbl), intent(out) :: ca(3,3,n)
+    module subroutine trshf_3_carray_sub(length, v1, v2, v3, ca)
+      integer,           intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: v1(length,3), v2(length,3), v3(length,3)
+      complex(kind=dbl), intent(out) :: ca(3,3,length)
     end subroutine trshf_3_carray_sub
     
     module subroutine gcopy_sub(n, arr_from, arr_to)

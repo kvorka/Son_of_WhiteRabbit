@@ -1,7 +1,7 @@
-submodule (ocean) vgradT_vcurlv
+submodule (lateral_grid) scvv_vcvxv
   implicit none; contains
   
-  module procedure vgradT_vcurlv_ocean_sub
+  module procedure scvv_vcvxv_sub
     integer                        :: nca, ncc, ncr
     complex(kind=dbl), allocatable :: cb(:), cr(:), ca(:)
     
@@ -16,7 +16,7 @@ submodule (ocean) vgradT_vcurlv
     !! to have the data in a contiguous storage before the heavy lifting
     allocate( ca(nca) )
     
-    call trshf_3_carray_sub( this%rxd%jms, v, q, curlv, ca )
+    call trshf_3_carray_sub( this%rxd%jms, v1, v2, v3, ca )
     
     !! Allocate the array for x,y,z components and transform the 3 vectors into 9 scalars
     !! representing the expansions for cartesian components: despite after the previous
@@ -31,7 +31,7 @@ submodule (ocean) vgradT_vcurlv
     
     !! After all the preparation, the transform is here: on the output, vgradT is stored
     !! in cr(1,*), while vcurlvx, vcurlvy and vcurlz are in cr(2:4,*)
-    call this%lat_grid%transform_sub( 4, 9, cb, cr, grid_op_vgradT_vcurlv_sub )
+    call this%transform_sub( 4, 9, cb, cr, grid_op_scvv_vcvxv_sub )
     
     deallocate( cb )
     
@@ -40,16 +40,16 @@ submodule (ocean) vgradT_vcurlv
     !! addded to math@ctrans.f90 by hand.
     allocate( ca(ncr) )
     
-    call trans_carray_sub( 4, this%rxd%jms1, cr, ca )
+    call trans_4_carray_sub( this%rxd%jms1, cr, ca )
     
     deallocate( cr )
     
     !! Now we can freely transer the data into destination fields with a changed indexation
-    call this%rxd%scal2scal_mj_to_jm_sub( ca(1), ntemp )
-    call this%rxd%scal2vec_mj_to_jm_sub( ca(this%rxd%jms1+1), nsph1, ntorr, nsph2 )
+    call this%rxd%scal2scal_mj_to_jm_sub( ca(1), scal )
+    call this%rxd%scal2vec_mj_to_jm_sub( ca(this%rxd%jms1+1), pol1, torr, pol2 )
     
     deallocate( ca )
     
-  end procedure vgradT_vcurlv_ocean_sub
+  end procedure scvv_vcvxv_sub
   
-end submodule vgradT_vcurlv
+end submodule scvv_vcvxv

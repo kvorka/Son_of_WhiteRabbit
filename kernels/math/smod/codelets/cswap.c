@@ -11,9 +11,6 @@ void swap_carray_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles and unrolled increment
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     double *p1 = ( double * ) arr1;
     double *p2 = ( double * ) arr2;
@@ -29,7 +26,7 @@ void swap_carray_c( const int length,
                 r02, r12, r22, r32;
         
         // Main cycle unrolled by 4
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r01 = _mm256_loadu_pd( p1 +  0 );
             r11 = _mm256_loadu_pd( p1 +  4 );
@@ -57,12 +54,14 @@ void swap_carray_c( const int length,
         }
         
         // Remainer loop
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             r01 = _mm256_loadu_pd( p1 );
+            
             r02 = _mm256_loadu_pd( p2 );
             
             _mm256_storeu_pd( p1, r02 );
+            
             _mm256_storeu_pd( p2, r01 );
             
             p1 += 4;
@@ -73,12 +72,14 @@ void swap_carray_c( const int length,
     }
     
     // Last SSE step if needed
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         __m128d r01 = _mm_loadu_pd( p1 );
+        
         __m128d r02 = _mm_loadu_pd( p2 );
         
         _mm_storeu_pd( p1, r02 );
+        
         _mm_storeu_pd( p2, r01 );
         
     }
@@ -86,9 +87,6 @@ void swap_carray_c( const int length,
 }
 #else
 {
-    
-    // Complex is two doubles and unrolled increment
-    const int n2 = 2 * length;
     
     // Casting memory addresses
     double *p1 = ( double * ) arr1;
@@ -105,7 +103,7 @@ void swap_carray_c( const int length,
                 r02, r12, r22, r32;
         
         // Main cycle unrolled by 4
-        for ( ; i <= n2-32; i += 32 ) {
+        for ( ; i <= length-16; i += 16 ) {
             
             r01 = _mm512_loadu_pd( p1 +  0 );
             r11 = _mm512_loadu_pd( p1 +  8 );
@@ -133,7 +131,7 @@ void swap_carray_c( const int length,
         }
         
         // Remainer loop
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             r01 = _mm512_loadu_pd( p1 );
             r02 = _mm512_loadu_pd( p2 );
@@ -149,11 +147,11 @@ void swap_carray_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         __m128d r01, r02;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             r01 = _mm_loadu_pd( p1 );
             r02 = _mm_loadu_pd( p2 );

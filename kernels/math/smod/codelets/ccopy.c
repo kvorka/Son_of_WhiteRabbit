@@ -11,9 +11,6 @@ void copy_carray_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pf = ( const double * ) arr_from;
           double *pt = (       double * ) arr_to;
@@ -28,7 +25,7 @@ void copy_carray_c( const int length,
         __m256d r0, r1, r2, r3;
         
         // Loop unrolled by 4
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r0 = _mm256_loadu_pd( pf +  0 );
             r1 = _mm256_loadu_pd( pf +  4 );
@@ -46,7 +43,7 @@ void copy_carray_c( const int length,
         }
         
         // Remainer loop
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             _mm256_storeu_pd( pt, _mm256_loadu_pd( pf ) );
             
@@ -58,7 +55,7 @@ void copy_carray_c( const int length,
     }
     
     // Last SSE step if needed
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         _mm_storeu_pd( pt, _mm_loadu_pd( pf ) );
         
@@ -67,9 +64,6 @@ void copy_carray_c( const int length,
 }
 #else
 {
-    
-    // Complex is two doubles
-    const int n2 = 2 * length;
     
     // Casting memory addresses
     const double *pf = ( const double * ) arr_from;
@@ -85,7 +79,7 @@ void copy_carray_c( const int length,
         __m512d r0, r1, r2, r3;
         
         // Loop unrolled by 4
-        for ( ; i <= n2-32; i += 32 ) {
+        for ( ; i <= length-16; i += 16 ) {
             
             r0 = _mm512_loadu_pd( pf +  0 );
             r1 = _mm512_loadu_pd( pf +  8 );
@@ -103,7 +97,7 @@ void copy_carray_c( const int length,
         }
         
         // Remainer loop
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             _mm512_storeu_pd( pt, _mm512_loadu_pd( pf ) );
             
@@ -115,9 +109,9 @@ void copy_carray_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             _mm_storeu_pd( pt, _mm_loadu_pd( pf ) );
             

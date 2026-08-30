@@ -15,9 +15,6 @@ void copy4_carray_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *p1 = ( const double * ) arr1;
     const double *p2 = ( const double * ) arr2;
@@ -39,7 +36,7 @@ void copy4_carray_c( const int length,
                 r10, r11, r12, r13;
         
         // Main cycle unrolled by 4 with fma instructions
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r00 = _mm256_loadu_pd( p1 +  0 );
             r01 = _mm256_loadu_pd( p1 +  4 );
@@ -108,7 +105,7 @@ void copy4_carray_c( const int length,
         
         // Remainder loop without fma instructions
         // as there is nowhere to hide their latency
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             r00 = _mm256_loadu_pd( p1 );
             r01 = _mm256_loadu_pd( p2 );
@@ -132,7 +129,7 @@ void copy4_carray_c( const int length,
     }
     
     // Last SSE step if needed, again, without fma
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac1 = _mm_load1_pd( fac1 );
         const __m128d rfac2 = _mm_load1_pd( fac2 );
@@ -159,9 +156,6 @@ void copy4_carray_c( const int length,
 #else
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *p1 = ( const double * ) arr1;
     const double *p2 = ( const double * ) arr2;
@@ -183,7 +177,7 @@ void copy4_carray_c( const int length,
                 r10, r11, r12, r13;
         
         // Main cycle unrolled by 4 with fma instructions
-        for ( ; i <= n2-32; i += 32 ) {
+        for ( ; i <= length-16; i += 16 ) {
             
             r00 = _mm512_loadu_pd( p1 +  0 );
             r01 = _mm512_loadu_pd( p1 +  8 );
@@ -228,7 +222,7 @@ void copy4_carray_c( const int length,
         
         // Remainder loop without fma instructions
         // as there is nowhere to hide their latency
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             r00 = _mm512_loadu_pd( p1 );
             r01 = _mm512_loadu_pd( p2 );
@@ -252,7 +246,7 @@ void copy4_carray_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac1 = _mm_load1_pd( fac1 );
         const __m128d rfac2 = _mm_load1_pd( fac2 );
@@ -260,7 +254,7 @@ void copy4_carray_c( const int length,
         
         __m128d r00, r01, r02;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             r00 = _mm_loadu_pd( p1 );
             r01 = _mm_loadu_pd( p2 );

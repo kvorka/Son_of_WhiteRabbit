@@ -1,7 +1,7 @@
-submodule (ocean) grid_vgradT_vcurlv
+submodule (lateral_grid) op_scvv_vcvxv
   implicit none; contains
   
-  module procedure grid_op_vgradT_vcurlv_sub
+  module procedure grid_op_scvv_vcvxv_sub
     integer :: i0, i1, i3
     
     do i3 = 0, nfour-1
@@ -18,6 +18,6 @@ submodule (ocean) grid_vgradT_vcurlv
       end do
     end do
     
-  end procedure grid_op_vgradT_vcurlv_sub
+  end procedure grid_op_scvv_vcvxv_sub
   
-end submodule grid_vgradT_vcurlv
+end submodule op_scvv_vcvxv

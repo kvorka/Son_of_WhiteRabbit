@@ -4,7 +4,7 @@
 #include <emmintrin.h>
 
 extern inline __attribute__((always_inline))
-void trshf_3_carray_c( const int n,
+void trshf_3_carray_c( const int length,
                        const double complex *restrict v1,
                        const double complex *restrict v2,
                        const double complex *restrict v3,
@@ -19,15 +19,15 @@ void trshf_3_carray_c( const int n,
           double *pt  = (       double * ) ca;
     
     // Memory addresses to be used
-    const double *p1 = pv1 + 0*n;
-    const double *p2 = pv1 + 2*n;
-    const double *p3 = pv1 + 4*n;
-    const double *p4 = pv2 + 0*n;
-    const double *p5 = pv2 + 2*n;
-    const double *p6 = pv2 + 4*n;
-    const double *p7 = pv3 + 0*n;
-    const double *p8 = pv3 + 2*n;
-    const double *p9 = pv3 + 4*n;
+    const double *p1 = pv1 + 0*length;
+    const double *p2 = pv1 + 2*length;
+    const double *p3 = pv1 + 4*length;
+    const double *p4 = pv2 + 0*length;
+    const double *p5 = pv2 + 2*length;
+    const double *p6 = pv2 + 4*length;
+    const double *p7 = pv3 + 0*length;
+    const double *p8 = pv3 + 2*length;
+    const double *p9 = pv3 + 4*length;
     
     // Iterator
     int i = 0;
@@ -41,7 +41,7 @@ void trshf_3_carray_c( const int n,
                 r04, r05, r06, r07;
         
         // Main cycle
-        for ( ; i <= n-2; i += 2 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             r00 = _mm256_loadu_pd( p1 );
             r01 = _mm256_loadu_pd( p4 );
@@ -95,7 +95,7 @@ void trshf_3_carray_c( const int n,
     }
     
     // SSE remainder (non-loop)
-    if ( i < n ) {
+    if ( i < length ) {
             
         // Registers to be used
         __m128d s00, s01, s02;

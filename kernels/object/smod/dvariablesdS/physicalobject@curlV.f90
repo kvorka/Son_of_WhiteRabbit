@@ -8,7 +8,7 @@ submodule (physicalobject) curlV
       
       call this%dv_dr_ptp_rr_jm_sub( ir, v, dv )
       
-      call this%curl_ptp_sub( ir, v, dv, curlv )
+      call this%curl_ptp_sub( fac, ir, v, dv, curlv )
       
     deallocate( dv )
     

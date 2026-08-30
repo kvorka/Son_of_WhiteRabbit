@@ -72,6 +72,15 @@ submodule (ocean) init
     close(11)
     close(12)
     
+    deallocate( this%ntemp )
+    deallocate( this%ntorr )
+    deallocate( this%nsph1 )
+    deallocate( this%nsph2 )
+    
+    call this%deallocEqs_sub( this%temp )
+    call this%deallocEqs_sub( this%torr )
+    call this%deallocEqs_sub( this%mech )
+    
     call this%deallocate_objects_sub()
     
   end procedure deallocate_ocean_sub

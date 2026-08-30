@@ -12,9 +12,6 @@ void copy3_carray_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pf = ( const double * ) arr_from;
           double *pt = (       double * ) arr_to;
@@ -33,7 +30,7 @@ void copy3_carray_c( const int length,
                 rt0, rt1, rt2, rt3;
         
         // Main loop with fma instructions unrolled by 4
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             rf0 = _mm256_loadu_pd( pf +  0 );
             rf1 = _mm256_loadu_pd( pf +  4 );
@@ -74,7 +71,7 @@ void copy3_carray_c( const int length,
         
         // Remainder loop without fma instructions
         // as there is nowhere to hide their latency
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             rf0 = _mm256_loadu_pd( pf );
             rt0 = _mm256_loadu_pd( pt );
@@ -91,7 +88,7 @@ void copy3_carray_c( const int length,
     }
     
     // Last SSE step if needed, again, without fma
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac = _mm_load1_pd( fac );
               __m128d rf0  = _mm_loadu_pd( pf  );
@@ -106,9 +103,6 @@ void copy3_carray_c( const int length,
 }
 #else
 {
-    
-    // Complex is two doubles
-    const int n2 = 2 * length;
     
     // Casting memory addresses
     const double *pf = ( const double * ) arr_from;
@@ -128,7 +122,7 @@ void copy3_carray_c( const int length,
                 rt0, rt1, rt2, rt3;
         
         // Main loop with fma instructions unrolled by 4
-        for ( ; i <= n2-32; i += 32 ) {
+        for ( ; i <= length-16; i += 16 ) {
             
             rf0 = _mm512_loadu_pd( pf +  0 );
             rf1 = _mm512_loadu_pd( pf +  8 );
@@ -157,7 +151,7 @@ void copy3_carray_c( const int length,
         
         // Remainder loop without fma instructions
         // as there is nowhere to hide their latency
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             rf0 = _mm512_loadu_pd( pf );
             rt0 = _mm512_loadu_pd( pt );
@@ -174,12 +168,12 @@ void copy3_carray_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac = _mm_load1_pd( fac );
               __m128d rt0, rf0;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             rf0 = _mm_loadu_pd( pf );
             rt0 = _mm_loadu_pd( pt );

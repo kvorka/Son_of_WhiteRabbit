@@ -17,9 +17,6 @@ void grad_pp_j_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pdarr = ( const double * ) darr;
     const double *parr  = ( const double * ) arr;
@@ -43,7 +40,7 @@ void grad_pp_j_c( const int length,
                 r10, r11, r12, r13;
         
         // Main cycle unrolled by 2 with fma instructions
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             r10 = _mm256_loadu_pd( parr  + 0 );
             r11 = _mm256_loadu_pd( parr  + 4 );
@@ -88,7 +85,7 @@ void grad_pp_j_c( const int length,
         
         // Remainder loop without fma instructions
         // as there is nowhere to hide their latency
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             r10 = _mm256_loadu_pd( parr  );
             r12 = _mm256_loadu_pd( pdarr );
@@ -115,7 +112,7 @@ void grad_pp_j_c( const int length,
     }
     
     // Last SSE step if needed, again, without fma
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac1 = _mm_load1_pd( fac1 );
         const __m128d rfac2 = _mm_load1_pd( fac2 );
@@ -145,9 +142,6 @@ void grad_pp_j_c( const int length,
 #else
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pdarr = ( const double * ) darr;
     const double *parr  = ( const double * ) arr;
@@ -171,7 +165,7 @@ void grad_pp_j_c( const int length,
                 r10, r11, r12, r13;
         
         // Main cycle unrolled by 2 with fma instructions
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r10 = _mm512_loadu_pd( parr  + 0 );
             r11 = _mm512_loadu_pd( parr  + 8 );
@@ -203,7 +197,7 @@ void grad_pp_j_c( const int length,
         
         // Remainder loop without fma instructions
         // as there is nowhere to hide their latency
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             r10 = _mm512_loadu_pd( parr  );
             r12 = _mm512_loadu_pd( pdarr );
@@ -230,7 +224,7 @@ void grad_pp_j_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac1 = _mm_load1_pd( fac1 );
         const __m128d rfac2 = _mm_load1_pd( fac2 );
@@ -239,7 +233,7 @@ void grad_pp_j_c( const int length,
         
         __m128d r00, r10, r12;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             r10 = _mm_loadu_pd( parr  );
             r12 = _mm_loadu_pd( pdarr );

@@ -24,9 +24,6 @@ void curl_ptp_j_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pdarr1 = ( const double * ) darr1;
     const double *pdarr2 = ( const double * ) darr2;
@@ -58,7 +55,7 @@ void curl_ptp_j_c( const int length,
         __m256d r00, r01, r02, r03;
         
         // Main cycle with fma instructions
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             r00 = _mm256_loadu_pd( parr2  );
             r01 = _mm256_loadu_pd( pdarr2 );
@@ -129,7 +126,7 @@ void curl_ptp_j_c( const int length,
     }
     
     // Last SSE step if needed
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         // Constant registers
         const __m128d rfac1 = _mm_load1_pd( fac1 );
@@ -202,9 +199,6 @@ void curl_ptp_j_c( const int length,
 #else
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pdarr1 = ( const double * ) darr1;
     const double *pdarr2 = ( const double * ) darr2;
@@ -237,7 +231,7 @@ void curl_ptp_j_c( const int length,
                 r10, r11, r12, r13;
         
         // Main cycle unrolled by 2 with fma instructions
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r00 = _mm512_loadu_pd( parr2  + 0 );
             r10 = _mm512_loadu_pd( parr2  + 8 );
@@ -314,7 +308,7 @@ void curl_ptp_j_c( const int length,
         }
         
         // Remainder (non-loop)
-        if ( i <= n2-8 ) {
+        if ( i <= length-4 ) {
             
             r00 = _mm512_loadu_pd( parr2  );
             r01 = _mm512_loadu_pd( pdarr2 );
@@ -364,14 +358,14 @@ void curl_ptp_j_c( const int length,
             pcrl2 += 8;
             pcrl3 += 8;
             
-            i += 8;
+            i += 4;
             
         }
         
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         // Constant registers
         const __m128d rfac1 = _mm_load1_pd( fac1 );
@@ -385,7 +379,7 @@ void curl_ptp_j_c( const int length,
         
         __m128d r00, r01, r02, r03;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             r00 = _mm_loadu_pd( parr2  );
             r01 = _mm_loadu_pd( pdarr2 );

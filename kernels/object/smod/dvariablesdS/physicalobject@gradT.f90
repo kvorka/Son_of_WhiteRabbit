@@ -8,7 +8,7 @@ submodule (physicalobject) gradT
       
       call this%dT_dr_rr_jm_sub( ir, T, dT )
       
-      call this%grad_ptp_sub( sgn, ir, T, dT, gradT )
+      call this%grad_ptp_sub( fac, ir, T, dT, gradT )
       
     deallocate( dT )
     

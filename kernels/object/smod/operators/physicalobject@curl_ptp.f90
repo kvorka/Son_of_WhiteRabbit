@@ -14,13 +14,13 @@ submodule (physicalobject) curl_ptp
         curlv(1,3) = czero
     
     do ij = 1, this%jmax
-      cj1 = sqrt( ( ij+1 ) / ( 2*ij + one ) )
-      cj2 = sqrt( ( ij   ) / ( 2*ij + one ) )
+      cj1 = sqrt( ( ij+1 ) / ( 2*ij + one ) ) * fac
+      cj2 = sqrt( ( ij   ) / ( 2*ij + one ) ) * fac
       
-      cjr1 = (ij-1) * crr
-      cjr2 = (ij  ) * crr
-      cjr3 = (ij+1) * crr
-      cjr4 = (ij+2) * crr
+      cjr1 = (ij-1) * crr * fac
+      cjr2 = (ij  ) * crr * fac
+      cjr3 = (ij+1) * crr * fac
+      cjr4 = (ij+2) * crr * fac
       
       ij0 = jm(ij,0)
       

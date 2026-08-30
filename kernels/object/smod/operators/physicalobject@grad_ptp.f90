@@ -8,11 +8,11 @@ submodule (physicalobject) grad_ptp
     !ij = 0
     !  im = 0
         gradT(1,1) = czero
-        gradT(1,3) = -sgn * dT_dr(1)
+        gradT(1,3) = -fac * dT_dr(1)
     
     do ij = 1, this%jmax
-      cj1 = +sqrt( ( ij   ) / ( 2*ij + one ) ) * sgn
-      cj2 = -sqrt( ( ij+1 ) / ( 2*ij + one ) ) * sgn
+      cj1 = +sqrt( ( ij   ) / ( 2*ij + one ) ) * fac
+      cj2 = -sqrt( ( ij+1 ) / ( 2*ij + one ) ) * fac
       
       cjr1 = +(ij+1) / this%rad_grid%rr(ir)
       cjr2 = -(ij  ) / this%rad_grid%rr(ir)

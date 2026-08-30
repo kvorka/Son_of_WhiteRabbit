@@ -5,7 +5,7 @@ submodule (math) ctra3v
     integer :: i
     
     !$omp simd
-    do i = 1, n
+    do i = 1, length
       ca(1,1,i) = v1(i,1)
       ca(2,1,i) = v2(i,1)
       ca(3,1,i) = v3(i,1)
