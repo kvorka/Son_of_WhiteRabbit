@@ -1,6 +1,7 @@
 module physicalobject
   use math
   use sph
+  use sphsvt
   use lateral_grid
   use radial_grid
   use equations
@@ -14,6 +15,7 @@ module physicalobject
     
     type(T_radialGrid)             :: rad_grid
     type(T_lateralGrid)            :: lat_grid
+    type(T_sphsvt)                 :: rxd
     type(T_equations), allocatable :: temp(:), torr(:), mech(:)
     complex(kind=dbl), allocatable :: nsph1(:,:), nsph2(:,:), ntorr(:,:), ntemp(:,:)
     
@@ -66,17 +68,17 @@ module physicalobject
       complex(kind=dbl),       intent(out) :: temp1(this%jms), temp2(this%jms), temp3(this%jms), temp4(this%jms)
     end subroutine temp4_rr_jm_sub
     
-    module subroutine dT_dr_rr_jm_sub(this, ir, T, dT)
+    module subroutine dT_dr_rr_jm_sub(this, ir, T, dT, temp3)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: T(this%jms), dT(this%jms)
+      complex(kind=dbl),       intent(out) :: T(this%jms), dT(this%jms), temp3(this%jms)
     end subroutine dT_dr_rr_jm_sub
     
-    module subroutine gradT_ptp_rr_jm_sub(this, ir, T, gradT, fac)
+    module subroutine gradT_ptp_rr_jm_sub(this, ir, T, gradT, fac, work)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       real(kind=dbl),          intent(in)  :: fac
-      complex(kind=dbl),       intent(out) :: T(this%jms), gradT(this%jms,3)
+      complex(kind=dbl),       intent(out) :: T(this%jms), gradT(3*this%jms), work(this%jms)
     end subroutine gradT_ptp_rr_jm_sub
     
     !! Interfaces :: temperature on r grid
@@ -109,17 +111,17 @@ module physicalobject
       complex(kind=dbl),       intent(out) :: v1(this%jms,3), v2(this%jms,3), v3(this%jms,3)
     end subroutine velc3_ptp_rr_jm_sub
     
-    module subroutine dv_dr_ptp_rr_jm_sub(this, ir, v, dv)
+    module subroutine dv_dr_ptp_rr_jm_sub(this, ir, v, dv, v3)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
-      complex(kind=dbl),       intent(out) :: dv(this%jms,3), v(this%jms,3)
+      complex(kind=dbl),       intent(out) :: v(this%jms,3), dv(this%jms,3), v3(this%jms,3)
     end subroutine dv_dr_ptp_rr_jm_sub
     
-    module subroutine curlv_ptp_rr_jm_sub(this, ir, v, curlv, fac)
+    module subroutine curlv_ptp_rr_jm_sub(this, ir, v, curlv, fac, work)
       class(T_physicalObject), intent(in)  :: this
       integer,                 intent(in)  :: ir
       real(kind=dbl),          intent(in)  :: fac
-      complex(kind=dbl),       intent(out) :: v(this%jms,3), curlv(this%jms,3)
+      complex(kind=dbl),       intent(out) :: v(3*this%jms), curlv(3*this%jms), work(3*this%jms)
     end subroutine curlv_ptp_rr_jm_sub
     
     !! Interfaces :: output

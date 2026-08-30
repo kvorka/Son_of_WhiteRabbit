@@ -31,7 +31,7 @@ mathpath=kernels/math
 sphidxpath=kernels/sph
 fftpath=kernels/latgrid/mod/fft
 legepath=kernels/latgrid/mod/legepoly
-sphsvtpath=kernels/latgrid/mod/sphsvt
+sphsvtpath=kernels/sphsvt
 latgridpath=kernels/latgrid
 radgridpath=kernels/radgrid
 eqspath=kernels/equations
@@ -60,7 +60,6 @@ lvl1=( "${mathpath}/smod"
        "${sphsvtpath}/smod/cleb" 
        "${sphsvtpath}/smod/transform" 
        "${latgridpath}/smod/" 
-       "${latgridpath}/scvv_vcvxv/" 
        "${radgridpath}/smod/init" 
        "${radgridpath}/smod/differences" 
        "${radgridpath}/smod/integration" 

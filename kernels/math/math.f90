@@ -48,6 +48,11 @@ module math
     end subroutine free_aligned_sub
     
 #if defined ( kernelC )
+    module subroutine zero_rarray_sub(istart, length, arr) bind(C, name="zero_rarray_c")
+      integer, value, intent(in)  :: istart, length
+      real(kind=dbl), intent(out) :: arr(*)
+    end subroutine zero_rarray_sub
+    
     module subroutine zero_carray_sub(length, arr) bind(C, name="zero_carray_c")
       integer, value,    intent(in)  :: length
       complex(kind=dbl), intent(out) :: arr(*)
@@ -149,6 +154,11 @@ module math
       complex(kind=dbl), intent(inout) :: cx(*), cy(*)
     end subroutine xy2ee_sub
 #else
+    module subroutine zero_rarray_sub(istart, length, arr)
+      integer, value, intent(in)  :: istart, length
+      real(kind=dbl), intent(out) :: arr(length)
+    end subroutine zero_rarray_sub
+    
     module subroutine zero_carray_sub(length, arr)
       integer,           intent(in)  :: length
       complex(kind=dbl), intent(out) :: arr(length)

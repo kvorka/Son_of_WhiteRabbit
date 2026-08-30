@@ -8,6 +8,7 @@ module sphsvt
     contains
     
     procedure :: init_sub => init_sphsvt_sub
+    procedure :: alloc_work_rxd_sub
     procedure :: scal2scal_mj_to_jm_sub, vec2scal_jm_to_mj_sub, scal2vec_mj_to_jm_sub
     
   end type T_sphsvt
@@ -17,6 +18,12 @@ module sphsvt
       class(T_sphsvt), intent(inout) :: this
       integer,         intent(in)    :: jmax
     end subroutine init_sphsvt_sub
+    
+    module subroutine alloc_work_rxd_sub(this, n, work)
+      class(T_sphsvt),                intent(in) :: this
+      integer,                        intent(in) :: n
+      complex(kind=dbl), allocatable, intent(out) :: work(:)
+    end subroutine alloc_work_rxd_sub
     
     module subroutine vec2scal_jm_to_mj_sub(this, nca, ca, cc)
       class(T_sphsvt),   intent(in)  :: this
