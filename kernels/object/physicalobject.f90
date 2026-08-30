@@ -9,7 +9,7 @@ module physicalobject
   
   type, abstract, public :: T_physicalObject
     character(len=5) :: thermal_bnd, diffusion_type
-    integer          :: nd, jmax, jms, jmv, n_iter, poc
+    integer          :: nd, jmax, jms, jmv, poc
     real(kind=dbl)   :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
     
     type(T_radialGrid)             :: rad_grid
@@ -24,9 +24,9 @@ module physicalobject
     
     procedure, pass :: temp_rr_fn, temp_rr_jm_sub, temp3_rr_jm_sub, temp4_rr_jm_sub, dT_dr_rr_jm_sub, gradT_ptp_rr_jm_sub,  &
                      & temp_r_fn, dT_dr_r_fn, dT_dr_r_jm_sub, velc_rr_jml_sub, dv_dr_ptp_rr_jm_sub, velc3_ptp_rr_jm_sub,    &
-                     & curlv_ptp_rr_jm_sub, init_eq_all_sub, mat_temp_sub, mat_mech_sub, mat_torr_sub, prepare_mat_mech_sub,   &
+                     & curlv_ptp_rr_jm_sub, mat_temp_sub, mat_mech_sub, mat_torr_sub, prepare_mat_mech_sub,   &
                      & prepare_mat_temp_sub, prepare_mat_torr_sub, solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub, &
-                     & solve_all_sub, init_nl_all_sub, hdiff_fn, buoy_rr_jml_sub, grad_ptp_sub, curl_ptp_sub, vypis_sub, &
+                     & hdiff_fn, buoy_rr_jml_sub, grad_ptp_sub, curl_ptp_sub, vypis_sub, &
                      & reynolds_fn, nuss_fn, deallocEqs_sub
     
   end type T_physicalObject
@@ -190,16 +190,6 @@ module physicalobject
       real(kind=dbl),          intent(out) :: matica(18,5*this%nd+2)
     end subroutine mat_mech_sub
     
-    !! Interfaces :: init equations
-    module subroutine init_eq_all_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine init_eq_all_sub
-    
-    !! Interfaces :: init non-linear terms
-    module subroutine init_nl_all_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine init_nl_all_sub
-    
     !! Interfaces :: solvers
     module subroutine solve_temp_ij_sub(this, ij)
       class(T_physicalObject), intent(inout) :: this
@@ -215,10 +205,6 @@ module physicalobject
       class(T_physicalObject), intent(inout) :: this
       integer,                 intent(in)    :: ij
     end subroutine solve_mech_ij_sub
-    
-    module subroutine solve_all_sub(this)
-      class(T_physicalObject), intent(inout) :: this
-    end subroutine solve_all_sub
     
     !! Interfaces :: diagnostics
     module real(kind=dbl) function nuss_fn(this)

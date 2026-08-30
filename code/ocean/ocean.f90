@@ -10,24 +10,31 @@ module ocean
     procedure, public, pass :: init_sub        => init_ocean_sub
     procedure, public, pass :: deallocate_sub  => deallocate_ocean_sub
     
-    procedure, public, pass :: fullnl_sub         => vgradT_vcurlv_ocean_sub
     procedure, public, pass :: time_scheme_sub    => time_scheme_ocean_sub
-    procedure, public, pass :: iter_sub           => iter_ocean_sub
-    procedure, public, pass :: speed_sub          => speed_ocean_sub
     procedure, public, pass :: vypis_ocean_sub    => vypis_ocean_sub
     
   end type T_ocean
   
   interface
     module subroutine init_ocean_sub(this, speed)
-      class(T_ocean), intent(inout)          :: this
-      logical,        intent(in),   optional :: speed
+      class(T_ocean), intent(inout) :: this
+      logical,        intent(in)    :: speed
     end subroutine init_ocean_sub
     
     module subroutine deallocate_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine deallocate_ocean_sub
     
+    module subroutine time_scheme_ocean_sub(this)
+      class(T_ocean), intent(inout) :: this
+    end subroutine time_scheme_ocean_sub
+    
+    module subroutine vypis_ocean_sub(this)
+      class(T_ocean), intent(inout) :: this
+    end subroutine vypis_ocean_sub
+  end interface
+  
+  interface
     module subroutine init_temp_bbnd_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine init_temp_bbnd_ocean_sub
@@ -35,26 +42,6 @@ module ocean
     module subroutine init_state_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine init_state_ocean_sub
-    
-    module subroutine time_scheme_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine time_scheme_ocean_sub
-    
-    module subroutine iter_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine iter_ocean_sub
-    
-    module subroutine speed_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine speed_ocean_sub
-    
-    module subroutine vypis_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine vypis_ocean_sub
-    
-    module subroutine vgradT_vcurlv_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine vgradT_vcurlv_ocean_sub
   end interface
   
 end module ocean

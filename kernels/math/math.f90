@@ -17,7 +17,6 @@ module math
   
   complex(kind=dbl), parameter :: cunit = cmplx(zero, one , kind=dbl)
   complex(kind=dbl), parameter :: czero = cmplx(zero, zero, kind=dbl)
-  complex(kind=dbl), parameter :: cs4pi = cmplx(s4pi, zero, kind=dbl)
   
   interface
     module elemental function int2str_fn(n) result(str)

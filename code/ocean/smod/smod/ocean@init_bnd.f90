@@ -19,7 +19,9 @@ submodule (ocean) init_bnd
                 write(*,*) 'invalid initflux file'
                 stop
               else
-                this%temp(0)%rhs1(0,1) = cs4pi
+                this%temp(0)%rhs1(0,1)%re = s4pi
+                this%temp(0)%rhs1(0,1)%im = zero
+                
                 normFlux = flux%re / s4pi
               end if
             
@@ -37,7 +39,8 @@ submodule (ocean) init_bnd
       end select
       
     else
-      this%temp(0)%rhs1(0,1) = cs4pi
+      this%temp(0)%rhs1(0,1)%re = s4pi
+      this%temp(0)%rhs1(0,1)%im = zero
       
     end if
     

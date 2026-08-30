@@ -1,9 +1,11 @@
-submodule (ocean) nonlin
+submodule (ocean) timescheme
   implicit none; contains
   
-  module procedure vgradT_vcurlv_ocean_sub
-    integer                        :: ir, ij, ij0
+  module procedure time_scheme_ocean_sub
+    integer                        :: ik, ir, ij, ij0
     complex(kind=dbl), allocatable :: v(:), curlv(:), T(:), gradT(:)
+    
+    this%t = this%t + this%dt
     
     !$omp parallel private (v, curlv, T, gradT)
     
@@ -28,17 +30,18 @@ submodule (ocean) nonlin
       call this%curlv_ptp_rr_jm_sub( ir, v, curlv )
       call this%gradT_ptp_rr_jm_sub( ir, T, gradT, -1 )
       
-      !! Rescale curl(v) with Prandtl number
+      !! Rescale curl(v) with Prandtl number and T with Rayleigh number
       call copy1_carray_sub( 3*this%jms, 1 / this%Pr, curlv )
+      call copy1_carray_sub(   this%jms, this%Ra,     T     )
       
       !! Add ez for Coriolis force
-      curlv(2) = curlv(2) + cs4pi * ( 2 / this%Ek )
+      curlv(2)%re = curlv(2)%re + s4pi * ( 2 / this%Ek )
       
       !! Compute nonlinear terms
       call this%lat_grid%vgradT_vcurlv_sub( gradT, curlv, v, this%ntemp(1,ir), this%nsph1(1,ir), &
-                                                          &  this%ntorr(1,ir), this%nsph2(1,ir)  )
+                                                           & this%ntorr(1,ir), this%nsph2(1,ir)  )
       
-      !! Add the buoyancy force with Newtonian gravity profile
+      !! Add the thermal buoyancy force
       call this%buoy_rr_jml_sub( ir, T, this%nsph1(1,ir), this%nsph2(1,ir) )
     end do
     !$omp end do
@@ -58,8 +61,21 @@ submodule (ocean) nonlin
     end do
     !$omp end do
     
+    !$omp do
+    do ik = 0, (this%jmax-1)/2
+      call this%solve_temp_ij_sub(ik)
+      call this%solve_temp_ij_sub(this%jmax-ik)
+      
+      call this%solve_torr_ij_sub(ik)
+      call this%solve_torr_ij_sub(this%jmax-ik)
+      
+      call this%solve_mech_ij_sub(ik)
+      call this%solve_mech_ij_sub(this%jmax-ik)
+    end do
+    !$omp end do
+    
     !$omp end parallel
     
-  end procedure vgradT_vcurlv_ocean_sub
+  end procedure time_scheme_ocean_sub
   
-end submodule nonlin
+end submodule timescheme

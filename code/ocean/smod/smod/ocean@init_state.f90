@@ -125,7 +125,7 @@ submodule (ocean) init_state
     call this%prepare_mat_torr_sub()
     call this%prepare_mat_mech_sub()
     
-      call this%time_scheme_sub()
+    call this%time_scheme_sub()
     
     !! Set the time-step to the initial choice
     this%ab = ab_help

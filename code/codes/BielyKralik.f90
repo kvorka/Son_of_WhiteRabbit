@@ -3,28 +3,38 @@ program BielyKralik
   use ocean
   implicit none
   
-#if defined (convection) || defined(benchmark)
-  type(T_ocean) :: oceanconv
+  type(T_ocean)  :: oceanconv
+  integer        :: k
+  real(kind=dbl) :: start, end
   
-  call oceanconv%init_sub()
+#if defined (convection) || defined(benchmark)
+  
+  call oceanconv%init_sub( speed = .False. )
   
   do
-    call oceanconv%iter_sub()
+    do k = 1, n_iter_ocean
+      call oceanconv%time_scheme_sub()
+    end do
+    
+    call oceanconv%vypis_ocean_sub()
   end do
   
   call oceanconv%deallocate_sub()
   
 #elif defined (wallclock)
-  type(T_ocean)  :: oceanspeed
-  real(kind=dbl) :: start, end
   
-  call oceanspeed%init_sub( speed = .True. )
+  call oceanconv%init_sub( speed = .True. )
   
   start = omp_get_wtime()
-    call oceanspeed%speed_sub()
+  
+  do k = 1, n_iter_ocean
+    call oceanconv%time_scheme_sub()
+  end do
+  
   end = omp_get_wtime()
-
-  write(*,*) (end-start) / oceanspeed%n_iter
+  
+  write(*,*) ( end - start ) / n_iter_ocean
+  
 #endif
 
 end program BielyKralik

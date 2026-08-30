@@ -50,6 +50,7 @@ lvl0=( "${mathpath}/smod/codelets"
        "${legepath}/smod/codelets/fwd" 
        "${gridpath}/smod/codelets" 
        "${sphsvtpath}/smod/codelets" 
+       "${latgridpath}/smod/codelets" 
        "${eqspath}/smod/codelets" 
        "${objpath}/smod/codelets" )
 
@@ -65,7 +66,9 @@ lvl1=( "${mathpath}/smod"
        "${sphsvtpath}/smod/init" 
        "${sphsvtpath}/smod/cleb" 
        "${sphsvtpath}/smod/transform" 
-       "${latgridpath}/smod" 
+       "${latgridpath}/smod/init" 
+       "${latgridpath}/smod/transform" 
+       "${latgridpath}/smod/cores" 
        "${radgridpath}/smod/init" 
        "${radgridpath}/smod/differences" 
        "${radgridpath}/smod/integration" 
@@ -82,11 +85,8 @@ lvl1=( "${mathpath}/smod"
        "${objpath}/smod/variables" 
        "${objpath}/smod/dvariablesdr" 
        "${objpath}/smod/dvariablesdS" 
-       "${oceanpath}/smod/init/smod" 
-       "${oceanpath}/smod/init" 
-       "${oceanpath}/smod/iter" 
-       "${oceanpath}/smod/nonlin" 
-       "${oceanpath}/smod/output" )
+       "${oceanpath}/smod/" 
+       "${oceanpath}/smod/smod" )
 
 ###########################################################################################
 ####                               1. COMPILING INTERFACES                             ####

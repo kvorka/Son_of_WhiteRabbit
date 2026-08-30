@@ -58,6 +58,20 @@ module lateral_grid
       complex(kind=dbl),    intent(in)  :: curlv(this%rxd%jms,3), q(this%rxd%jms,3), v(this%rxd%jms,3)
       complex(kind=dbl),    intent(out) :: ntemp(*), nsph1(*), ntorr(*), nsph2(*)
     end subroutine vgradT_vcurlv_sub
+
+#if defined ( kernelC )
+    module subroutine copy_v_gradT_curlv_sub(n, v, q, curlv, ca) bind(C, name="copy_v_gradT_curlv_c")
+      integer, value,    intent(in)  :: n
+      complex(kind=dbl), intent(in)  :: v(*), q(*), curlv(*)
+      complex(kind=dbl), intent(out) :: ca(*)
+    end subroutine copy_v_gradT_curlv_sub
+#else
+    module subroutine copy_v_gradT_curlv_sub(n, v, q, curlv, ca)
+      integer,           intent(in)  :: n
+      complex(kind=dbl), intent(in)  :: v(n,3), q(n,3), curlv(n,3)
+      complex(kind=dbl), intent(out) :: ca(3,3,n)
+    end subroutine copy_v_gradT_curlv_sub
+#endif
   end interface
   
 end module lateral_grid

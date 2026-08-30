@@ -5,8 +5,10 @@ submodule (physicalobject) buoyancy
     integer        :: ij, ij0
     real(kind=dbl) :: facrr
     
-    facrr = this%Ra / ( 1 - this%r_ud )**2 / this%rad_grid%rr(ir)**2
+    !! Gravity profile
+    facrr = 1 / ( 1 - this%r_ud )**2 / this%rad_grid%rr(ir)**2
     
+    !! nsph + er * T
     do ij = 1, this%jmax
       ij0 = jm(ij,0)
       

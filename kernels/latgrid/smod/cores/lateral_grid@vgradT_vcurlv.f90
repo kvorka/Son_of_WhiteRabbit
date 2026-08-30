@@ -16,7 +16,7 @@ submodule (lateral_grid) vgradT_vcurlv
     !! to have the data in a contiguous storage before the heavy lifting
     allocate( ca(nca) )
     
-    call copy_vgradT_vcurlv_sub( this%rxd%jms, v, q, curlv, ca )
+    call copy_v_gradT_curlv_sub( this%rxd%jms, v, q, curlv, ca )
     
     !! Allocate the array for x,y,z components and transform the 3 vectors into 9 scalars
     !! representing the expansions for cartesian components: despite after the previous
