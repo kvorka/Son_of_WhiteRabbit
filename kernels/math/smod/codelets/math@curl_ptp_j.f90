@@ -1,4 +1,4 @@
-submodule (physicalobject) curl_ptp_j
+submodule (math) curl_ptp_j
   implicit none; contains
   
   module procedure curl_ptp_j_sub

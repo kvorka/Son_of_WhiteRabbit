@@ -49,19 +49,5 @@ module equations
       integer,            intent(in)    :: isol, irhs
     end subroutine matrix_multiple2_sub
   end interface
-
-  interface
-#if defined ( kernelC )
-    module subroutine swap_carray_sub(length, arr1, arr2) bind(C, name="swap_carray_c")
-      integer, value,    intent(in)    :: length
-      complex(kind=dbl), intent(inout) :: arr1(*), arr2(*)
-    end subroutine swap_carray_sub
-#else
-    module subroutine swap_carray_sub(length, arr1, arr2)
-      integer,           intent(in)    :: length
-      complex(kind=dbl), intent(inout) :: arr1(length), arr2(length)
-    end subroutine swap_carray_sub
-#endif
-  end interface
-  
+    
 end module equations

@@ -1,11 +1,11 @@
-submodule (grid_ops) vgradT_vcurlv
+submodule (ocean) grid_vgradT_vcurlv
   implicit none; contains
   
   module procedure grid_op_vgradT_vcurlv_sub
     integer :: i0, i1, i3
     
     do i3 = 0, nfour-1
-      call tempcpy_sub( 9, grid(1,1,9*i3), gtmp )
+      call gcopy_sub( 9, grid(1,1,9*i3), gtmp )
       
       do i1 = 1, 4
         !$omp simd
@@ -20,4 +20,4 @@ submodule (grid_ops) vgradT_vcurlv
     
   end procedure grid_op_vgradT_vcurlv_sub
   
-end submodule vgradT_vcurlv
+end submodule grid_vgradT_vcurlv

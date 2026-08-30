@@ -29,9 +29,9 @@ codepath=code/codes
 ###########################################################################################
 lvl0=( "${mathpath}/smod/codelets" )
 
-lvl1=( "${mathpath}/smod" \
-       "${sphidxpath}/smod" \
-       "${iopath}/smod" \
+lvl1=( "${mathpath}/smod" 
+       "${sphidxpath}/smod" 
+       "${iopath}/smod" 
        "${outputpath}/smod" )
 
 ###########################################################################################
@@ -68,7 +68,7 @@ compile_lvl F lvl1
 ###########################################################################################
 ####                                 4. LINKING                                        ####
 ###########################################################################################
-$fcompile -flto=auto ${codepath}/OutputOcean.f90 *.o -o Test_output.out
+$fcompile ${codepath}/OutputOcean.f90 *.o -o "Test_"$code_type".out"
 
 ###########################################################################################
 ####                              REMOVING OLD FILES                                   ####

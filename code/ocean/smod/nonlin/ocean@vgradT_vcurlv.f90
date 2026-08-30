@@ -1,9 +1,9 @@
-submodule (lateral_grid) vgradT_vcurlv
+submodule (ocean) vgradT_vcurlv
   implicit none; contains
   
-  module procedure vgradT_vcurlv_sub
+  module procedure vgradT_vcurlv_ocean_sub
     integer                        :: nca, ncc, ncr
-    complex(kind=dbl), allocatable :: cc(:), cr(:), ca(:)
+    complex(kind=dbl), allocatable :: cb(:), cr(:), ca(:)
     
     !! Array dimensions for transform: the temporal storage for 2grid transform
     !! needs scalar length of jms, while the actual array needs jms1 (jmax+1,jmax+1)
@@ -16,24 +16,24 @@ submodule (lateral_grid) vgradT_vcurlv
     !! to have the data in a contiguous storage before the heavy lifting
     allocate( ca(nca) )
     
-    call copy_v_gradT_curlv_sub( this%rxd%jms, v, q, curlv, ca )
+    call trshf_3_carray_sub( this%rxd%jms, v, q, curlv, ca )
     
     !! Allocate the array for x,y,z components and transform the 3 vectors into 9 scalars
     !! representing the expansions for cartesian components: despite after the previous
     !! copy, the vectors are ordered as v(l-1), q(l-1), curlv(l-1), v(l), q(l) ... for
     !! best cache behaviour, at the end of the transform, a small transposition occurs
     !! and the output layout is vx, vy, vz, qx, qy, qz, curlvx, curlvy, curlvz
-    allocate( cc(ncc), cr(ncr) )
+    allocate( cb(ncc), cr(ncr) )
     
-    call this%rxd%vec2scal_jm_to_mj_sub( 3, ca, cc )
+    call this%rxd%vec2scal_jm_to_mj_sub( 3, ca, cb )
     
     deallocate( ca )
     
     !! After all the preparation, the transform is here: on the output, vgradT is stored
     !! in cr(1,*), while vcurlvx, vcurlvy and vcurlz are in cr(2:4,*)
-    call this%transform_sub( 4, 9, cc, cr, grid_op_vgradT_vcurlv_sub )
+    call this%lat_grid%transform_sub( 4, 9, cb, cr, grid_op_vgradT_vcurlv_sub )
     
-    deallocate( cc )
+    deallocate( cb )
     
     !! Another layer of transposing: from (4,mj) to (mj,4). If any other dimensions should
     !! be used, like (7,mj) to (mj,7) might occur with dynamo simulations, these should be
@@ -50,6 +50,6 @@ submodule (lateral_grid) vgradT_vcurlv
     
     deallocate( ca )
     
-  end procedure vgradT_vcurlv_sub
+  end procedure vgradT_vcurlv_ocean_sub
   
 end submodule vgradT_vcurlv

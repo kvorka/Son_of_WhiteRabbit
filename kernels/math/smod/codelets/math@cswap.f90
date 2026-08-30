@@ -1,4 +1,4 @@
-submodule (equations) cswap
+submodule (math) cswap
   implicit none; contains
   
   module procedure swap_carray_sub

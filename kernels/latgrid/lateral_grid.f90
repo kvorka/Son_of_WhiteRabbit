@@ -2,8 +2,6 @@ module lateral_grid
   use math
   use fourier_transform
   use lege_poly
-  use sphsvt
-  use grid_ops
   implicit none
   
   !! Everything is build around two assumptions: (1) number of quadrature points is divisible by 4 * register length (step) and
@@ -14,17 +12,14 @@ module lateral_grid
                                                & 247, 253, 267, 285, 297, 317, 321, 357, 381, 397, 429, 447, 477, 497, 1021       ]
   
   type, public :: T_lateralGrid
-    type(T_legep),  public :: lgp
-    type(T_fft),    public :: fft
-    type(T_sphsvt), public :: rxd
+    type(T_legep), public :: lgp
+    type(T_fft),   public :: fft
     
     contains
     
     procedure :: init_sub       => init_harmonics_sub
-    procedure :: deallocate_sub => deallocate_harmonics_sub
-    
     procedure :: transform_sub
-    procedure :: vgradT_vcurlv_sub
+    procedure :: deallocate_sub => deallocate_harmonics_sub
     
   end type T_lateralGrid
   
@@ -45,33 +40,13 @@ module lateral_grid
       complex(kind=dbl),    intent(inout) :: cr(nf,*)
       
       interface
-        subroutine grid_sub(nfour, gxyz, gtemp); import dbl, ndbl
+        module subroutine grid_sub(nfour, gxyz, gtemp)
           integer,        intent(in)    :: nfour
           real(kind=dbl), intent(inout) :: gxyz(ndbl,4,0:*)
           real(kind=dbl), intent(out)   :: gtemp(ndbl,4,0:*)
         end subroutine grid_sub
       end interface
     end subroutine transform_sub
-    
-    module subroutine vgradT_vcurlv_sub(this, q, curlv, v, ntemp, nsph1, ntorr, nsph2)
-      class(T_lateralGrid), intent(in)  :: this
-      complex(kind=dbl),    intent(in)  :: curlv(this%rxd%jms,3), q(this%rxd%jms,3), v(this%rxd%jms,3)
-      complex(kind=dbl),    intent(out) :: ntemp(*), nsph1(*), ntorr(*), nsph2(*)
-    end subroutine vgradT_vcurlv_sub
-
-#if defined ( kernelC )
-    module subroutine copy_v_gradT_curlv_sub(n, v, q, curlv, ca) bind(C, name="copy_v_gradT_curlv_c")
-      integer, value,    intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: v(*), q(*), curlv(*)
-      complex(kind=dbl), intent(out) :: ca(*)
-    end subroutine copy_v_gradT_curlv_sub
-#else
-    module subroutine copy_v_gradT_curlv_sub(n, v, q, curlv, ca)
-      integer,           intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: v(n,3), q(n,3), curlv(n,3)
-      complex(kind=dbl), intent(out) :: ca(3,3,n)
-    end subroutine copy_v_gradT_curlv_sub
-#endif
   end interface
   
 end module lateral_grid

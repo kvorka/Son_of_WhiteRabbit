@@ -4,30 +4,30 @@
 #include <emmintrin.h>
 
 extern inline __attribute__((always_inline))
-void copy_v_gradT_curlv_c( const int n,
-                           const double complex *restrict v,
-                           const double complex *restrict q,
-                           const double complex *restrict curlv,
-                                 double complex *restrict ca )
+void trshf_3_carray_c( const int n,
+                       const double complex *restrict v1,
+                       const double complex *restrict v2,
+                       const double complex *restrict v3,
+                             double complex *restrict ca )
 
 {
     
     // Casting memory addresses
-    const double *pv = ( const double * ) v;
-    const double *pq = ( const double * ) q;
-    const double *pc = ( const double * ) curlv;
-          double *pt = (       double * ) ca;
+    const double *pv1 = ( const double * ) v1;
+    const double *pv2 = ( const double * ) v2;
+    const double *pv3 = ( const double * ) v3;
+          double *pt  = (       double * ) ca;
     
     // Memory addresses to be used
-    const double *p1 = pv + 0*n;
-    const double *p2 = pv + 2*n;
-    const double *p3 = pv + 4*n;
-    const double *p4 = pq + 0*n;
-    const double *p5 = pq + 2*n;
-    const double *p6 = pq + 4*n;
-    const double *p7 = pc + 0*n;
-    const double *p8 = pc + 2*n;
-    const double *p9 = pc + 4*n;
+    const double *p1 = pv1 + 0*n;
+    const double *p2 = pv1 + 2*n;
+    const double *p3 = pv1 + 4*n;
+    const double *p4 = pv2 + 0*n;
+    const double *p5 = pv2 + 2*n;
+    const double *p6 = pv2 + 4*n;
+    const double *p7 = pv3 + 0*n;
+    const double *p8 = pv3 + 2*n;
+    const double *p9 = pv3 + 4*n;
     
     // Iterator
     int i = 0;

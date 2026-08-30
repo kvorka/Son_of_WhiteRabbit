@@ -1,4 +1,4 @@
-submodule (physicalobject) ccopy5
+submodule (math) ccopy5
   implicit none; contains
   
   module procedure copy5_carray_sub

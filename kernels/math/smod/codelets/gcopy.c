@@ -1,9 +1,9 @@
 #include <immintrin.h>
 
 extern inline __attribute__((always_inline))
-void tempcpy_c( const int n,
-                const double *restrict arr_from,
-                      double *restrict arr_to )
+void gcopy_c( const int n,
+              const double *restrict arr_from,
+                    double *restrict arr_to )
 
 #if defined ( mem32 )
 {

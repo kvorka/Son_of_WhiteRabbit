@@ -9,9 +9,6 @@ submodule (lateral_grid) init
       stop
     end if
     
-    !Prepare indexing object
-    call this%rxd%init_sub( jmax )
-    
     !FFT
     nF = 3*(jmax+3)
     call this%fft%init_sub( nF )

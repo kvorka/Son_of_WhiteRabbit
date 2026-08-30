@@ -1,4 +1,4 @@
-submodule (physicalobject) grad_pp_j
+submodule (math) grad_pp_j
   implicit none; contains
   
   module procedure grad_pp_j_sub

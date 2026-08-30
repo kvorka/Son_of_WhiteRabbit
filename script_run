@@ -30,9 +30,8 @@ source ./shell/compiler.sh
 mathpath=kernels/math
 fftpath=kernels/latgrid/mod/fft
 legepath=kernels/latgrid/mod/legepoly
-gridpath=kernels/latgrid/mod/grid_ops
 sphidxpath=kernels/sph
-sphsvtpath=kernels/latgrid/mod/sphsvt
+sphsvtpath=kernels/sphsvt
 latgridpath=kernels/latgrid
 radgridpath=kernels/radgrid
 eqspath=kernels/equations
@@ -48,11 +47,7 @@ lvl0=( "${mathpath}/smod/codelets"
        "${fftpath}/smod/codelets" 
        "${legepath}/smod/codelets/bwd" 
        "${legepath}/smod/codelets/fwd" 
-       "${gridpath}/smod/codelets" 
-       "${sphsvtpath}/smod/codelets" 
-       "${latgridpath}/smod/codelets" 
-       "${eqspath}/smod/codelets" 
-       "${objpath}/smod/codelets" )
+       "${sphsvtpath}/smod/codelets" )
 
 lvl1=( "${mathpath}/smod" 
        "${fftpath}/smod/init" 
@@ -61,14 +56,11 @@ lvl1=( "${mathpath}/smod"
        "${legepath}/smod/init" 
        "${legepath}/smod/indexing" 
        "${legepath}/smod/transform" 
-       "${gridpath}/smod/cores" 
        "${sphidxpath}/smod" 
        "${sphsvtpath}/smod/init" 
        "${sphsvtpath}/smod/cleb" 
        "${sphsvtpath}/smod/transform" 
-       "${latgridpath}/smod/init" 
-       "${latgridpath}/smod/transform" 
-       "${latgridpath}/smod/cores" 
+       "${latgridpath}/smod/" 
        "${radgridpath}/smod/init" 
        "${radgridpath}/smod/differences" 
        "${radgridpath}/smod/integration" 
@@ -86,7 +78,7 @@ lvl1=( "${mathpath}/smod"
        "${objpath}/smod/dvariablesdr" 
        "${objpath}/smod/dvariablesdS" 
        "${oceanpath}/smod/" 
-       "${oceanpath}/smod/smod" )
+       "${oceanpath}/smod/nonlin" )
 
 ###########################################################################################
 ####                               1. COMPILING INTERFACES                             ####
@@ -95,7 +87,6 @@ $fcompile -c ${mathpath}/calloc.f90
 $fcompile -c ${mathpath}/math.f90
 $fcompile -c ${fftpath}/fourier_transform.f90
 $fcompile -c ${legepath}/lege_poly.f90
-$fcompile -c ${gridpath}/grid_ops.f90
 $fcompile -c ${sphidxpath}/sph.f90
 $fcompile -c ${sphsvtpath}/sphsvt.f90
 $fcompile -c ${latgridpath}/lateral_grid.f90

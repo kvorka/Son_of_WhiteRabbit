@@ -10,12 +10,13 @@ submodule (physicalobject) init
     this%jms  =     ( this%jmax * ( this%jmax+1 ) / 2 + this%jmax ) + 1
     this%jmv  = 3 * ( this%jmax * ( this%jmax+1 ) / 2 + this%jmax ) + 1
     
-    call this%rad_grid%init_sub(this%nd, r_ud/(1-r_ud), 1/(1-r_ud))
-    call this%lat_grid%init_sub(this%jmax)
+    call this%rad_grid%init_sub( this%nd, r_ud/(1-r_ud), 1/(1-r_ud) )
+    call this%lat_grid%init_sub( this%jmax )
+    
+    call this%rxd%init_sub( this%jmax )
     
     this%poc = 0
     this%t   = zero
-    
     this%dt  = 0.49_dbl * ( this%rad_grid%r(2)-this%rad_grid%r(1) )**2
     
   end procedure init_objects_sub

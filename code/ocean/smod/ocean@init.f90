@@ -6,8 +6,8 @@ submodule (ocean) init
     
     call this%init_objects_sub( nd = nd_ocean, jmax = jmax_ocean, r_ud = r_ud_ocean )
     
-    this%cf     = 0.6_dbl
-    this%ab     = 1.5_dbl
+    this%cf = 0.6_dbl
+    this%ab = 1.5_dbl
     
     this%Pr = Pr_ocean
     this%Ra = Ra_ocean

@@ -1,7 +1,7 @@
-submodule (grid_ops) tempcopy
+submodule (math) gcopy
   implicit none; contains
   
-  module procedure tempcpy_sub
+  module procedure gcopy_sub
     integer :: i0, i2
     
     do i2 = 1, n
@@ -14,6 +14,6 @@ submodule (grid_ops) tempcopy
       end do
     end do
     
-  end procedure tempcpy_sub
+  end procedure gcopy_sub
   
-end submodule tempcopy
+end submodule gcopy
