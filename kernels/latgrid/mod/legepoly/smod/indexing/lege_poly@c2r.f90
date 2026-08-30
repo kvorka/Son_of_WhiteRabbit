@@ -33,6 +33,7 @@ submodule (lege_poly) c2r
         imj = imj+1
         
         call bwd_idx1_sub( ncab, this%emj(imj+1), cab(1,imj), rcab(1,ima) )
+        call zero_rarray_sub( 2*ncab, 4*ncab, rcab(1,ima) )
       end if
     
     do im = 1, this%jmax-1
@@ -64,6 +65,7 @@ submodule (lege_poly) c2r
         imj = imj+1
         
         call bwd_idx1_sub( ncab, this%emj(imj+im+1), cab(1,imj), rcab(1,ima) )
+        call zero_rarray_sub( 2*ncab, 4*ncab, rcab(1,ima) )
       end if
     end do
     
@@ -72,6 +74,7 @@ submodule (lege_poly) c2r
         ima = ima+1
         imj = imj+1
         
+        call zero_rarray_sub( 0, 2*ncab, rcab(1,ima) )
         call bwd_idx3_sub( ncab, cab(1,imj), rcab(1,ima) )
         
   end procedure c2r_mj_to_mj_sub

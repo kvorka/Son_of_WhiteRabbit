@@ -1,7 +1,7 @@
 submodule (math) rnull
   implicit none; contains
   
-  module procedure zero_rarray_4_sub
+  module procedure zero_rarray_sub
     integer :: i
     
     !$omp simd
@@ -9,6 +9,6 @@ submodule (math) rnull
       arr(i) = zero
     end do
     
-  end procedure zero_rarray_4_sub
+  end procedure zero_rarray_sub
   
 end submodule rnull

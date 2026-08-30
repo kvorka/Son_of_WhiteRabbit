@@ -6,9 +6,8 @@ submodule (lateral_grid) transform
     real(kind=dbl), pointer, contiguous :: pmm(:), pmj1(:), pmj(:), cosx(:), sinx(:), cosx2(:), wght(:), &
                                          & sumN(:), sumS(:), swork(:), gridN(:), gridS(:)
     
-    !! Zero input and output
-    call zero_rarray_4_sub( 0, 4*nb*this%lgp%nrma, rcc )
-    call zero_rarray_4_sub( 0, 4*nf*this%lgp%nrma, rcr )
+    !! Zero output before proceeding
+    call zero_rarray_sub( 0, 4*nf*this%lgp%nrma, rcr )
     
     !! Size of the grid and number of non-zero frequencies
     nGrid  =     nb * step * ( this%fft%n      )
@@ -45,8 +44,8 @@ submodule (lateral_grid) transform
       
       !! Northern hemisphere :: synthesis over orders (fft) followed by grid computations and analysis (fft) back 
       !! to orders. Keep in mind, that few last frequencies are used only for dealiasing and need to be set to zero 
-      !! before the second fft.
-      call zero_rarray_4_sub( nLege, nGrid, sumN )
+      !! before fft.
+      call zero_rarray_sub( nLege, nGrid, sumN )
       
       call this%fft%fft_c2r_sub( nb, sumN )
       call g_sub( this%fft%n, sumN, gridN )
@@ -54,8 +53,8 @@ submodule (lateral_grid) transform
       
       !! Southern hemisphere :: synthesis over orders (fft) followed by grid computations and analysis (fft) back 
       !! to orders. Keep in mind, that few last frequencies are used only for dealiasing and need to be set to zero 
-      !! before the second fft.
-      call zero_rarray_4_sub( nLege, nGrid, sumS )
+      !! before fft.
+      call zero_rarray_sub( nLege, nGrid, sumS )
       
       call this%fft%fft_c2r_sub( nb, sumS )
       call g_sub( this%fft%n, sumS, gridS )

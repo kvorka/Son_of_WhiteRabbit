@@ -4,9 +4,9 @@
 #include <emmintrin.h>
 
 extern inline __attribute__((always_inline))
-void zero_rarray_4_c( const int istart,
-                      const int length,
-                            double *restrict arr )
+void zero_rarray_c( const int istart,
+                    const int length,
+                          double *restrict arr )
 
 #if defined ( mem32 )
 {
@@ -17,26 +17,49 @@ void zero_rarray_4_c( const int istart,
     // Iterator
     int i = istart;
     
-    // Constant zero register
-    const __m256d rzero = _mm256_setzero_pd();
-    
-    for ( ; i <= length-16; i += 16 ) {
+    // Body of the cycle
+    {
         
-        _mm256_storeu_pd( parr +  0, rzero );
-        _mm256_storeu_pd( parr +  4, rzero );
-        _mm256_storeu_pd( parr +  8, rzero );
-        _mm256_storeu_pd( parr + 12, rzero );
+        // Constant zero register
+        const __m256d rzero = _mm256_setzero_pd();
         
-        parr += 16;
+        for ( ; i <= length-16; i += 16 ) {
+            
+            _mm256_storeu_pd( parr +  0, rzero );
+            _mm256_storeu_pd( parr +  4, rzero );
+            _mm256_storeu_pd( parr +  8, rzero );
+            _mm256_storeu_pd( parr + 12, rzero );
+            
+            parr += 16;
+            
+        }
+        
+        // Remainer loop
+        for ( ; i <= length-4; i += 4 ) {
+            
+            _mm256_storeu_pd( parr, rzero );
+            
+            parr += 4;
+            
+        }
         
     }
     
-    // Remainer loop
-    for ( ; i <= length-4; i += 4 ) {
+    // Last SSE step if possible
+    if ( i <= length-2 ) {
         
-        _mm256_storeu_pd( parr, rzero );
+        _mm_storeu_pd( parr, _mm_setzero_pd() );
         
-        parr += 4;
+        parr += 2;
+        
+        i += 2;
+        
+    }
+    
+    // Scalar remainder if needed
+    if ( i < length ) {
+        
+        parr[0] = 0.;
         
     }
     
@@ -76,10 +99,14 @@ void zero_rarray_4_c( const int istart,
             
         }
         
-        // AVX remainder
+        // Masked remainder
         if ( i < length ) {
             
-            _mm256_storeu_pd( parr, _mm256_setzero_pd() );
+            int rem = length - i;
+            
+            __mmask8 mask = (1U << rem) - 1U;
+            
+            _mm512_mask_storeu_pd( parr, mask, _mm512_setzero_pd() );
             
         }
         
