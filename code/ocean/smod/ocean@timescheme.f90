@@ -25,14 +25,29 @@ submodule (ocean) timescheme
   
   module procedure time_scheme_ocean_sub
     integer                                :: ik, ir, ij, ij0
-    type(c_ptr)                            :: c_tWork, c_trcc, c_trcr
-    real(kind=dbl),    pointer, contiguous :: tWork(:), trcc(:), trcr(:)
+    type(c_ptr)                            :: c_tWork
+    real(kind=dbl),    allocatable         :: rccWork(:), rcrWork(:)
+    real(kind=dbl),    pointer, contiguous :: tWork(:)
     complex(kind=dbl), allocatable, target :: vWork(:)
     complex(kind=dbl), pointer, contiguous :: T(:), gradT(:), v(:), curlv(:), work1(:), work2(:), work3(:)
     
+    !!******************************************************************************************************!!
+    !!** Move time by one time-step.                                                                      **!!
+    !!******************************************************************************************************!!
     this%t = this%t + this%dt
     
-    !$omp parallel private (c_tWork, c_trcc, c_trcr, tWork, trcc, trcr, vWork, T, v, gradT, curlv, work1, work2, work3)
+    !!******************************************************************************************************!!
+    !!** Unaligned memory allocations are handled before parallel region. Namely, vWork holds spectral    **!!
+    !!** coefficients of v, T, curlv and gradT, while it is also being used for complex transpositions.   **!!
+    !!** rccWork and rcrWork are just temporal holders for shuffled real/imag south/north thingy in the   **!!
+    !!** spectral transform. The sizes are set according to number of backword transforms, nb = 9 requi-  **!!
+    !!** res working array, which is 2*9+1 rxd%jms1 sized arrays. With nb=9 and nf=4 we set also rcc/rcr. **!!
+    !!******************************************************************************************************!!
+    call this%rxd%alloc_work_rxd_sub( 19, vWork )
+    call this%lat_grid%lgp%alloc_rscal_sub( 9, rccWork )
+    call this%lat_grid%lgp%alloc_rscal_sub( 4, rcrWork )
+    
+    !$omp parallel private (c_tWork, tWork, rccWork, rcrWork, vWork, T, v, gradT, curlv, work1, work2, work3)
     
     !!******************************************************************************************************!!
     !!** At first, copy the non-linear terms from previous time-step into right-hand sides. These are re- **!!
@@ -52,17 +67,13 @@ submodule (ocean) timescheme
     !$omp end do
     
     !!******************************************************************************************************!!
-    !!** Memory allocations. Though there are more allocations ongoing inside some routines, the main re- **!!
-    !!** usable arrays are allocated before entering the main radial loop. Namely, vWork holds spectral   **!!
-    !!** coefficients of v, T, curlv and gradT, while it is also being used for complex transpositions.   **!!
-    !!** The aligned stores are used only in lat_grid%transform. The sizes are set according to number of **!!
-    !!** backword transforms, nb = 9 and required working arrays, which is 2*9+1 rxd%jms1 sized arrays.   **!!
+    !!** Aligned memory allocations for transform guided by high number of backword transforms.           **!!
     !!******************************************************************************************************!!
-    call this%rxd%alloc_work_rxd_sub( 19, vWork )
     call this%lat_grid%alloc_work_lgrid_sub( 9, c_tWork, tWork )
-    call this%lat_grid%lgp%alloc_rscal_sub( 9, c_trcc, trcc )
-    call this%lat_grid%lgp%alloc_rscal_sub( 4, c_trcr, trcr )
     
+    !!******************************************************************************************************!!
+    !!** Pointers set-up for cleaner code.                                                                **!!
+    !!******************************************************************************************************!!
     T     => vWork( 1                :  1 * this%jms )
     v     => vWork( 1 + 1 * this%jms :  4 * this%jms )
     gradT => vWork( 1 + 4 * this%jms :  7 * this%jms )
@@ -102,8 +113,8 @@ submodule (ocean) timescheme
                                         nb    = 9,                     &
                                         cc    = work1,                 &
                                         cr    = work2,                 &
-                                        rcc   = trcc,                  &
-                                        rcr   = trcr,                  &
+                                        rcc   = rccWork,               &
+                                        rcr   = rcrWork,               &
                                         work  = tWork,                 &
                                         g_sub = grid_op_scvv_vcvxv_sub )
       
@@ -131,13 +142,9 @@ submodule (ocean) timescheme
     !$omp end do
     
     !!******************************************************************************************************!!
-    !!** Clean memory after transform.                                                                    **!!
+    !!** Clean aligned memory after transform.                                                            **!!
     !!******************************************************************************************************!!
-    deallocate( vWork )
-    
     call free_aligned_sub( c_tWork, tWork )
-    call free_aligned_sub( c_trcc,  trcc  )
-    call free_aligned_sub( c_trcr,  trcr  )
     
     !!******************************************************************************************************!!
     !!** Add the non-linear terms computed in this time-step to the right-hand side. The non-linear terms **!!
@@ -173,6 +180,11 @@ submodule (ocean) timescheme
     !$omp end do
     
     !$omp end parallel
+    
+    !!******************************************************************************************************!!
+    !!** Clean memory after parallel region is done.                                                      **!!
+    !!******************************************************************************************************!!
+    deallocate( vWork, rccWork, rcrWork )
     
   end procedure time_scheme_ocean_sub
   
