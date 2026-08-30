@@ -11,9 +11,6 @@ void xy2ee_c( const int n,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles and unrolled increment
-    const int n2 = 2 * n;
-    
     // Casting memory addresses
     double *px = ( double * ) cx;
     double *py = ( double * ) cy;
@@ -32,7 +29,7 @@ void xy2ee_c( const int n,
         __m256d r00, r01, r02, r03, 
                 r04, r05, r06, r07;
         
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= n-4; i += 4 ) {
             
             r00 = _mm256_loadu_pd( px + 0 );
             r01 = _mm256_loadu_pd( px + 4 );
@@ -73,7 +70,7 @@ void xy2ee_c( const int n,
         }
         
         // Remainder (non-loop)
-        if ( i <= n2-4 ) {
+        if ( i <= n-2 ) {
             
             r00 = _mm256_loadu_pd( px );
             r02 = _mm256_loadu_pd( py );
@@ -99,14 +96,14 @@ void xy2ee_c( const int n,
             px += 4;
             py += 4;
             
-            i += 4;
+            i += 2;
             
         }
         
     }
     
     // Last SSE step if needed
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
         // Constant register
         const __m128d rsqrt2 = _mm_set1_pd( 0.7071067811865475 );
@@ -142,9 +139,6 @@ void xy2ee_c( const int n,
 #else
 {
     
-    // Complex is two doubles and unrolled increment
-    const int n2 = 2 * n;
-    
     // Casting memory addresses
     double *px = ( double * ) cx;
     double *py = ( double * ) cy;
@@ -163,7 +157,7 @@ void xy2ee_c( const int n,
         __m512d r00, r01, r02, r03, 
                 r04, r05, r06, r07;
         
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= n-8; i += 8 ) {
             
             r00 = _mm512_loadu_pd( px + 0 );
             r01 = _mm512_loadu_pd( px + 8 );
@@ -194,7 +188,7 @@ void xy2ee_c( const int n,
         }
         
         // Remainder (non-loop)
-        if ( i <= n2-8 ) {
+        if ( i <= n-4 ) {
             
             r00 = _mm512_loadu_pd( px );
             r02 = _mm512_loadu_pd( py );
@@ -213,14 +207,14 @@ void xy2ee_c( const int n,
             px += 8;
             py += 8;
             
-            i += 8;
+            i += 4;
             
         }
         
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
         // Constant register
         const __m128d rsqrt2 = _mm_set1_pd( 0.7071067811865475 );
@@ -229,7 +223,7 @@ void xy2ee_c( const int n,
         // Other registers to be used
         __m128d r00, r02, r04, r05;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             r00 = _mm_loadu_pd( px );
             r02 = _mm_loadu_pd( py );

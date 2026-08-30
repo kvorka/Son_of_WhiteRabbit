@@ -12,9 +12,6 @@ void cadj3_carray_c( const int length,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * length;
-    
     // Casting memory addresses
     const double *pf = ( const double * ) arr_from;
           double *pt = (       double * ) arr_to;
@@ -35,7 +32,7 @@ void cadj3_carray_c( const int length,
         
         // Main cycle unrolled by 4 with fma instructions
         // if availaible
-        for ( ; i <= n2-16; i += 16 ) {
+        for ( ; i <= length-8; i += 8 ) {
             
             r00 = _mm256_loadu_pd( pf +  0 );
             r01 = _mm256_loadu_pd( pf +  4 );
@@ -81,7 +78,7 @@ void cadj3_carray_c( const int length,
         
         // Remainder loop without fma as there is no chance
         // of hiding the latency
-        for ( ; i <= n2-4; i += 4 ) {
+        for ( ; i <= length-2; i += 2 ) {
             
             r00 = _mm256_loadu_pd( pf );
             r04 = _mm256_loadu_pd( pt );
@@ -100,7 +97,7 @@ void cadj3_carray_c( const int length,
     }
     
     // Last SSE step if needed, againg, without fma
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rs00 = _mm_set_pd( -0., 0.);
         const __m128d rs01 = _mm_load1_pd( fac );
@@ -119,9 +116,6 @@ void cadj3_carray_c( const int length,
 }
 #else
 {
-    
-    // Complex is two doubles
-    const int n2 = 2 * length;
     
     // Casting memory addresses
     const double *pf = ( const double * ) arr_from;
@@ -143,7 +137,7 @@ void cadj3_carray_c( const int length,
         
         // Main cycle unrolled by 4 with fma instructions
         // if availaible
-        for ( ; i <= n2-32; i += 32 ) {
+        for ( ; i <= length-16; i += 16 ) {
             
             r00 = _mm512_loadu_pd( pf +  0 );
             r01 = _mm512_loadu_pd( pf +  8 );
@@ -177,7 +171,7 @@ void cadj3_carray_c( const int length,
         
         // Remainder loop without fma as there is no chance
         // of hiding the latency
-        for ( ; i <= n2-8; i += 8 ) {
+        for ( ; i <= length-4; i += 4 ) {
             
             r00 = _mm512_loadu_pd( pf );
             r04 = _mm512_loadu_pd( pt );
@@ -196,14 +190,14 @@ void cadj3_carray_c( const int length,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < length ) {
         
         const __m128d rfac = _mm_load1_pd( fac );
         const __m128d radj = _mm_set_pd( -0., 0.);
         
         __m128d r00, r04;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < length; i++ ) {
             
             r00 = _mm_loadu_pd( pf );
             r04 = _mm_loadu_pd( pt );

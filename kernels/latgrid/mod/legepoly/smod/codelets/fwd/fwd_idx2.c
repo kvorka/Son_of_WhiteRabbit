@@ -12,9 +12,6 @@ void fwd_idx2_c( const int n,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * n;
-    
     // Casting memory references
     double *pcab = ( double * ) cab;
     
@@ -38,7 +35,7 @@ void fwd_idx2_c( const int n,
         __m256d r00, r01, r02, r03;
         
         // Main cycle unrolled by 2
-        for ( i = 0; i <= n2-8; i += 8 ) {
+        for ( i = 0; i <= n-4; i += 4 ) {
             
             r02 = _mm256_loadu_pd( pr1 + 0 );
             r03 = _mm256_loadu_pd( pr1 + 4 );
@@ -71,7 +68,7 @@ void fwd_idx2_c( const int n,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
         // Constant registers
         const __m128d rfac1 = _mm_load1_pd( cff + 0 );
@@ -80,7 +77,7 @@ void fwd_idx2_c( const int n,
         // Registers to be used
         __m128d r00, r02;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             r00 = _mm_loadu_pd( pr1 );
             r02 = _mm_loadu_pd( pr3 );
@@ -103,9 +100,6 @@ void fwd_idx2_c( const int n,
 }
 #else
 {
-    
-    // Complex is two doubles
-    const int n2 = 2 * n;
     
     // Casting memory references
     double *pcab = ( double * ) cab;
@@ -130,7 +124,7 @@ void fwd_idx2_c( const int n,
         __m512d r00, r02;
         
         // Main cycle (no unroll and no fma due to small count)
-        for ( i = 0; i <= n2-8; i += 8 ) {
+        for ( i = 0; i <= n-4; i += 4 ) {
             
             r02 = _mm512_loadu_pd( pr1 );
             r00 = _mm512_loadu_pd( pr3 );
@@ -151,7 +145,7 @@ void fwd_idx2_c( const int n,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
         // Constant registers
         const __m128d rfac1 = _mm_load1_pd( cff + 0 );
@@ -160,7 +154,7 @@ void fwd_idx2_c( const int n,
         // Registers to be used
         __m128d r00, r02;
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             r00 = _mm_loadu_pd( pr1 );
             r02 = _mm_loadu_pd( pr3 );

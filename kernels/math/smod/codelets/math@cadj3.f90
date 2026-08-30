@@ -1,4 +1,4 @@
-submodule (sphsvt) cadj3
+submodule (math) cadj3
   implicit none; contains
   
   module procedure cadj3_carray_sub

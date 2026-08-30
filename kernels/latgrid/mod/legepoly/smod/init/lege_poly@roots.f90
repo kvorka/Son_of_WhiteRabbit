@@ -28,10 +28,10 @@ submodule (lege_poly) roots
         x3  = ( x1 + x2 ) / 2
         fx3 = lege_fn(2*this%nLege, x3)
         
-        root  = x3 + (x3-x1) * sign(1._qbl,fx1-fx2) * fx3 / sqrt( fx3**2 - fx1*fx2 )
+        root  = x3 + (x3-x1) * sign(qone,fx1-fx2) * fx3 / sqrt( fx3**2 - fx1*fx2 )
         froot = lege_fn(2*this%nLege, root)
         
-        if ( abs(froot) < qeps ) then
+        if ( abs(froot) < 1.0d-28 ) then
           exit
         else if ( fx3 * froot < qzero ) then
           x1  = x3

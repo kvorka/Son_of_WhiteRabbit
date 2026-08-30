@@ -1,8 +1,9 @@
-submodule (sphsvt) xy2ee
+submodule (math) xy2ee
   implicit none; contains
   
   module procedure xy2ee_sub
     integer           :: i
+    real(kind=dbl)    :: sq2_1 = 1 / sqrt(2._dbl)
     complex(kind=dbl) :: ci
     
     !$omp simd

@@ -11,9 +11,6 @@ void fwd_idx3_c( const int n,
 #if defined ( mem32 )
 {
     
-    // Complex is two doubles
-    const int n2 = 2 * n;
-    
     // Casting memory references
     double *pcab = ( double * ) cab;
     
@@ -31,7 +28,7 @@ void fwd_idx3_c( const int n,
         __m256d r00, r01;
         
         // Main cycle unrolled by 2
-        for ( i = 0; i <= n2-8; i += 8 ) {
+        for ( i = 0; i <= n-4; i += 4 ) {
             
             r00 = _mm256_loadu_pd( pr2 + 0 );
             r01 = _mm256_loadu_pd( pr2 + 4 );
@@ -47,9 +44,9 @@ void fwd_idx3_c( const int n,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             _mm_storeu_pd( pc1, _mm_loadu_pd( pr2 ) );
             
@@ -63,9 +60,6 @@ void fwd_idx3_c( const int n,
 }
 #else
 {
-    
-    // Complex is two doubles
-    const int n2 = 2 * n;
     
     // Casting memory references
     double *pcab = ( double * ) cab;
@@ -81,7 +75,7 @@ void fwd_idx3_c( const int n,
     {
         
         // Main cycle (no unroll due to small count)
-        for ( i = 0; i <= n2-8; i += 8 ) {
+        for ( i = 0; i <= n-4; i += 4 ) {
             
             _mm512_storeu_pd( pc1, _mm512_loadu_pd( pr2 ) );
             
@@ -93,9 +87,9 @@ void fwd_idx3_c( const int n,
     }
     
     // SSE remainder (could be split to avx/sse)
-    if ( i <= n2-2 ) {
+    if ( i < n ) {
         
-        for ( ; i <= n2-2; i += 2 ) {
+        for ( ; i < n; i++ ) {
             
             _mm_storeu_pd( pc1, _mm_loadu_pd( pr2 ) );
             

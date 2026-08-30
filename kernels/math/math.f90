@@ -2,18 +2,14 @@ module math
   use calloc
   implicit none; public
   
-  real(kind=dbl), parameter :: deps = 1.0d-15
-  real(kind=qbl), parameter :: qeps = 1.0d-28
-  
   real(kind=dbl), parameter :: zero  = 0._dbl
   real(kind=qbl), parameter :: qzero = 0._qbl
   real(kind=dbl), parameter :: one   = 1._dbl
   real(kind=qbl), parameter :: qone  = 1._qbl
-  
-  real(kind=dbl), parameter :: sq2_1 = 1 / sqrt(2._dbl)
   real(kind=dbl), parameter :: pi    = acos(-one)
   real(kind=qbl), parameter :: qpi   = acos(-qone)
-  real(kind=dbl), parameter :: s4pi  = sqrt(4*pi)
+  
+  real(kind=dbl), parameter :: s4pi = sqrt(4*pi)
   
   complex(kind=dbl), parameter :: cunit = cmplx(zero, one , kind=dbl)
   complex(kind=dbl), parameter :: czero = cmplx(zero, zero, kind=dbl)
@@ -83,6 +79,13 @@ module math
       complex(kind=dbl), intent(inout) :: arr_to(*)
     end subroutine copy3_carray_sub
     
+    module subroutine cadj3_carray_sub(n, fac, arr_from, arr_to) bind(C, name="cadj3_carray_c")
+      integer, value,    intent(in)    :: n
+      real(kind=dbl),    intent(in)    :: fac
+      complex(kind=dbl), intent(in)    :: arr_from(*)
+      complex(kind=dbl), intent(inout) :: arr_to(*) 
+    end subroutine cadj3_carray_sub
+    
     module subroutine copy4_carray_sub(length, fac1, fac2, fac3, arr1, arr2, arr_to) bind(C, name="copy4_carray_c")
       integer, value,    intent(in)    :: length
       real(kind=dbl),    intent(in)    :: fac1, fac2, fac3
@@ -134,6 +137,17 @@ module math
       complex(kind=dbl), intent(in)  :: darr1(*), darr2(*), darr3(*), arr1(*), arr2(*), arr3(*)
       complex(kind=dbl), intent(out) :: curl1(*), curl2(*), curl3(*)
     end subroutine curl_ptp_j_sub
+    
+    module subroutine eee2xyz_sub(n, sumPTP, cc) bind(C, name="eee2xyz_c")
+      integer, value,    intent(in)  :: n
+      complex(kind=dbl), intent(in)  :: sumPTP(*)
+      complex(kind=dbl), intent(out) :: cc(*)
+    end subroutine eee2xyz_sub
+    
+    module subroutine xy2ee_sub(n, cx, cy) bind(C, name="xy2ee_c")
+      integer, value,    intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
+    end subroutine xy2ee_sub
 #else
     module subroutine zero_carray_sub(length, arr)
       integer,           intent(in)  :: length
@@ -165,6 +179,13 @@ module math
       complex(kind=dbl), intent(in)    :: arr_from(length)
       complex(kind=dbl), intent(inout) :: arr_to(length)
     end subroutine copy3_carray_sub
+    
+    module subroutine cadj3_carray_sub(n, fac, arr_from, arr_to)
+      integer,           intent(in)    :: n
+      real(kind=dbl),    intent(in)    :: fac
+      complex(kind=dbl), intent(in)    :: arr_from(n)
+      complex(kind=dbl), intent(inout) :: arr_to(n) 
+    end subroutine cadj3_carray_sub
     
     module subroutine copy4_carray_sub(length, fac1, fac2, fac3, arr1, arr2, arr_to)
       integer,           intent(in)    :: length
@@ -217,6 +238,17 @@ module math
       complex(kind=dbl), intent(in)  :: darr1(length), darr2(length), darr3(length), arr1(length), arr2(length), arr3(length)
       complex(kind=dbl), intent(out) :: curl1(length), curl2(length), curl3(length)
     end subroutine curl_ptp_j_sub
+    
+    module subroutine eee2xyz_sub(n, sumPTP, cxyz)
+      integer,           intent(in)  :: n
+      complex(kind=dbl), intent(in)  :: sumPTP(n,3)
+      complex(kind=dbl), intent(out) :: cxyz(3,n)
+    end subroutine eee2xyz_sub
+    
+    module subroutine xy2ee_sub(n, cx, cy)
+      integer,           intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(n), cy(n)
+    end subroutine xy2ee_sub
 #endif
   end interface
   
