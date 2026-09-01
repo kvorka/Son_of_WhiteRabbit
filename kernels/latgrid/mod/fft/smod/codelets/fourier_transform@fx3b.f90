@@ -11,13 +11,15 @@ submodule (fourier_transform) fx3b
           !$omp simd
           do i0 = 1, ndbl
             x1re = x(i0,i1,i2,1,i3,1)
-            x1im = x(i0,i1,i2,2,i3,1)
             x2re = x(i0,i1,i2,1,i3,2)
-            x2im = x(i0,i1,i2,2,i3,2)
             
             x01 = x1re - x2re
-            x02 = x1im - x2im
             x03 = x1re + x2re
+            
+            x1im = x(i0,i1,i2,2,i3,1)
+            x2im = x(i0,i1,i2,2,i3,2)
+            
+            x02 = x1im - x2im
             x04 = x1im + x2im
             
             x0re = x(i0,i1,i2,1,i3,0)

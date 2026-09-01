@@ -31,10 +31,7 @@ void fxzm3a_c( const int m,
     const __m256d rC32 = _mm256_set1_pd( +0.86602540378443864676 );
     
     // Registers to be used
-    __m256d rt1re, rt1im, rt2re, rt2im, 
-            r00, r01, r02, r03, 
-            r04, r05, r06, r07,
-            r08, r09, r10, r11;
+    __m256d rt1re, rt1im, rt2re, rt2im, r0re, r0im, r1re, r1im, r2re, r2im, r01, r02;
     
     for ( int i4 = 0; i4 < k; i4++ ) {
         
@@ -49,84 +46,85 @@ void fxzm3a_c( const int m,
                 
                 for ( int i1 = 0; i1 < 4; i1++ ) {
                     
-                    r02 = _mm256_load_pd( px1re );
-                    r03 = _mm256_load_pd( px1im );
-                    r04 = _mm256_load_pd( px2re );
-                    r05 = _mm256_load_pd( px2im );
+                    r0re = _mm256_load_pd( px1re );
+                    r0im = _mm256_load_pd( px1im );
                     
-                    r00 = _mm256_mul_pd( rt1re, r02 );
-                    r01 = _mm256_mul_pd( rt1re, r03 );
-                    r06 = _mm256_mul_pd( rt2re, r04 );
-                    r07 = _mm256_mul_pd( rt2re, r05 );
+                    r01  = _mm256_mul_pd( rt1im, r0im );
+                    r02  = _mm256_mul_pd( rt1im, r0re );
                     
-                    #if defined (fma)
-                    r00 = _mm256_fnmadd_pd( rt1im, r03, r00 );
-                    r01 = _mm256_fmadd_pd(  rt1im, r02, r01 );
-                    r06 = _mm256_fmsub_pd(  rt2im, r05, r06  );
-                    r07 = _mm256_fmadd_pd(  rt2im, r04, r07  );
-                    #else
-                    r08 = _mm256_mul_pd( rt1im, r03 );
-                    r09 = _mm256_mul_pd( rt1im, r02 );
-                    r10 = _mm256_mul_pd( rt2im, r05 );
-                    r11 = _mm256_mul_pd( rt2im, r04 );
+                    r2re = _mm256_load_pd( px2re );
+                    r2im = _mm256_load_pd( px2im );
                     
-                    r00 = _mm256_sub_pd( r00, r08 );
-                    r01 = _mm256_add_pd( r01, r09 );
-                    r06 = _mm256_sub_pd( r10, r06 );
-                    r07 = _mm256_add_pd( r11, r07 );
-                    #endif
-                    
-                    r02 = _mm256_add_pd( r00, r06 );
-                    r03 = _mm256_sub_pd( r01, r07 );
-                    
-                    r06 = _mm256_load_pd( px0re );
-                    r07 = _mm256_load_pd( px0im );
-                    
-                    r00 = _mm256_add_pd( r00, r00 );
-                    r01 = _mm256_add_pd( r01, r01 );
-                    
-                    r00 = _mm256_sub_pd( r00, r02 );
-                    r01 = _mm256_sub_pd( r01, r03 );
+                    r1re = _mm256_mul_pd( rt2re, r2re );
+                    r1im = _mm256_mul_pd( rt2re, r2im );
                     
                     #if defined (fma)
-                    r04 = _mm256_fmadd_pd( rC31, r00, r06 );
-                    r05 = _mm256_fmadd_pd( rC31, r01, r07 );
+                    r01  = _mm256_fmsub_pd(  rt1re, r0re, r01  );
+                    r02  = _mm256_fmadd_pd(  rt1re, r0im, r02  );
+                    r1re = _mm256_fnmadd_pd( rt2im, r2im, r1re );
+                    r1im = _mm256_fmadd_pd(  rt2im, r2re, r1im );
                     #else
-                    r08 = _mm256_mul_pd( rC31, r00 );
-                    r09 = _mm256_mul_pd( rC31, r01 );
+                    r0re = _mm256_mul_pd( rt1re, r0re );
+                    r0im = _mm256_mul_pd( rt1re, r0im );
+                    r2im = _mm256_mul_pd( rt2im, r2im );
+                    r2re = _mm256_mul_pd( rt2im, r2re );
                     
-                    r04 = _mm256_add_pd( r06, r08 );
-                    r05 = _mm256_add_pd( r07, r09 );
+                    r01  = _mm256_sub_pd( r0re, r01  );
+                    r02  = _mm256_add_pd( r0im, r02  );
+                    r1re = _mm256_sub_pd( r1re, r2im );
+                    r1im = _mm256_add_pd( r1im, r2re );
                     #endif
                     
-                    r00 = _mm256_add_pd( r00, r06 );
-                    r01 = _mm256_add_pd( r01, r07 );
+                    r1re = _mm256_sub_pd( r01, r1re );
+                    r1im = _mm256_sub_pd( r02, r1im );
+                    r2re = _mm256_add_pd( r01, r01  );
+                    r2im = _mm256_add_pd( r02, r02  );
                     
-                    _mm256_store_pd( px0re, r00 );
-                    _mm256_store_pd( px0im, r01 );
+                    r01 = _mm256_sub_pd( r2re, r1re );
+                    r02 = _mm256_sub_pd( r2im, r1im );
+                    
+                    r0re = _mm256_load_pd( px0re );
+                    r0im = _mm256_load_pd( px0im );
                     
                     #if defined (fma)
-                    r06 = _mm256_fmadd_pd(  rC32, r03, r04 );
-                    r07 = _mm256_fnmadd_pd( rC32, r02, r05 );
+                    r2re = _mm256_fmadd_pd( rC31, r01, r0re );
+                    r2im = _mm256_fmadd_pd( rC31, r02, r0im );
                     #else
-                    r08 = _mm256_mul_pd( rC32, r03 );
-                    r09 = _mm256_mul_pd( rC32, r02 );
+                    r2re = _mm256_mul_pd( rC31, r01 );
+                    r2im = _mm256_mul_pd( rC31, r02 );
                     
-                    r06 = _mm256_add_pd( r04, r08 );
-                    r07 = _mm256_sub_pd( r05, r09 );
+                    r2re = _mm256_add_pd( r2re, r0re );
+                    r2im = _mm256_add_pd( r2im, r0im );
                     #endif
                     
-                    _mm256_store_pd( px2re, r06 );
-                    _mm256_store_pd( px2im, r07 );
+                    r0re = _mm256_add_pd( r0re, r01 );
+                    r0im = _mm256_add_pd( r0im, r02 );
                     
-                    r04 = _mm256_add_pd( r04, r04 );
-                    r05 = _mm256_add_pd( r05, r05 );
+                    _mm256_store_pd( px0re, r0re );
+                    _mm256_store_pd( px0im, r0im );
                     
-                    r04 = _mm256_sub_pd( r04, r06 );
-                    r05 = _mm256_sub_pd( r05, r07 );
+                    #if defined (fma)
+                    r1im = _mm256_fmadd_pd(  rC32, r1im, r2re );
+                    r1re = _mm256_fnmadd_pd( rC32, r1re, r2im );
+                    #else
+                    r1im = _mm256_mul_pd( rC32, r1im );
+                    r1re = _mm256_mul_pd( rC32, r1re );
                     
-                    _mm256_store_pd( px1re, r04 );
-                    _mm256_store_pd( px1im, r05 );
+                    r1im = _mm256_add_pd( r2re, r1im );
+                    r1re = _mm256_sub_pd( r2im, r1re );
+                    #endif
+                    
+                    r2re = _mm256_add_pd( r2re, r2re );
+                    r2im = _mm256_add_pd( r2im, r2im );
+                    
+                    _mm256_store_pd( px2re, r1im );
+                    _mm256_store_pd( px2im, r1re );
+                    
+                    r2re = _mm256_sub_pd( r2re, r1im );
+                    r2im = _mm256_sub_pd( r2im, r1re );
+                    
+                    _mm256_store_pd( px1re, r2re );
+                    _mm256_store_pd( px1im, r2im );
                     
                     // Walking to next SIMD line before next
                     // i1 cycle iteration.
@@ -191,10 +189,7 @@ void fxzm3a_c( const int m,
     const __m512d rC32 = _mm512_set1_pd( +0.86602540378443864676 );
     
     // Registers to be used
-    __m512d rt1re, rt1im, 
-            rt2re, rt2im, 
-            r00, r01, r02, r03, 
-            r04, r05, r06, r07;
+    __m512d rt1re, rt1im, rt2re, rt2im, r0re, r0im, r1re, r1im, r2re, r2im, r01, r02;
     
     for ( int i4 = 0; i4 < k; i4++ ) {
         
@@ -209,56 +204,57 @@ void fxzm3a_c( const int m,
                 
                 for ( int i1 = 0; i1 < 4; i1++ ) {
                     
-                    r02 = _mm512_load_pd( px1re );
-                    r03 = _mm512_load_pd( px1im );
-                    r04 = _mm512_load_pd( px2re );
-                    r05 = _mm512_load_pd( px2im );
+                    r0re = _mm512_load_pd( px1re );
+                    r0im = _mm512_load_pd( px1im );
                     
-                    r00 = _mm512_mul_pd( rt1re, r02 );
-                    r01 = _mm512_mul_pd( rt1re, r03 );
-                    r06 = _mm512_mul_pd( rt2re, r04 );
-                    r07 = _mm512_mul_pd( rt2re, r05 );
+                    r01  = _mm512_mul_pd( rt1im, r0im );
+                    r02  = _mm512_mul_pd( rt1im, r0re );
                     
-                    r00 = _mm512_fnmadd_pd( rt1im, r03, r00 );
-                    r01 = _mm512_fmadd_pd(  rt1im, r02, r01 );
-                    r06 = _mm512_fmsub_pd(  rt2im, r05, r06  );
-                    r07 = _mm512_fmadd_pd(  rt2im, r04, r07  );
+                    r2re = _mm512_load_pd( px2re );
+                    r2im = _mm512_load_pd( px2im );
                     
-                    r02 = _mm512_add_pd( r00, r06 );
-                    r03 = _mm512_sub_pd( r01, r07 );
+                    r1re = _mm512_mul_pd( rt2re, r2re );
+                    r1im = _mm512_mul_pd( rt2re, r2im );
                     
-                    r06 = _mm512_load_pd( px0re );
-                    r07 = _mm512_load_pd( px0im );
+                    r01  = _mm512_fmsub_pd(  rt1re, r0re, r01  );
+                    r02  = _mm512_fmadd_pd(  rt1re, r0im, r02  );
+                    r1re = _mm512_fnmadd_pd( rt2im, r2im, r1re );
+                    r1im = _mm512_fmadd_pd(  rt2im, r2re, r1im );
                     
-                    r00 = _mm512_add_pd( r00, r00 );
-                    r01 = _mm512_add_pd( r01, r01 );
+                    r1re = _mm512_sub_pd( r01, r1re );
+                    r1im = _mm512_sub_pd( r02, r1im );
+                    r2re = _mm512_add_pd( r01, r01  );
+                    r2im = _mm512_add_pd( r02, r02  );
                     
-                    r00 = _mm512_sub_pd( r00, r02 );
-                    r01 = _mm512_sub_pd( r01, r03 );
+                    r01 = _mm512_sub_pd( r2re, r1re );
+                    r02 = _mm512_sub_pd( r2im, r1im );
                     
-                    r04 = _mm512_fmadd_pd( rC31, r00, r06 );
-                    r05 = _mm512_fmadd_pd( rC31, r01, r07 );
+                    r0re = _mm512_load_pd( px0re );
+                    r0im = _mm512_load_pd( px0im );
                     
-                    r00 = _mm512_add_pd( r00, r06 );
-                    r01 = _mm512_add_pd( r01, r07 );
+                    r2re = _mm512_fmadd_pd( rC31, r01, r0re );
+                    r2im = _mm512_fmadd_pd( rC31, r02, r0im );
                     
-                    _mm512_store_pd( px0re, r00 );
-                    _mm512_store_pd( px0im, r01 );
+                    r0re = _mm512_add_pd( r0re, r01 );
+                    r0im = _mm512_add_pd( r0im, r02 );
                     
-                    r06 = _mm512_fmadd_pd(  rC32, r03, r04 );
-                    r07 = _mm512_fnmadd_pd( rC32, r02, r05 );
+                    _mm512_store_pd( px0re, r0re );
+                    _mm512_store_pd( px0im, r0im );
                     
-                    _mm512_store_pd( px2re, r06 );
-                    _mm512_store_pd( px2im, r07 );
+                    r1im = _mm512_fmadd_pd(  rC32, r1im, r2re );
+                    r1re = _mm512_fnmadd_pd( rC32, r1re, r2im );
                     
-                    r04 = _mm512_add_pd( r04, r04 );
-                    r05 = _mm512_add_pd( r05, r05 );
+                    r2re = _mm512_add_pd( r2re, r2re );
+                    r2im = _mm512_add_pd( r2im, r2im );
                     
-                    r04 = _mm512_sub_pd( r04, r06 );
-                    r05 = _mm512_sub_pd( r05, r07 );
+                    _mm512_store_pd( px2re, r1im );
+                    _mm512_store_pd( px2im, r1re );
                     
-                    _mm512_store_pd( px1re, r04 );
-                    _mm512_store_pd( px1im, r05 );
+                    r2re = _mm512_sub_pd( r2re, r1im );
+                    r2im = _mm512_sub_pd( r2im, r1re );
+                    
+                    _mm512_store_pd( px1re, r2re );
+                    _mm512_store_pd( px1im, r2im );
                     
                     // Walking to next SIMD line before next
                     // i1 cycle iteration.

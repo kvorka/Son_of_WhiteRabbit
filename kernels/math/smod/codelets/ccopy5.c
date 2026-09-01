@@ -107,10 +107,10 @@ void copy5_carray_c( const int length,
             r10 = _mm256_fmadd_pd( rfac4, r12, r10 );
             r11 = _mm256_fmadd_pd( rfac4, r13, r11 );
             #else
-            r02 = _mm256_mul_pd( rfac2, r02 );
-            r03 = _mm256_mul_pd( rfac2, r03 );
-            r12 = _mm256_mul_pd( rfac2, r12 );
-            r13 = _mm256_mul_pd( rfac2, r13 );
+            r02 = _mm256_mul_pd( rfac4, r02 );
+            r03 = _mm256_mul_pd( rfac4, r03 );
+            r12 = _mm256_mul_pd( rfac4, r12 );
+            r13 = _mm256_mul_pd( rfac4, r13 );
             
             r00 = _mm256_add_pd( r02, r00 );
             r01 = _mm256_add_pd( r03, r01 );

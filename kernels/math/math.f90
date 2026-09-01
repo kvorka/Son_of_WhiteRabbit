@@ -1,20 +1,40 @@
 module math
-  use calloc
+  use iso_c_binding
+  use iso_fortran_env, only : real128
   implicit none; public
   
-  real(kind=dbl), parameter :: zero  = 0._dbl
-  real(kind=qbl), parameter :: qzero = 0._qbl
-  real(kind=dbl), parameter :: one   = 1._dbl
-  real(kind=qbl), parameter :: qone  = 1._qbl
-  real(kind=dbl), parameter :: pi    = acos(-one)
-  real(kind=qbl), parameter :: qpi   = acos(-qone)
-  
-  real(kind=dbl), parameter :: s4pi = sqrt(4*pi)
-  
-  complex(kind=dbl), parameter :: cunit = cmplx(zero, one , kind=dbl)
+  integer,           parameter :: dbl = c_double
+  integer,           parameter :: qbl = real128
+  real(kind=dbl),    parameter :: zero  = 0._dbl
+  real(kind=qbl),    parameter :: qzero = 0._qbl
   complex(kind=dbl), parameter :: czero = cmplx(zero, zero, kind=dbl)
+  real(kind=dbl),    parameter :: one   = 1._dbl
+  real(kind=qbl),    parameter :: qone  = 1._qbl
+  complex(kind=dbl), parameter :: cunit = cmplx(zero, one , kind=dbl)
+  real(kind=dbl),    parameter :: pi    = acos(-one)
+  real(kind=qbl),    parameter :: qpi   = acos(-qone)
+  real(kind=dbl),    parameter :: s4pi  = sqrt(4*pi)
+  
+#if defined (mem64)
+  integer, parameter :: alig = 64  !! memory alignement: AVX512
+  integer, parameter :: ndbl = 8   !! number of doubles in one reg. AVX512
+#elif defined (mem32)
+  integer, parameter :: alig = 32  !! memory alignement: AVX
+  integer, parameter :: ndbl = 4   !! number of doubles in one reg. AVX
+#elif defined (mem16)
+  integer, parameter :: alig = 16  !! memory alignement: SSE
+  integer, parameter :: ndbl = 2   !! number of doubles in one reg. SSE
+#endif
   
   interface
+    module type(c_ptr) function fortmalloc(alignmt, n) bind(C, name='aligned_alloc')
+      integer, value :: alignmt, n
+    end function fortmalloc
+    
+    module subroutine fortfree(ptr) bind(C, name="free")
+      type(c_ptr), value :: ptr
+    end subroutine fortfree
+    
     module elemental function int2str_fn(n) result(str)
       integer,          intent(in) :: n
       character(len=10)            :: str
@@ -52,6 +72,12 @@ module math
       integer, value, intent(in)  :: istart, length
       real(kind=dbl), intent(out) :: arr(*)
     end subroutine zero_rarray_sub
+    
+    module subroutine copy_rarray_sub(istart, length, arr_from, arr_to) bind(C, name="copy_rarray_c")
+      integer, value, intent(in)  :: istart, length
+      real(kind=dbl), intent(in)  :: arr_from(*)
+      real(kind=dbl), intent(out) :: arr_to(*)
+    end subroutine copy_rarray_sub
     
     module subroutine zero_carray_sub(length, arr) bind(C, name="zero_carray_c")
       integer, value,    intent(in)  :: length
@@ -155,9 +181,15 @@ module math
     end subroutine xy2ee_sub
 #else
     module subroutine zero_rarray_sub(istart, length, arr)
-      integer, value, intent(in)  :: istart, length
+      integer,        intent(in)  :: istart, length
       real(kind=dbl), intent(out) :: arr(length)
     end subroutine zero_rarray_sub
+    
+    module subroutine copy_rarray_sub(istart, length, arr_from, arr_to)
+      integer,        intent(in)  :: istart, length
+      real(kind=dbl), intent(in)  :: arr_from(*)
+      real(kind=dbl), intent(out) :: arr_to(length)
+    end subroutine copy_rarray_sub
     
     module subroutine zero_carray_sub(length, arr)
       integer,           intent(in)  :: length

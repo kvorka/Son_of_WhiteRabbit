@@ -1,9 +1,13 @@
 submodule (math) alloc_aligned
-  implicit none; contains
+  implicit none
+  
+  contains
   
   module procedure alloc_aligned_sub
     
-    c_arr = fortmalloc( alig, n * size_c_dbl )
+    !! This assumes a double precision is 8 bytes
+    !! so it wont work on some wild architectures
+    c_arr = fortmalloc( alig, 8 * n )
     call c_f_pointer( c_arr, f_arr, [n] )
     
   end procedure alloc_aligned_sub

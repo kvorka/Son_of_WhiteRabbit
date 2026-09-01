@@ -37,13 +37,15 @@ void fxzm3b_c( const int m,
             for ( int i1 = 0; i1 < 4; i1++ ) {
                 
                 r1re = _mm256_load_pd( px1re );
-                r1im = _mm256_load_pd( px1im );
                 r2re = _mm256_load_pd( px2re );
-                r2im = _mm256_load_pd( px2im );
                 
                 r01 = _mm256_sub_pd( r1re, r2re );
-                r02 = _mm256_sub_pd( r1im, r2im );
                 r03 = _mm256_add_pd( r1re, r2re );
+                
+                r1im = _mm256_load_pd( px1im );
+                r2im = _mm256_load_pd( px2im );
+                
+                r02 = _mm256_sub_pd( r1im, r2im );
                 r04 = _mm256_add_pd( r1im, r2im );
                 
                 r0re = _mm256_load_pd( px0re );
@@ -144,13 +146,15 @@ void fxzm3b_c( const int m,
             for ( int i1 = 0; i1 < 4; i1++ ) {
                 
                 r1re = _mm512_load_pd( px1re );
-                r1im = _mm512_load_pd( px1im );
                 r2re = _mm512_load_pd( px2re );
-                r2im = _mm512_load_pd( px2im );
                 
                 r01 = _mm512_sub_pd( r1re, r2re );
-                r02 = _mm512_sub_pd( r1im, r2im );
                 r03 = _mm512_add_pd( r1re, r2re );
+                
+                r1im = _mm512_load_pd( px1im );
+                r2im = _mm512_load_pd( px2im );
+                
+                r02 = _mm512_sub_pd( r1im, r2im );
                 r04 = _mm512_add_pd( r1im, r2im );
                 
                 r0re = _mm512_load_pd( px0re );

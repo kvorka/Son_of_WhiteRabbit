@@ -13,7 +13,7 @@
 ####                                    COMPILER                                       ####
 ####                                 gfortran, ifx                                     ####
 ###########################################################################################
-code_type="wallclock"
+code_type="benchmark"
 memory="mem32"
 kernel="kernelC"
 instructions="fma"
@@ -81,7 +81,6 @@ lvl1=( "${mathpath}/smod"
 ###########################################################################################
 ####                               1. COMPILING INTERFACES                             ####
 ###########################################################################################
-$fcompile -c ${mathpath}/calloc.f90
 $fcompile -c ${mathpath}/math.f90
 $fcompile -c ${sphidxpath}/sph.f90
 $fcompile -c ${fftpath}/fourier_transform.f90
