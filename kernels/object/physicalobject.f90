@@ -28,7 +28,7 @@ module physicalobject
                      & temp_r_fn, dT_dr_r_fn, dT_dr_r_jm_sub, velc_jml_rr_sub, velc_rr_jml_sub, dv_dr_ptp_rr_jm_sub,             &
                      & velc3_ptp_rr_jm_sub, curlv_ptp_rr_jm_sub, mat_temp_sub, mat_mech_sub, mat_torr_sub, prepare_mat_mech_sub, &
                      & prepare_mat_temp_sub, prepare_mat_torr_sub, solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub,      &
-                     & hdiff_fn, buoy_rr_jml_sub, substract_globrot_sub, grad_ptp_sub, curl_ptp_sub, vypis_sub, reynolds_fn,     &
+                     & hdiff_fn, buoy_rr_jml_sub, substract_globrot_sub, grad_ptp_sub, curl_ptp_sub, writefile_sub, reynolds_fn, &
                      & nuss_fn, deallocEqs_sub
     
   end type T_physicalObject
@@ -132,11 +132,11 @@ module physicalobject
     end subroutine curlv_ptp_rr_jm_sub
     
     !! Interfaces :: output
-    module subroutine vypis_sub(this, filenum, path, quantity)
+    module subroutine writefile_sub(this, filenum, path, quantity)
       class(T_physicalObject), intent(in) :: this
       integer,                 intent(in) :: filenum
       character(len=*),        intent(in) :: path, quantity
-    end subroutine vypis_sub
+    end subroutine writefile_sub
     
     !! Interfaces :: forces
     module real(kind=dbl) function hdiff_fn(this, j)

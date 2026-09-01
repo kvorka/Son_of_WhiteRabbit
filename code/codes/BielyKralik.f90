@@ -16,7 +16,7 @@ program BielyKralik
       call oceanconv%time_scheme_sub()
     end do
     
-    call oceanconv%vypis_ocean_sub()
+    call oceanconv%vypis_sub()
   end do
   
   call oceanconv%deallocate_sub()

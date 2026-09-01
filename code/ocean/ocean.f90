@@ -8,10 +8,9 @@ module ocean
     contains
     
     procedure, public, pass :: init_sub        => init_ocean_sub
+    procedure, public, pass :: time_scheme_sub => time_scheme_ocean_sub
+    procedure, public, pass :: write_state_sub => write_state_ocean_sub
     procedure, public, pass :: deallocate_sub  => deallocate_ocean_sub
-    
-    procedure, public, pass :: time_scheme_sub   => time_scheme_ocean_sub
-    procedure, public, pass :: vypis_ocean_sub   => vypis_ocean_sub
     
   end type T_ocean
   
@@ -21,25 +20,17 @@ module ocean
       logical,        intent(in)    :: speed
     end subroutine init_ocean_sub
     
-    module subroutine deallocate_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine deallocate_ocean_sub
-    
     module subroutine time_scheme_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
     end subroutine time_scheme_ocean_sub
     
-    module subroutine vypis_ocean_sub(this)
+    module subroutine write_state_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
-    end subroutine vypis_ocean_sub
+    end subroutine write_state_ocean_sub
     
-    module subroutine init_temp_bbnd_ocean_sub(this)
+    module subroutine deallocate_ocean_sub(this)
       class(T_ocean), intent(inout) :: this
-    end subroutine init_temp_bbnd_ocean_sub
-    
-    module subroutine init_state_ocean_sub(this)
-      class(T_ocean), intent(inout) :: this
-    end subroutine init_state_ocean_sub
+    end subroutine deallocate_ocean_sub
   end interface
   
 end module ocean

@@ -1,7 +1,7 @@
 submodule (physicalobject) output
   implicit none ; contains
   
-  module procedure vypis_sub
+  module procedure writefile_sub
     integer                        :: ir
     complex(kind=dbl), allocatable :: arr(:,:)
     
@@ -47,6 +47,6 @@ submodule (physicalobject) output
     
     deallocate( arr )
     
-  end procedure vypis_sub
+  end procedure writefile_sub
   
 end submodule output
