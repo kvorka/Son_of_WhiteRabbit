@@ -1,12 +1,12 @@
-submodule (radial_grid) rvolint
+submodule (radial_grid) cvolint
   implicit none; contains
   
-  module procedure rintV_fn
+  module procedure cintV_fn
     integer        :: ir
     real(kind=dbl) :: cr11, cr12, cr21, cr22, dr
     
     !! Set the integral to zero
-    intV = zero
+    intV = czero
     
     !! Check, whether we are on the main or secondary grid and start
     !! the integration procedure. The data are always interpolated
@@ -45,6 +45,6 @@ submodule (radial_grid) rvolint
     !! Account for avereging into the middle of the cells
     intV = intV / 2
     
-  end procedure rintV_fn
+  end procedure cintV_fn
   
-end submodule rvolint
+end submodule cvolint

@@ -15,6 +15,7 @@ submodule (ocean) init
     
     this%diffusion_type = diffusion_ocean
     this%thermal_bnd    = therm_bnd_ocean
+    this%mechanical_bnd = mech_bnd_ocean
     
     !! Prepare Nusselt and Energy saving check files if needed
     if ( .not. speed ) then

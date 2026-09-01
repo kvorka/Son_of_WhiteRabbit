@@ -22,9 +22,7 @@ void fxzm2b_c( const int m,
     double *px1im = x + step * ( 1 + 2 * l2 * 1 );
      
     // Registers to be used
-    __m256d r00, r01, 
-            r02, r03, 
-            r04, r05;
+    __m256d r0re, r0im, r1re, r1im, r01, r02;
     
     for ( int i3 = 0; i3 < l2; i3++ ) {
         
@@ -32,20 +30,23 @@ void fxzm2b_c( const int m,
             
             for ( int i1 = 0; i1 < 4; i1++ ) {
                 
-                r00 = _mm256_load_pd( px0re );
-                r01 = _mm256_load_pd( px0im );
-                r04 = _mm256_load_pd( px1re );
-                r05 = _mm256_load_pd( px1im );
+                r0re = _mm256_load_pd( px0re );
+                r0im = _mm256_load_pd( px0im );
+                r1re = _mm256_load_pd( px1re );
+                r1im = _mm256_load_pd( px1im );
                 
-                r02 = _mm256_sub_pd( r00, r04 );
-                r03 = _mm256_sub_pd( r01, r05 );
-                r00 = _mm256_add_pd( r00, r04 );
-                r01 = _mm256_add_pd( r01, r05 );
+                r1re = _mm256_sub_pd( r0re, r1re );
+                r1im = _mm256_sub_pd( r0im, r1im );
+                r01  = _mm256_add_pd( r0re, r0re );
+                r02  = _mm256_add_pd( r0im, r0im );
                 
-                _mm256_store_pd( px0re, r00 );
-                _mm256_store_pd( px0im, r01 );
-                _mm256_store_pd( px1re, r02 );
-                _mm256_store_pd( px1im, r03 );
+                r0re = _mm256_sub_pd( r01, r1re );
+                r0im = _mm256_sub_pd( r02, r1im );
+                
+                _mm256_store_pd( px0re, r0re );
+                _mm256_store_pd( px0im, r0im );
+                _mm256_store_pd( px1re, r1re );
+                _mm256_store_pd( px1im, r1im );
                 
                 // Walking to next SIMD line before next
                 // i1 cycle iteration.
@@ -88,7 +89,7 @@ void fxzm2b_c( const int m,
     double *px1im = x + step * ( 1 + 2 * l2 * 1 );
      
     // Registers to be used
-    __m512d r00, r01, r02, r03, r04, r05;
+    __m512d r0re, r0im, r1re, r1im, r01, r02;
     
     for ( int i3 = 0; i3 < l2; i3++ ) {
         
@@ -96,20 +97,23 @@ void fxzm2b_c( const int m,
             
             for ( int i1 = 0; i1 < 4; i1++ ) {
                 
-                r00 = _mm512_load_pd( px0re );
-                r01 = _mm512_load_pd( px0im );
-                r04 = _mm512_load_pd( px1re );
-                r05 = _mm512_load_pd( px1im );
+                r0re = _mm512_load_pd( px0re );
+                r0im = _mm512_load_pd( px0im );
+                r1re = _mm512_load_pd( px1re );
+                r1im = _mm512_load_pd( px1im );
                 
-                r02 = _mm512_sub_pd( r00, r04 );
-                r03 = _mm512_sub_pd( r01, r05 );
-                r00 = _mm512_add_pd( r00, r04 );
-                r01 = _mm512_add_pd( r01, r05 );
+                r1re = _mm512_sub_pd( r0re, r1re );
+                r1im = _mm512_sub_pd( r0im, r1im );
+                r01  = _mm512_add_pd( r0re, r0re );
+                r02  = _mm512_add_pd( r0im, r0im );
                 
-                _mm512_store_pd( px0re, r00 );
-                _mm512_store_pd( px0im, r01 );
-                _mm512_store_pd( px1re, r02 );
-                _mm512_store_pd( px1im, r03 );
+                r0re = _mm512_sub_pd( r01, r1re );
+                r0im = _mm512_sub_pd( r02, r1im );
+                
+                _mm512_store_pd( px0re, r0re );
+                _mm512_store_pd( px0im, r0im );
+                _mm512_store_pd( px1re, r1re );
+                _mm512_store_pd( px1im, r1im );
                 
                 // Walking to next SIMD line before next
                 // i1 cycle iteration.

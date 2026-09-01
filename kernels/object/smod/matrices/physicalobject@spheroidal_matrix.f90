@@ -26,11 +26,27 @@ submodule (physicalobject) spheroidal_matrix
     
     ir = 1
       is = 1
-        matica(10,is) = this%rad_grid%c(ir,-1)
-        matica(15,is) = this%rad_grid%c(ir,+1)
-        
-        matica(10,is+1) = this%rad_grid%c(ir,-1)
-        matica(15,is+1) = this%rad_grid%c(ir,+1)
+        select case ( this%mechanical_bnd )
+          case ('noslp')
+            matica(10,is) = this%rad_grid%c(ir,-1)
+            matica(15,is) = this%rad_grid%c(ir,+1)
+            
+            matica(10,is+1) = this%rad_grid%c(ir,-1)
+            matica(15,is+1) = this%rad_grid%c(ir,+1)
+            
+          case ('frslp')
+            matica(10,is) = facj1 * this%rad_grid%c(ir,-1)
+            matica(11,is) = facj2 * this%rad_grid%c(ir,-1)
+            matica(15,is) = facj1 * this%rad_grid%c(ir,+1)
+            matica(16,is) = facj2 * this%rad_grid%c(ir,+1)
+            
+            matica( 9,is+1) = +facj2 * this%rad_grid%r(ir) * (j-1) * this%rad_grid%c(ir,-1)
+            matica(10,is+1) = +facj1 * this%rad_grid%r(ir) * (j+2) * this%rad_grid%c(ir,-1)
+            matica(12,is+1) = +facj2
+            matica(13,is+1) = -facj1
+            matica(14,is+1) = +facj2 * this%rad_grid%r(ir) * (j-1) * this%rad_grid%c(ir,+1)
+            matica(15,is+1) = +facj1 * this%rad_grid%r(ir) * (j+2) * this%rad_grid%c(ir,+1)
+        end select
         
     do ir = 1, this%nd
       is  = 5*(ir-1)+1
@@ -88,11 +104,27 @@ submodule (physicalobject) spheroidal_matrix
     
     ir = this%nd
       is = 5*ir+1
-        matica( 5,is) = this%rad_grid%c(ir,-1)
-        matica(10,is) = this%rad_grid%c(ir,+1)
-        
-        matica( 5,is+1) = this%rad_grid%c(ir,-1)
-        matica(10,is+1) = this%rad_grid%c(ir,+1)
+        select case ( this%mechanical_bnd )
+          case ('noslp')
+            matica( 5,is) = this%rad_grid%c(ir,-1)
+            matica(10,is) = this%rad_grid%c(ir,+1)
+            
+            matica( 5,is+1) = this%rad_grid%c(ir,-1)
+            matica(10,is+1) = this%rad_grid%c(ir,+1)
+          
+          case('frslp')
+            matica( 5,is) = facj1 * this%rad_grid%c(ir,-1)
+            matica( 6,is) = facj2 * this%rad_grid%c(ir,-1)
+            matica(10,is) = facj1 * this%rad_grid%c(ir,+1)
+            matica(11,is) = facj2 * this%rad_grid%c(ir,+1)
+            
+            matica( 4,is+1) = +facj2 * this%rad_grid%r(ir) * (j-1) * this%rad_grid%c(ir,-1)
+            matica( 5,is+1) = +facj1 * this%rad_grid%r(ir) * (j+2) * this%rad_grid%c(ir,-1)
+            matica( 7,is+1) = +facj2
+            matica( 8,is+1) = -facj1
+            matica( 9,is+1) = +facj2 * this%rad_grid%r(ir) * (j-1) * this%rad_grid%c(ir,+1)
+            matica(10,is+1) = +facj1 * this%rad_grid%r(ir) * (j+2) * this%rad_grid%c(ir,+1)
+        end select
     
   end procedure mat_mech_sub
   

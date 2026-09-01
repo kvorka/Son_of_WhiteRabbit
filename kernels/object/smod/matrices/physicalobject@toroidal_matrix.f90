@@ -23,8 +23,16 @@ submodule (physicalobject) toroidal_visc_matrix
     
     ir = 1
       is = 1
-        matica(4,is) = this%rad_grid%c(ir,-1)
-        matica(6,is) = this%rad_grid%c(ir,+1)
+        select case ( this%mechanical_bnd )
+          case ('noslp')
+            matica(4,is) = this%rad_grid%c(ir,-1)
+            matica(6,is) = this%rad_grid%c(ir,+1)
+          
+          case ('frslp')
+            matica(4,is) = -this%rad_grid%r(ir) * this%rad_grid%c(ir,-1)
+            matica(5,is) = +one
+            matica(6,is) = -this%rad_grid%r(ir) * this%rad_grid%c(ir,+1)
+        end select
     
     do ir = 1, this%nd
       is  = 2*(ir-1)+1
@@ -48,9 +56,17 @@ submodule (physicalobject) toroidal_visc_matrix
     
     ir = this%nd
       is = 2*ir+1
-        matica(2,is) = this%rad_grid%c(ir,-1)
-        matica(4,is) = this%rad_grid%c(ir,+1)
-  
+        select case ( this%mechanical_bnd )
+          case ('noslp')
+            matica(2,is) = this%rad_grid%c(ir,-1)
+            matica(4,is) = this%rad_grid%c(ir,+1)
+          
+          case ('frslp')
+            matica(2,is) = -this%rad_grid%r(ir) * this%rad_grid%c(ir,-1)
+            matica(3,is) = +one
+            matica(4,is) = -this%rad_grid%r(ir) * this%rad_grid%c(ir,+1)
+        end select
+        
   end procedure mat_torr_sub
   
 end submodule toroidal_visc_matrix

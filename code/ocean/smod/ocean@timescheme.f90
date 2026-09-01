@@ -186,6 +186,11 @@ submodule (ocean) timescheme
     !!******************************************************************************************************!!
     deallocate( vWork, rccWork, rcrWork )
     
+    !!******************************************************************************************************!!
+    !!** Free-slip requires this to conserve the angular momentum.                                        **!!
+    !!******************************************************************************************************!!
+    if ( this%mechanical_bnd == 'frslp' ) call this%substract_globrot_sub()
+    
   end procedure time_scheme_ocean_sub
   
 end submodule timescheme

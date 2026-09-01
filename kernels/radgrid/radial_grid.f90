@@ -12,7 +12,11 @@ module radial_grid
     procedure, pass :: init_sub       => init_grid_sub
     procedure, pass :: deallocate_sub => deallocate_grid_sub
     
-    procedure, pass :: d, c, dd, cc, drr, interpolation_sub, intV_fn
+    procedure, pass :: d, c, dd, cc, drr
+    procedure, pass :: interpolation_sub
+    procedure, pass :: rintV_fn, cintV_fn
+    
+    generic :: intV_fn => rintV_fn, cintV_fn
     
   end type T_radialGrid
   
@@ -52,11 +56,17 @@ module radial_grid
       integer,             intent(in) :: i, p
     end function drr
     
-    module function intV_fn(this, field) result(intV)
+    module function rintV_fn(this, field) result(intV)
       class(T_radialGrid), intent(in) :: this
       real(kind=dbl),      intent(in) :: field(:)
       real(kind=dbl)                  :: intV
-    end function intV_fn
+    end function rintV_fn
+    
+    module function cintV_fn(this, field) result(intV)
+      class(T_radialGrid), intent(in) :: this
+      complex(kind=dbl),   intent(in) :: field(:)
+      complex(kind=dbl)               :: intV
+    end function cintV_fn
     
     module subroutine interpolation_sub(this, jmdim, ir, field, nrdim1, jmdim1, rr1, field1)
       class(T_radialGrid), intent(in)  :: this

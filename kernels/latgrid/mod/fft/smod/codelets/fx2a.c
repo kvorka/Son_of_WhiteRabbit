@@ -25,9 +25,7 @@ void fxzm2a_c( const int m,
     double *px1im = x + step * ( 1 + 2 * l2 * 1 );
     
     // Registers to be used
-    __m256d rtre, rtim, 
-            r00, r01, r02, r03,
-            r04, r05, r06, r07;
+    __m256d rtre, rtim, r0re, r0im, r1re, r1im, r01, r02, r03, r04;
     
     for ( int i4 = 0; i4 < k; i4++ ) {
         
@@ -40,43 +38,41 @@ void fxzm2a_c( const int m,
                 
                 for ( int i1 = 0; i1 < 4; i1++ ) {
                     
-                    r00 = _mm256_load_pd( px0re );
-                    r01 = _mm256_load_pd( px0im );
-                    
-                    r02 = _mm256_add_pd( r00, r00 );
-                    r03 = _mm256_add_pd( r01, r01 );
-                    
-                    r04 = _mm256_load_pd( px1re );
-                    r05 = _mm256_load_pd( px1im );
+                    r0re = _mm256_load_pd( px0re );
+                    r0im = _mm256_load_pd( px0im );
+                    r1re = _mm256_load_pd( px1re );
+                    r1im = _mm256_load_pd( px1im );
                     
                     #if defined (fma)
-                    r00 = _mm256_fnmadd_pd( rtre, r04, r00 );
-                    r01 = _mm256_fnmadd_pd( rtim, r04, r01 );
+                    r03 = _mm256_fnmadd_pd( rtre, r1re, r0re );
+                    r04 = _mm256_fnmadd_pd( rtim, r1re, r0im );
                     
-                    r00 = _mm256_fmadd_pd(  rtim, r05, r00 );
-                    r01 = _mm256_fnmadd_pd( rtre, r05, r01 );
+                    r03  = _mm256_fmadd_pd(  rtim, r1im, r03 );
+                    r04  = _mm256_fnmadd_pd( rtre, r1im, r04 );
                     #else
-                    r06 = _mm256_mul_pd( rtre, r04 );
-                    r07 = _mm256_mul_pd( rtim, r04 );
+                    r03 = _mm256_mul_pd( rtre, r1re );
+                    r04 = _mm256_mul_pd( rtim, r1re );
+                    r01 = _mm256_mul_pd( rtim, r1im );
+                    r02 = _mm256_mul_pd( rtre, r1im );
                     
-                    r00 = _mm256_sub_pd( r00, r06 );
-                    r01 = _mm256_sub_pd( r01, r07 );
+                    r03 = _mm256_sub_pd( r0re, r03  );
+                    r04 = _mm256_sub_pd( r0im, r04  );
                     
-                    r06 = _mm256_mul_pd( rtim, r05 );
-                    r07 = _mm256_mul_pd( rtre, r05 );
-                    
-                    r00 = _mm256_add_pd( r00, r06 );
-                    r01 = _mm256_sub_pd( r01, r07 );
+                    r03  = _mm256_add_pd( r03, r01 );
+                    r04  = _mm256_sub_pd( r04, r02 );
                     #endif
                     
-                    _mm256_store_pd( px1re, r00 );
-                    _mm256_store_pd( px1im, r01 );
+                    r0re = _mm256_add_pd( r0re, r0re );
+                    r0im = _mm256_add_pd( r0im, r0im );
                     
-                    r00 = _mm256_sub_pd( r02, r00 );
-                    r01 = _mm256_sub_pd( r03, r01 );
+                    _mm256_store_pd( px1re, r03 );
+                    _mm256_store_pd( px1im, r04 );
                     
-                    _mm256_store_pd( px0re, r00 );
-                    _mm256_store_pd( px0im, r01 );
+                    r0re = _mm256_sub_pd( r0re, r03 );
+                    r0im = _mm256_sub_pd( r0im, r04 );
+                    
+                    _mm256_store_pd( px0re, r0re );
+                    _mm256_store_pd( px0im, r0im );
                     
                     // Walking to next SIMD line before next
                     // i1 cycle iteration.
@@ -129,9 +125,7 @@ void fxzm2a_c( const int m,
     double *px1im = x + step * ( 1 + 2 * l2 * 1 );
     
     // Registers to be used
-    __m512d rtre, rtim, 
-            r00, r01, r02, r03,
-            r04, r05, r06, r07;
+    __m512d rtre, rtim, r0re, r0im, r1re, r1im, r03, r04;
     
     for ( int i4 = 0; i4 < k; i4++ ) {
         
@@ -144,29 +138,28 @@ void fxzm2a_c( const int m,
                 
                 for ( int i1 = 0; i1 < 4; i1++ ) {
                     
-                    r00 = _mm512_load_pd( px0re );
-                    r01 = _mm512_load_pd( px0im );
+                    r0re = _mm512_load_pd( px0re );
+                    r0im = _mm512_load_pd( px0im );
+                    r1re = _mm512_load_pd( px1re );
+                    r1im = _mm512_load_pd( px1im );
                     
-                    r02 = _mm512_add_pd( r00, r00 );
-                    r03 = _mm512_add_pd( r01, r01 );
+                    r03 = _mm512_fnmadd_pd( rtre, r1re, r0re );
+                    r04 = _mm512_fnmadd_pd( rtim, r1re, r0im );
                     
-                    r04 = _mm512_load_pd( px1re );
-                    r05 = _mm512_load_pd( px1im );
+                    r03  = _mm512_fmadd_pd(  rtim, r1im, r03 );
+                    r04  = _mm512_fnmadd_pd( rtre, r1im, r04 );
                     
-                    r00 = _mm512_fnmadd_pd( rtre, r04, r00 );
-                    r01 = _mm512_fnmadd_pd( rtim, r04, r01 );
+                    r0re = _mm512_add_pd( r0re, r0re );
+                    r0im = _mm512_add_pd( r0im, r0im );
                     
-                    r00 = _mm512_fmadd_pd(  rtim, r05, r00 );
-                    r01 = _mm512_fnmadd_pd( rtre, r05, r01 );
+                    _mm512_store_pd( px1re, r03 );
+                    _mm512_store_pd( px1im, r04 );
                     
-                    _mm512_store_pd( px1re, r00 );
-                    _mm512_store_pd( px1im, r01 );
+                    r0re = _mm512_sub_pd( r0re, r03 );
+                    r0im = _mm512_sub_pd( r0im, r04 );
                     
-                    r00 = _mm512_sub_pd( r02, r00 );
-                    r01 = _mm512_sub_pd( r03, r01 );
-                    
-                    _mm512_store_pd( px0re, r00 );
-                    _mm512_store_pd( px0im, r01 );
+                    _mm512_store_pd( px0re, r0re );
+                    _mm512_store_pd( px0im, r0im );
                     
                     // Walking to next SIMD line before next
                     // i1 cycle iteration.
