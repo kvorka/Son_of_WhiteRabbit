@@ -13,7 +13,7 @@
 ####                                    COMPILER                                       ####
 ####                                 gfortran, ifx                                     ####
 ###########################################################################################
-code_type="benchmark"
+code_type="wallclock"
 memory="mem32"
 kernel="kernelC"
 instructions="fma"
@@ -92,7 +92,7 @@ $fcompile -c ${radgridpath}/radial_grid.f90
 $fcompile -c ${eqspath}/equations.f90
 $fcompile -c ${iopath}/binaryio.f90
 $fcompile -c ${objpath}/physicalobject.f90
-$fcompile -c ${oceanpath}/ocean_constants.f90
+$fcompile -c ${oceanpath}/ocean_parms.f90
 $fcompile -c ${oceanpath}/ocean.f90
 
 ###########################################################################################

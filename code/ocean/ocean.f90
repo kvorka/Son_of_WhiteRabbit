@@ -1,6 +1,6 @@
 module ocean
+  use ocean_parms
   use physicalobject
-  use ocean_constants
   implicit none
   
   type, extends(T_physicalObject), public :: T_ocean
