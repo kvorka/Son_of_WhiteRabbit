@@ -13,9 +13,9 @@
 ####                                    COMPILER                                       ####
 ####                                 gfortran, ifx                                     ####
 ###########################################################################################
-code_type="benchmark"
+code_type="wallclock"
 memory="mem32"
-kernel="kernelC"
+kernel="kernelF"
 instructions="fma"
 compiler="gfortran"
 
