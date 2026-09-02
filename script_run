@@ -15,7 +15,7 @@
 ###########################################################################################
 code_type="wallclock"
 memory="mem32"
-kernel="kernelF"
+kernel="kernelC"
 instructions="fma"
 compiler="gfortran"
 

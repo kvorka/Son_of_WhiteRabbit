@@ -20,9 +20,8 @@ fcompile="gfortran-12 -Ofast \
                       -D$memory \
                       -D$kernel \
                       -D$code_type \
-                      --param=max-inline-insns-single=5000 \
-                      --param=inline-unit-growth=1000 \
-                      --param=large-function-growth=2000 \
+                      --param=large-stack-frame=10000 \
+                      --param=large-stack-frame-growth=2000 \
                       -cpp"
 
 ccompile="gcc-12 -Ofast \
