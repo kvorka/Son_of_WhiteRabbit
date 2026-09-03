@@ -31,8 +31,8 @@ module ocean_parms
   character(len=*), parameter :: init_bbnd_file              ='heat_flux_cond.cmplx'
   
 #elif defined ( wallclock )
-  integer,          parameter :: nd_ocean        = 97
-  integer,          parameter :: jmax_ocean      = 321
+  integer,          parameter :: nd_ocean        = 145
+  integer,          parameter :: jmax_ocean      = 213
   integer,          parameter :: n_iter_ocean    = 20
   real(kind=dbl),   parameter :: r_ud_ocean      = 0.60_dbl
   real(kind=dbl),   parameter :: Pr_ocean        = 1._dbl
@@ -50,8 +50,8 @@ module ocean_parms
   character(len=*), parameter :: init_bbnd_file  = 'heat_flux_cond.cmplx'
   
 #elif defined ( benchmark )
-  integer,          parameter :: nd_ocean        = 97
-  integer,          parameter :: jmax_ocean      = 321
+  integer,          parameter :: nd_ocean        = 73
+  integer,          parameter :: jmax_ocean      = 125
   integer,          parameter :: n_iter_ocean    = 100
   real(kind=dbl),   parameter :: r_ud_ocean      = 0.60_dbl
   real(kind=dbl),   parameter :: Pr_ocean        = 1._dbl

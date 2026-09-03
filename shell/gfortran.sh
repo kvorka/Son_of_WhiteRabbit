@@ -28,13 +28,16 @@ ccompile="gcc-12 -Ofast \
                  -march=native \
                  -mno-vzeroupper \
                  -fno-bounds-check \
+                 -fno-builtin-memcpy \
+                 -fno-builtin-memset \
+                 -fno-builtin-memmove \
                  -fno-tree-loop-distribute-patterns \
                  -fstrict-aliasing \
                  -fomit-frame-pointer \
                  -fno-stack-protector \
                  -flto=auto \
                  -fwhole-program \
-                 -fopenmp \
+                 -fopenmp-simd \
                  -D$memory \
                  -D$instructions \
                  -cpp"

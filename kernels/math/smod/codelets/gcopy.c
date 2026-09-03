@@ -1,66 +1,51 @@
-#include <immintrin.h>
-
 extern inline __attribute__((always_inline))
 void gcopy_c( const int n,
               const double *restrict arr_from,
                     double *restrict arr_to )
 
-#if defined ( mem32 )
 {
     
-    // Memory addresses
-    const double *pf = arr_from;
-          double *pt = arr_to;
+    // Memory references to be used
+    const double *restrict pf = arr_from;
+          double *restrict pt = arr_to;
     
-    // Registers to be used
-    __m256d r0, r1, r2, r3;
-    
-    for ( int i2 = 0; i2 < n; i2++ ) {
+    // Main cycle
+    for ( int i1 = 0; i1 < n; i1++ ) {
         
-        r0 = _mm256_load_pd( pf +  0 );
-        r1 = _mm256_load_pd( pf +  4 );
-        r2 = _mm256_load_pd( pf +  8 );
-        r3 = _mm256_load_pd( pf + 12 );
+        #if defined ( mem16 )
+        #pragma omp unroll partial (8) simd aligned (arr_from, arr_to : 16)
+        for ( int i0 = 0; i0 < 8; i0++ ) {
+            
+            pt[i0] = pf[i0];
+            
+        }
         
-        _mm256_store_pd( pt +  0, r0 );
-        _mm256_store_pd( pt +  4, r1 );
-        _mm256_store_pd( pt +  8, r2 );
-        _mm256_store_pd( pt + 12, r3 );
+        pf += 8;
+        pt += 8;
         
-        // Walking towards next i2 iteration
+        #elif defined ( mem32 )
+        #pragma omp unroll partial (16) simd aligned (arr_from, arr_to : 32)
+        for ( int i0 = 0; i0 < 16; i0++ ) {
+            
+            pt[i0] = pf[i0];
+            
+        }
+        
         pf += 16;
         pt += 16;
         
-    }
-    
-}
-#else
-{
-    
-    // Memory addresses
-    const double *pf = arr_from;
-          double *pt = arr_to;
-    
-    // Registers to be used
-    __m512d r0, r1, r2, r3;
-    
-    for ( int i2 = 0; i2 < n; i2++ ) {
+        #elif defined ( mem64 )
+        #pragma omp unroll partial (32) simd aligned (arr_from, arr_to : 64)
+        for ( int i0 = 0; i0 < 32; i0++ ) {
+            
+            pt[i0] = pf[i0];
+            
+        }
         
-        r0 = _mm512_load_pd( pf +  0 );
-        r1 = _mm512_load_pd( pf +  8 );
-        r2 = _mm512_load_pd( pf + 16 );
-        r3 = _mm512_load_pd( pf + 24 );
-        
-        _mm512_store_pd( pt +  0, r0 );
-        _mm512_store_pd( pt +  8, r1 );
-        _mm512_store_pd( pt + 16, r2 );
-        _mm512_store_pd( pt + 24, r3 );
-        
-        // Walking towards next i2 iteration
         pf += 32;
         pt += 32;
+        #endif
         
     }
     
 }
-#endif

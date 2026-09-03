@@ -91,44 +91,44 @@ module math
     end subroutine copy_carray_sub
     
     module subroutine copy1_carray_sub(length, fac, arr) bind(C, name="copy1_carray_c")
-      integer, value,    intent(in)    :: length
-      real(kind=dbl),    intent(in)    :: fac
-      complex(kind=dbl), intent(inout) :: arr(*)
+      integer,        value, intent(in)    :: length
+      real(kind=dbl), value, intent(in)    :: fac
+      complex(kind=dbl),     intent(inout) :: arr(*)
     end subroutine copy1_carray_sub
     
     module subroutine copy2_carray_sub(length, fac, arr_from, arr_to) bind(C, name="copy2_carray_c")
-      integer, value,    intent(in)  :: length
-      real(kind=dbl),    intent(in)  :: fac
-      complex(kind=dbl), intent(in)  :: arr_from(*)
-      complex(kind=dbl), intent(out) :: arr_to(*)
+      integer,        value, intent(in)  :: length
+      real(kind=dbl), value, intent(in)  :: fac
+      complex(kind=dbl),     intent(in)  :: arr_from(*)
+      complex(kind=dbl),     intent(out) :: arr_to(*)
     end subroutine copy2_carray_sub
     
     module subroutine copy3_carray_sub(length, fac, arr_from, arr_to) bind(C, name="copy3_carray_c")
-      integer, value,    intent(in)    :: length
-      real(kind=dbl),    intent(in)    :: fac
-      complex(kind=dbl), intent(in)    :: arr_from(*)
-      complex(kind=dbl), intent(inout) :: arr_to(*)
+      integer,        value, intent(in)    :: length
+      real(kind=dbl), value, intent(in)    :: fac
+      complex(kind=dbl),     intent(in)    :: arr_from(*)
+      complex(kind=dbl),     intent(inout) :: arr_to(*)
     end subroutine copy3_carray_sub
     
     module subroutine cadj3_carray_sub(n, fac, arr_from, arr_to) bind(C, name="cadj3_carray_c")
-      integer, value,    intent(in)    :: n
-      real(kind=dbl),    intent(in)    :: fac
-      complex(kind=dbl), intent(in)    :: arr_from(*)
-      complex(kind=dbl), intent(inout) :: arr_to(*) 
+      integer,        value, intent(in)    :: n
+      real(kind=dbl), value, intent(in)    :: fac
+      complex(kind=dbl),     intent(in)    :: arr_from(*)
+      complex(kind=dbl),     intent(inout) :: arr_to(*) 
     end subroutine cadj3_carray_sub
     
     module subroutine copy4_carray_sub(length, fac1, fac2, fac3, arr1, arr2, arr_to) bind(C, name="copy4_carray_c")
-      integer, value,    intent(in)    :: length
-      real(kind=dbl),    intent(in)    :: fac1, fac2, fac3
-      complex(kind=dbl), intent(in)    :: arr1(*), arr2(*)
-      complex(kind=dbl), intent(inout) :: arr_to(*)
+      integer,        value, intent(in)    :: length
+      real(kind=dbl), value, intent(in)    :: fac1, fac2, fac3
+      complex(kind=dbl),     intent(in)    :: arr1(*), arr2(*)
+      complex(kind=dbl),     intent(inout) :: arr_to(*)
     end subroutine copy4_carray_sub
     
     module subroutine copy5_carray_sub(length, fac1, fac2, fac3, fac4, arr1, arr2, arr3, arr_to) bind(C, name="copy5_carray_c")
-      integer, value,    intent(in)    :: length
-      real(kind=dbl),    intent(in)    :: fac1, fac2, fac3, fac4
-      complex(kind=dbl), intent(in)    :: arr1(*), arr2(*), arr3(*)
-      complex(kind=dbl), intent(inout) :: arr_to(*)
+      integer,        value, intent(in)    :: length
+      real(kind=dbl), value, intent(in)    :: fac1, fac2, fac3, fac4
+      complex(kind=dbl),     intent(in)    :: arr1(*), arr2(*), arr3(*)
+      complex(kind=dbl),     intent(inout) :: arr_to(*)
     end subroutine copy5_carray_sub
     
     module subroutine swap_carray_sub(length, arr1, arr2) bind(C, name="swap_carray_c")
@@ -155,10 +155,10 @@ module math
     end subroutine gcopy_sub
     
     module subroutine grad_pp_j_sub(length, fac1, fac2, fac3, fac4, darr, arr, grad1, grad3) bind(C, name="grad_pp_j_c")
-      integer, value,    intent(in)  :: length
-      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4
-      complex(kind=dbl), intent(in)  :: darr(*), arr(*)
-      complex(kind=dbl), intent(out) :: grad1(*), grad3(*)
+      integer,        value, intent(in)  :: length
+      real(kind=dbl), value, intent(in)  :: fac1, fac2, fac3, fac4
+      complex(kind=dbl),     intent(in)  :: darr(*), arr(*)
+      complex(kind=dbl),     intent(out) :: grad1(*), grad3(*)
     end subroutine grad_pp_j_sub
     
     module subroutine curl_ptp_j_sub(length, fac1, fac2, fac3, fac4, fac5, fac6, darr1, darr2, darr3, arr1, arr2, arr3, &
@@ -257,7 +257,7 @@ module math
     module subroutine trshf_3_carray_sub(length, v1, v2, v3, ca)
       integer,           intent(in)  :: length
       complex(kind=dbl), intent(in)  :: v1(length,3), v2(length,3), v3(length,3)
-      complex(kind=dbl), intent(out) :: ca(3,3,length)
+      complex(kind=dbl), intent(out) :: ca(9,length)
     end subroutine trshf_3_carray_sub
     
     module subroutine gcopy_sub(n, arr_from, arr_to)

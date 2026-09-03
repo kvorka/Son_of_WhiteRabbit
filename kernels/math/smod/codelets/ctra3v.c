@@ -13,10 +13,10 @@ void trshf_3_carray_c( const int length,
 {
     
     // Casting memory addresses
-    const double *pv1 = ( const double * ) v1;
-    const double *pv2 = ( const double * ) v2;
-    const double *pv3 = ( const double * ) v3;
-          double *pt  = (       double * ) ca;
+    const double *restrict pv1 = ( const double * ) v1;
+    const double *restrict pv2 = ( const double * ) v2;
+    const double *restrict pv3 = ( const double * ) v3;
+          double *restrict pt  = (       double * ) ca;
     
     // Memory addresses to be used
     const double *p1 = pv1 + 0*length;

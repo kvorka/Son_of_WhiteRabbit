@@ -11,8 +11,8 @@ void trans_4_carray_c( const int length,
 {
     
     // Casting memory references
-    const double *pf = ( const double * ) arr_from;
-          double *pt = (       double * ) arr_to;
+    const double *restrict pf = ( const double * ) arr_from;
+          double *restrict pt = (       double * ) arr_to;
     
     // Memory references to be used
     double *pt0 = pt + 0 * length;
