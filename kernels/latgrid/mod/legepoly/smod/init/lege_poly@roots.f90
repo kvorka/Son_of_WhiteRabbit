@@ -47,10 +47,10 @@ submodule (lege_poly) roots
         end if
       end do
       
-      this%cosx(i)  = q2r_fn( root )
-      this%sinx(i)  = q2r_fn( sqrt( 1 - root**2 ) )
-      this%cosx2(i) = q2r_fn( root**2 )
-      this%wght(i)  = q2r_fn( qpi * (1-root**2) / ( this%nLege * lege_fn(2*this%nLege-1, root) )**2 )
+      this%cosx(i)  = real( root, kind=dbl )
+      this%sinx(i)  = real( sqrt( 1 - root**2 ), kind=dbl )
+      this%cosx2(i) = real( root**2, kind=dbl )
+      this%wght(i)  = real( qpi * (1-root**2) / ( this%nLege * lege_fn(2*this%nLege-1, root) )**2, kind=dbl )
     end do
     !$omp end parallel do
     

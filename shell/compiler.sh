@@ -25,9 +25,16 @@ function compile_lvl() {
                 do
                     find "$dir" -maxdepth 1 -name "*.c" -exec $ccompile -c {} + &
                 done
-        else
+    elif [ "$1" == "F" ]
+        then
             for dir in "${dirs[@]}"
                 do
+                    find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
+                done
+    else
+            for dir in "${dirs[@]}"
+                do
+                    find "$dir" -maxdepth 1 -name "*.c"   -exec $ccompile -c {} + &
                     find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
                 done
     fi

@@ -75,40 +75,24 @@ module lege_poly
       complex(kind=dbl), intent(out) :: cab(ncab,*)
     end subroutine r2c_mj_to_mj_sub
     
-    module subroutine bwd_legesum_sub(this, nb, cc, sumN, sumS, cosx, sinx, cosx2, pmm, pmj1, pmj, swork)
-      class(T_legep), intent(in)  :: this
-      integer,        intent(in)  :: nb
-      real(kind=dbl), intent(in)  :: cosx(*), sinx(*), cosx2(*), cc(4*nb,*)
-      real(kind=dbl), intent(out) :: pmm(*), pmj1(*), pmj(*), swork(*), sumN(8*nb*ndbl,0:*), sumS(8*nb*ndbl,0:*)
-    end subroutine bwd_legesum_sub
-    
-    module subroutine fwd_legesum_sub(this, nf, sumN, sumS, cr, cosx, sinx, cosx2, weight, pmm, pmj1, pmj, swork)
-      class(T_legep), intent(in)    :: this
-      integer,        intent(in)    :: nf
-      real(kind=dbl), intent(in)    :: sumN(8*nf*ndbl,0:*), sumS(8*nf*ndbl,0:*), cosx(*), sinx(*), cosx2(*), weight(*)
-      real(kind=dbl), intent(out)   :: pmm(*), pmj1(*), pmj(*), swork(*)
-      real(kind=dbl), intent(inout) :: cr(4*nf,*)
-    end subroutine fwd_legesum_sub
-    
-#if defined ( kernelC )
-    module subroutine bwd_idx1_sub(n, cff, cab, rcab) bind(C, name="bwd_idx1_c")
-      integer, value,    intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: cff
-      complex(kind=dbl), intent(in)  :: cab(*)
-      real(kind=dbl),    intent(out) :: rcab(*)
+    module subroutine bwd_idx1_sub(length, fac, cab, rcab) bind(C, name="bwd_idx1_c")
+      integer,        value, intent(in)  :: length
+      real(kind=dbl), value, intent(in)  :: fac
+      complex(kind=dbl),     intent(in)  :: cab(*)
+      real(kind=dbl),        intent(out) :: rcab(*)
     end subroutine bwd_idx1_sub
     
-    module subroutine bwd_idx2_sub(n, cff, cab, rcab) bind(C, name="bwd_idx2_c")
-      integer, value,    intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: cff(*)
-      complex(kind=dbl), intent(in)  :: cab(*)
-      real(kind=dbl),    intent(out) :: rcab(*)
+    module subroutine bwd_idx2_sub(length, fac, cab, rcab) bind(C, name="bwd_idx2_c")
+      integer,        value, intent(in)  :: length
+      real(kind=dbl),        intent(in)  :: fac(*)
+      complex(kind=dbl),     intent(in)  :: cab(*)
+      real(kind=dbl),        intent(out) :: rcab(*)
     end subroutine bwd_idx2_sub
     
-    module subroutine bwd_idx3_sub(n, cab, rcab) bind(C, name="bwd_idx3_c")
-      integer, value,    intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: cab(*)
-      real(kind=dbl),    intent(out) :: rcab(*)
+    module subroutine bwd_idx3_sub(length, cab, rcab) bind(C, name="bwd_idx3_c")
+      integer,        value, intent(in)  :: length
+      complex(kind=dbl),     intent(in)  :: cab(*)
+      real(kind=dbl),        intent(out) :: rcab(*)
     end subroutine bwd_idx3_sub
     
     module subroutine fwd_idx2_sub(n, cff, rcab, cab) bind(C, name="fwd_idx2_c")
@@ -124,76 +108,20 @@ module lege_poly
       complex(kind=dbl), intent(out) :: cab(*)
     end subroutine fwd_idx3_sub
     
-    module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork) bind(C, name="bwd_set_c")
-      integer, value, intent(in)    :: n, ma1
-      real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), cc(*)
-      real(kind=dbl), intent(inout) :: pmm(*)
-      real(kind=dbl), intent(out)   :: pmj1(*), pmj(*), swork(*)
-    end subroutine bwd_set_sub
+    module subroutine bwd_legesum_sub(this, nb, cc, sumN, sumS, cosx, sinx, cosx2, pmm, pmj1, pmj, swork)
+      class(T_legep), intent(in)  :: this
+      integer,        intent(in)  :: nb
+      real(kind=dbl), intent(in)  :: cosx(*), sinx(*), cosx2(*), cc(4*nb,*)
+      real(kind=dbl), intent(out) :: pmm(*), pmj1(*), pmj(*), swork(*), sumN(8*nb*ndbl,0:*), sumS(8*nb*ndbl,0:*)
+    end subroutine bwd_legesum_sub
     
-    module subroutine bwd_rec_sub(n, nma, fmj, cosx2, cc, pmj1, pmj, swork) bind(C, name="bwd_rec_c")
-      integer, value, intent(in)    :: n, nma
-      real(kind=dbl), intent(in)    :: fmj(*), cosx2(*), cc(*)
-      real(kind=dbl), intent(inout) :: pmj1(*), pmj(*), swork(*)
-    end subroutine bwd_rec_sub
-    
-    module subroutine bwd_rsc_sub(n, cosx, swork, sumN, sumS) bind(C, name="bwd_rsc_c")
-      integer, value, intent(in)  :: n
-      real(kind=dbl), intent(in)  :: cosx(*), swork(*)
-      real(kind=dbl), intent(out) :: sumN(*), sumS(*)
-    end subroutine bwd_rsc_sub
-    
-    module subroutine fwd_rsc_sub(n, w, cosx, sumN, sumS, swork) bind(C, name="fwd_rsc_c")
-      integer, value, intent(in)  :: n
-      real(kind=dbl), intent(in)  :: w(*), cosx(*), sumN(*), sumS(*)
-      real(kind=dbl), intent(out) :: swork(*)
-    end subroutine fwd_rsc_sub
-    
-    module subroutine fwd_set_sub(n, ma1, cff, cosx, sinx, swork, pmm, pmj1, pmj, cr) bind(C, name="fwd_set_c")
-      integer, value, intent(in)    :: n, ma1
-      real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), swork(*)
-      real(kind=dbl), intent(out)   :: pmj1(*), pmj(*)
-      real(kind=dbl), intent(inout) :: pmm(*), cr(*)
-    end subroutine fwd_set_sub
-    
-    module subroutine fwd_rec_sub(n, nma, fmj, cosx2, swork, pmj1, pmj, cr) bind(C, name="fwd_rec_c")
-      integer, value, intent(in)    :: n, nma
-      real(kind=dbl), intent(in)    :: fmj(*), cosx2(*), swork(*)
-      real(kind=dbl), intent(inout) :: pmj1(*), pmj(*), cr(*)
-    end subroutine fwd_rec_sub
-#else
-    module subroutine bwd_idx1_sub(n, cff, cab, rcab)
-      integer,           intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: cff
-      complex(kind=dbl), intent(in)  :: cab(n)
-      real(kind=dbl),    intent(out) :: rcab(2,n)
-    end subroutine bwd_idx1_sub
-    
-    module subroutine bwd_idx2_sub(n, cff, cab, rcab)
-      integer,           intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: cff(2)
-      complex(kind=dbl), intent(in)  :: cab(n,3)
-      real(kind=dbl),    intent(out) :: rcab(2,n)
-    end subroutine bwd_idx2_sub
-    
-    module subroutine bwd_idx3_sub(n, cab, rcab)
-      integer,           intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: cab(n)
-      real(kind=dbl),    intent(out) :: rcab(2,n,2)
-    end subroutine bwd_idx3_sub
-    
-    module subroutine fwd_idx2_sub(n, cff, rcab, cab)
-      integer, value,    intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: cff(2)
-      real(kind=dbl),    intent(in)  :: rcab(2,n,3)
-      complex(kind=dbl), intent(out) :: cab(n)
-    end subroutine fwd_idx2_sub
-    
-    module subroutine fwd_idx3_sub(n, rcab, cab)
-      integer, value,    intent(in)  :: n
-      real(kind=dbl),    intent(in)  :: rcab(2,n,2)
-      complex(kind=dbl), intent(out) :: cab(n)
-    end subroutine fwd_idx3_sub
+    module subroutine fwd_legesum_sub(this, nf, sumN, sumS, cr, cosx, sinx, cosx2, weight, pmm, pmj1, pmj, swork)
+      class(T_legep), intent(in)    :: this
+      integer,        intent(in)    :: nf
+      real(kind=dbl), intent(in)    :: sumN(8*nf*ndbl,0:*), sumS(8*nf*ndbl,0:*), cosx(*), sinx(*), cosx2(*), weight(*)
+      real(kind=dbl), intent(out)   :: pmm(*), pmj1(*), pmj(*), swork(*)
+      real(kind=dbl), intent(inout) :: cr(4*nf,*)
+    end subroutine fwd_legesum_sub
     
     module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork)
       integer,        intent(in)    :: n, ma1
@@ -221,19 +149,18 @@ module lege_poly
       real(kind=dbl), intent(out) :: swork(ndbl,4,2,n,2)
     end subroutine fwd_rsc_sub
     
-    module subroutine fwd_set_sub(n, ma1, cff, cosx, sinx, swork, pmm, pmj1, pmj, cr)
-      integer,        intent(in)    :: n, ma1
-      real(kind=dbl), intent(in)    :: cff, cosx(ndbl,n), sinx(ndbl,n), swork(ndbl,4,4,n)
-      real(kind=dbl), intent(out)   :: pmj1(ndbl,n), pmj(ndbl,n)
-      real(kind=dbl), intent(inout) :: pmm(ndbl,n), cr(4,n)
+    module subroutine fwd_set_sub(n, ma1, cff, cosx, sinx, swork, pmm, pmj1, pmj, cr) bind(C, name="fwd_set_c")
+      integer, value, intent(in)    :: n, ma1
+      real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), swork(*)
+      real(kind=dbl), intent(out)   :: pmj1(*), pmj(*)
+      real(kind=dbl), intent(inout) :: pmm(*), cr(*)
     end subroutine fwd_set_sub
     
-    module subroutine fwd_rec_sub(n, nma, fmj, cosx2, swork, pmj1, pmj, cr)
-      integer,        intent(in)    :: n, nma
-      real(kind=dbl), intent(in)    :: fmj(3,nma), cosx2(ndbl,n), swork(ndbl,4,4,n)
-      real(kind=dbl), intent(inout) :: pmj1(ndbl,4), pmj(ndbl,4), cr(4,n,nma)
+    module subroutine fwd_rec_sub(n, nma, fmj, cosx2, swork, pmj1, pmj, cr) bind(C, name="fwd_rec_c")
+      integer, value, intent(in)    :: n, nma
+      real(kind=dbl), intent(in)    :: fmj(*), cosx2(*), swork(*)
+      real(kind=dbl), intent(inout) :: pmj1(*), pmj(*), cr(*)
     end subroutine fwd_rec_sub
-#endif
   end interface
   
 end module lege_poly

@@ -4,16 +4,18 @@ submodule (math) xy2ee
   module procedure xy2ee_sub
     real(kind=dbl), parameter :: fac = 0.7071067811865475_dbl
     integer                   :: i
-    complex(kind=dbl)         :: ci
+    complex(kind=dbl)         :: cix, ciy
     
     !$omp simd
-    do i = 1, n
+    do i = 1, length
       cy(i) = cy(i) * cunit
       cx(i) = cx(i) * fac
       
-      ci    = +cx(i) + cy(i) * fac
-      cy(i) = -cx(i) + cy(i) * fac
-      cx(i) = ci
+      cix = fac * cy(i) + cx(i)
+      ciy = fac * cy(i) - cx(i)
+      
+      cx(i) = cix
+      cy(i) = ciy
     end do
     
   end procedure xy2ee_sub

@@ -65,7 +65,7 @@ void fxzm5b_c( const int m,
                 r3im = _mm256_sub_pd( r2im, r2re );
                 r0im = _mm256_add_pd( r2im, r2re );
                 
-                #if defined ( fma )
+                #if defined ( __FMA__ )
                 r2re = _mm256_fmadd_pd( rC53, r3re, r4re );
                 r2im = _mm256_fmadd_pd( rC53, r3im, r4im );
                 
@@ -98,7 +98,7 @@ void fxzm5b_c( const int m,
                 _mm256_store_pd( px0re, r01 );
                 _mm256_store_pd( px0im, r02 );
                 
-                #if defined ( fma )
+                #if defined ( __FMA__ )
                 r0re = _mm256_fnmadd_pd( rC51, r4re, r0re );
                 r0im = _mm256_fnmadd_pd( rC51, r4im, r0im );
                 
@@ -123,7 +123,7 @@ void fxzm5b_c( const int m,
                 r0re = _mm256_sub_pd( r0re, r1re );
                 r0im = _mm256_sub_pd( r0im, r1im );
                 
-                #if defined ( fma )
+                #if defined ( __FMA__ )
                 r3re = _mm256_fmadd_pd(  rC54, r3re, r1im );
                 r3im = _mm256_fnmadd_pd( rC54, r3im, r1re );
                 r2im = _mm256_fnmadd_pd( rC54, r2im, r0re );

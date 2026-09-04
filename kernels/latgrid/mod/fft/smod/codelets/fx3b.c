@@ -51,7 +51,7 @@ void fxzm3b_c( const int m,
                 r0re = _mm256_load_pd( px0re );
                 r0im = _mm256_load_pd( px0im );
                 
-                #if defined (fma)
+                #if defined (__FMA__)
                 r1re = _mm256_fmadd_pd( rC31, r03, r0re );
                 r1im = _mm256_fmadd_pd( rC31, r04, r0im );
                 
@@ -160,7 +160,7 @@ void fxzm3b_c( const int m,
                 r0re = _mm512_load_pd( px0re );
                 r0im = _mm512_load_pd( px0im );
                 
-                #if defined (fma)
+                #if defined (__FMA__)
                 r1re = _mm512_fmadd_pd( rC31, r03, r0re );
                 r1im = _mm512_fmadd_pd( rC31, r04, r0im );
                 

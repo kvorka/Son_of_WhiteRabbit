@@ -4,19 +4,18 @@
 ####                          wallclock, benchmark, convection                         ####
 ####                                                                                   ####
 ####                                MEMORY ALIGNEMENT                                  ####
-####                               mem16, mem32, mem64                                 ####
+####                                   mem32, mem64                                    ####
 ####                                                                                   ####
 ####                                      KERNEL                                       ####
-####                     kernelC (mem32 [fma/nofma], mem64 [fma])                      ####
-####                           kernelF (mem16, mem32, mem64)                           ####
+####                               kernelC (mem32, mem64)                              ####
+####                               kernelF (mem32, mem64)                              ####
 ####                                                                                   ####
 ####                                    COMPILER                                       ####
-####                                 gfortran, ifx                                     ####
+####                                  gfortran, ifx                                    ####
 ###########################################################################################
 code_type="benchmark"
 memory="mem32"
-kernel="kernelF"
-instructions="fma"
+kernel="kernelC"
 compiler="gfortran"
 
 ###########################################################################################
@@ -43,13 +42,12 @@ codepath=code/codes
 ###########################################################################################
 ####                                  DIRS STRUCTURE                                   ####
 ###########################################################################################
-lvl0=( "${mathpath}/smod/codelets" 
-       "${fftpath}/smod/codelets" 
-       "${legepath}/smod/codelets/bwd" 
-       "${legepath}/smod/codelets/fwd" )
+lvlM=( "${mathpath}/smod" 
+       "${legepath}/smod/codelets" )
 
-lvl1=( "${mathpath}/smod" 
-       "${sphidxpath}/smod" 
+lvl0=( "${fftpath}/smod/codelets" )
+
+lvl1=( "${sphidxpath}/smod" 
        "${fftpath}/smod/init" 
        "${fftpath}/smod/cores" 
        "${fftpath}/smod/transform" 
@@ -97,6 +95,8 @@ $fcompile -c ${oceanpath}/ocean.f90
 ###########################################################################################
 ####                        2. COMPILING LVL0 IMPLEMENTATIONS                          ####
 ###########################################################################################
+compile_lvl CF lvlM
+
 if [ "$kernel" = "kernelC" ]
     then
         compile_lvl C lvl0

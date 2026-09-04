@@ -18,7 +18,7 @@ submodule (radial_grid) init
       
       !$omp simd
       do ir = 1, nr
-        this%r(ir) = q2r_fn( rdu2 - cos( (2*ir-1) * pi_nr ) * cos_pi_nr )
+        this%r(ir) = real( rdu2 - cos( (2*ir-1) * pi_nr ) * cos_pi_nr, kind=dbl )
       end do
       
     !! Prepare the secondary grid with two ghost points
@@ -26,7 +26,7 @@ submodule (radial_grid) init
       
       !$omp simd
       do ir = 1, nr+1 
-        this%rr(ir) = q2r_fn( rdu2 - cos( 2*(ir-1) * pi_nr ) * cos_pi_nr )
+        this%rr(ir) = real( rdu2 - cos( 2*(ir-1) * pi_nr ) * cos_pi_nr, kind=dbl )
       end do
       
     !! Save the volume of the shell for

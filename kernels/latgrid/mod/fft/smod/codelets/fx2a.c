@@ -43,7 +43,7 @@ void fxzm2a_c( const int m,
                     r1re = _mm256_load_pd( px1re );
                     r1im = _mm256_load_pd( px1im );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r03 = _mm256_fnmadd_pd( rtre, r1re, r0re );
                     r04 = _mm256_fnmadd_pd( rtim, r1re, r0im );
                     

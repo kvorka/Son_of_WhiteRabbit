@@ -9,8 +9,8 @@ submodule (ocean) output
     write(11,*) this%poc, this%t, this%nuss_fn(), this%reynolds_fn()
 #endif
     
-    write(12,*) this%poc, this%t, c2r_fn( this%dT_dr_r_fn(this%nd,0,0) ) / &
-                                & c2r_fn( this%dT_dr_r_fn(1,0,0)       ) / this%r_ud**2
+    write(12,*) this%poc, this%t, real( this%dT_dr_r_fn(this%nd,0,0), kind=dbl ) / &
+                                & real( this%dT_dr_r_fn(1,0,0), kind=dbl )       / this%r_ud**2
     
     call this%writefile_sub( 8, 'data/data_ocean_temp' , 'temperature' )
     call this%writefile_sub( 8, 'data/data_ocean_veloc', 'velocity'    )

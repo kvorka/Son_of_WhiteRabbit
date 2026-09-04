@@ -66,7 +66,7 @@ void fxzm5a_c( const int m,
                     r02 = _mm256_mul_pd( rt1re, r10 );
                     r03 = _mm256_mul_pd( rt1re, r11 );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r02 = _mm256_fnmadd_pd( rt1im, r11, r02 );
                     r03 = _mm256_fmadd_pd(  rt1im, r10, r03 );
                     #else
@@ -83,7 +83,7 @@ void fxzm5a_c( const int m,
                     r04 = _mm256_mul_pd( rt2re, r10 );
                     r05 = _mm256_mul_pd( rt2re, r11 );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r04 = _mm256_fnmadd_pd( rt2im, r11, r04 );
                     r05 = _mm256_fmadd_pd(  rt2im, r10, r05 );
                     #else
@@ -97,7 +97,7 @@ void fxzm5a_c( const int m,
                     r10 = _mm256_load_pd( px3re );
                     r11 = _mm256_load_pd( px3im );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r06 = _mm256_fnmadd_pd( rt3re, r10, r04 );
                     r07 = _mm256_fnmadd_pd( rt3re, r11, r05 );
                     
@@ -120,7 +120,7 @@ void fxzm5a_c( const int m,
                     r10 = _mm256_load_pd( px4re );
                     r11 = _mm256_load_pd( px4im );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r00 = _mm256_fnmadd_pd( rt4re, r10, r02 );
                     r01 = _mm256_fnmadd_pd( rt4re, r11, r03 );
                     
@@ -150,7 +150,7 @@ void fxzm5a_c( const int m,
                     r08 = _mm256_sub_pd( r10,  r06 );
                     r09 = _mm256_sub_pd( r11,  r07 );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r04 = _mm256_fmadd_pd( rC53, r06, r00 );
                     r05 = _mm256_fmadd_pd( rC53, r07, r01 );
                     
@@ -179,7 +179,7 @@ void fxzm5a_c( const int m,
                     r10 = _mm256_load_pd( px0re );
                     r11 = _mm256_load_pd( px0im );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r08 = _mm256_fnmadd_pd( rC51, r00, r10 );
                     r09 = _mm256_fnmadd_pd( rC51, r01, r11 );
                     
@@ -210,7 +210,7 @@ void fxzm5a_c( const int m,
                     _mm256_store_pd( px0re, r00 );
                     _mm256_store_pd( px0im, r01 );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r10 = _mm256_fnmadd_pd( rC54, r07, r02 );
                     r11 = _mm256_fmadd_pd(  rC54, r06, r03 );
                     #else
@@ -227,7 +227,7 @@ void fxzm5a_c( const int m,
                     r02 = _mm256_add_pd( r02, r02 );
                     r03 = _mm256_add_pd( r03, r03 );
                     
-                    #if defined (fma)
+                    #if defined (__FMA__)
                     r00 = _mm256_fnmadd_pd( rC54, r05, r08 );
                     r01 = _mm256_fmadd_pd(  rC54, r04, r09 );
                     #else

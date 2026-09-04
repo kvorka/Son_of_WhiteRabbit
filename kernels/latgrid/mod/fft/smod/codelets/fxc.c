@@ -41,7 +41,7 @@ void fxc2r_c( const int m,
             r05 = _mm256_add_pd( r01, r02 );
             r06 = _mm256_sub_pd( r01, r02 );
             
-            #if defined (fma)
+            #if defined (__FMA__)
             r01 = _mm256_fnmadd_pd( rt2, r04, r03 );
             r02 = _mm256_fnmadd_pd( rt2, r05, r06 );
             
@@ -64,7 +64,7 @@ void fxc2r_c( const int m,
             _mm256_store_pd( px11, r01 );
             _mm256_store_pd( px12, r02 );
             
-            #if defined (fma)
+            #if defined (__FMA__)
             r01 = _mm256_fmsub_pd(  rTwo, r03, r01 );
             r02 = _mm256_fnmadd_pd( rTwo, r06, r02 );
             #else
