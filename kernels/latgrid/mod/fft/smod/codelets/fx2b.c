@@ -20,7 +20,7 @@ void fxzm2b_c( const int m,
     double *px0im = x + step * ( 1 + 2 * l2 * 0 );
     double *px1re = x + step * ( 0 + 2 * l2 * 1 );
     double *px1im = x + step * ( 1 + 2 * l2 * 1 );
-     
+    
     // Registers to be used
     __m256d r0re, r0im, r1re, r1im, r01, r02;
     
@@ -87,7 +87,7 @@ void fxzm2b_c( const int m,
     double *px0im = x + step * ( 1 + 2 * l2 * 0 );
     double *px1re = x + step * ( 0 + 2 * l2 * 1 );
     double *px1im = x + step * ( 1 + 2 * l2 * 1 );
-     
+    
     // Registers to be used
     __m512d r0re, r0im, r1re, r1im, r01, r02;
     

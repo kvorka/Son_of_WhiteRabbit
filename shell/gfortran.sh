@@ -19,7 +19,6 @@ fcompile="gfortran-12 \
   -fwhole-program \
   -fopenmp \
   -D$memory \
-  -D$kernel \
   -D$code_type \
   -cpp"
 

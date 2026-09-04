@@ -15,31 +15,25 @@ esac
 ###########################################################################################
 ####                                COMPILE DIR STRUCTURE                              ####
 ###########################################################################################
-function compile_lvl() {
+function fcompile_lvl() {
     
-    local -n dirs=$2
+    local -n dirs=$1
     
-    if [ "$1" == "C" ]
-        then        
-            for dir in "${dirs[@]}"
-                do
-                    find "$dir" -maxdepth 1 -name "*.c" -exec $ccompile -c {} + &
-                done
-    elif [ "$1" == "F" ]
-        then
-            for dir in "${dirs[@]}"
-                do
-                    find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
-                done
-    else
-            for dir in "${dirs[@]}"
-                do
-                    find "$dir" -maxdepth 1 -name "*.c"   -exec $ccompile -c {} + &
-                    find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
-                done
-    fi
+    for dir in "${dirs[@]}"
+        do
+            find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
+        done
     
-    wait
+}
+
+function ccompile_lvl() {
+    
+    local -n dirs=$1
+    
+    for dir in "${dirs[@]}"
+        do
+            find "$dir" -maxdepth 1 -name "*.c" -exec $ccompile -c {} + &
+        done
     
 }
 

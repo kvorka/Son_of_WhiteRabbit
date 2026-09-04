@@ -6,16 +6,11 @@
 ####                                MEMORY ALIGNEMENT                                  ####
 ####                                   mem32, mem64                                    ####
 ####                                                                                   ####
-####                                      KERNEL                                       ####
-####                               kernelC (mem32, mem64)                              ####
-####                               kernelF (mem32, mem64)                              ####
-####                                                                                   ####
 ####                                    COMPILER                                       ####
 ####                                  gfortran, ifx                                    ####
 ###########################################################################################
 code_type="benchmark"
 memory="mem32"
-kernel="kernelC"
 compiler="gfortran"
 
 ###########################################################################################
@@ -42,12 +37,12 @@ codepath=code/codes
 ###########################################################################################
 ####                                  DIRS STRUCTURE                                   ####
 ###########################################################################################
-lvlM=( "${mathpath}/smod" 
-       "${legepath}/smod/codelets" )
+lvl0=( "${mathpath}/smod/codelets" 
+       "${legepath}/smod/codelets" 
+       "${fftpath}/smod/codelets" )
 
-lvl0=( "${fftpath}/smod/codelets" )
-
-lvl1=( "${sphidxpath}/smod" 
+lvl1=( "${mathpath}/smod" 
+       "${sphidxpath}/smod" 
        "${fftpath}/smod/init" 
        "${fftpath}/smod/cores" 
        "${fftpath}/smod/transform" 
@@ -93,24 +88,16 @@ $fcompile -c ${oceanpath}/ocean_parms.f90
 $fcompile -c ${oceanpath}/ocean.f90
 
 ###########################################################################################
-####                        2. COMPILING LVL0 IMPLEMENTATIONS                          ####
+####                           2. COMPILING IMPLEMENTATIONS                            ####
 ###########################################################################################
-compile_lvl CF lvlM
+ccompile_lvl lvl0
+fcompile_lvl lvl0
+fcompile_lvl lvl1
 
-if [ "$kernel" = "kernelC" ]
-    then
-        compile_lvl C lvl0
-    else
-        compile_lvl F lvl0
-fi
+wait
 
 ###########################################################################################
-####                        3. COMPILING LVL1 IMPLEMENTATIONS                          ####
-###########################################################################################
-compile_lvl F lvl1
-
-###########################################################################################
-####                                 4. LINKING                                        ####
+####                                 3. LINKING                                        ####
 ###########################################################################################
 $fcompile ${codepath}/BielyKralik.f90 *.o -o "Test_"$code_type".out"
 

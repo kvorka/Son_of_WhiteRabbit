@@ -12,7 +12,6 @@ fcompile="ifx -O3 \
               -qopt-zmm-usage=high \
               -qopenmp \
               -D$memory \
-              -D$kernel \
               -D$code_type \
               -cpp"
 
@@ -23,6 +22,6 @@ ccompile="icx -O3 \
               -fno-alias \
               -fomit-frame-pointer \
               -fno-stack-protector \
-              -qopenmp \
+              -qopenmp-simd \
               -D$memory \
               -std=c11"
