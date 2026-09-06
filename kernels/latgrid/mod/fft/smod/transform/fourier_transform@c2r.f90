@@ -7,10 +7,10 @@ submodule (fourier_transform) c2r
     call fxaddsub( m, x(1,1,0), x(1,2,0) )
     
     do i = 1, (this%n-2)/4
-      call fxc2r( m, this%t(this%n+2*i-1), x(1,1,i), &
-                                           & x(1,2,i), &
-                                           & x(1,1,this%n/2-i), &
-                                           & x(1,2,this%n/2-i)  )
+      call fxc2r( m, this%t(this%n+2*i-1),  x(1,1,i), &
+                                          & x(1,2,i), &
+                                          & x(1,1,this%n/2-i), &
+                                          & x(1,2,this%n/2-i)  )
     end do
     
     if ( mod(this%n,4) == 0) then

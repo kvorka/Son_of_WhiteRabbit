@@ -1,5 +1,5 @@
 module math
-  use iso_c_binding
+  use iso_c_binding, only : c_double, c_ptr, c_f_pointer
   use iso_fortran_env, only : real128
   implicit none; public
   
@@ -49,14 +49,6 @@ module math
       real(kind=dbl), pointer, intent(inout) :: f_arr(:)
     end subroutine free_aligned_sub
     
-    module subroutine curl_ptp_j_sub( length, fac1, fac2, fac3, fac4, fac5, fac6, darr1, darr2, darr3, arr1, arr2, arr3, &
-                                    & curl1, curl2, curl3)
-      integer,           intent(in)  :: length
-      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4, fac5, fac6
-      complex(kind=dbl), intent(in)  :: darr1(length), darr2(length), darr3(length), arr1(length), arr2(length), arr3(length)
-      complex(kind=dbl), intent(out) :: curl1(length), curl2(length), curl3(length)
-    end subroutine curl_ptp_j_sub
-    
     module subroutine ee2xy_sub(n, cx, cy) bind(C, name="ee2xy_c")
       integer, value,    intent(in)    :: n
       complex(kind=dbl), intent(inout) :: cx(*), cy(*)
@@ -91,6 +83,14 @@ module math
       complex(kind=dbl),     intent(in)  :: darr(*), arr(*)
       complex(kind=dbl),     intent(out) :: grad1(*), grad3(*)
     end subroutine grad_pp_j_sub
+    
+    module subroutine curl_ptp_j_sub( length, fac1, fac2, fac3, fac4, fac5, fac6, darr1, darr2, darr3, arr1, arr2, arr3, &
+                                    & curl1, curl2, curl3) bind(C, name="curl_ptp_j_c")
+      integer,    value, intent(in)  :: length
+      real(kind=dbl),    intent(in)  :: fac1, fac2, fac3, fac4, fac5, fac6
+      complex(kind=dbl), intent(in)  :: darr1(*), darr2(*), darr3(*), arr1(*), arr2(*), arr3(*)
+      complex(kind=dbl), intent(out) :: curl1(*), curl2(*), curl3(*)
+    end subroutine curl_ptp_j_sub
     
     module subroutine zero_rarray_sub(istart, length, arr) bind(C, name="zero_rarray_c")
       integer, value, intent(in)  :: istart, length

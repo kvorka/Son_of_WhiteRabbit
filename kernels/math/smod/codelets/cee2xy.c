@@ -125,7 +125,7 @@ void ee2xy_c( const int n,
     // Masked remainder if needed
     if ( i < n ) {
         
-        const __mmask8 mask = _cvtu32_mask8( (1U << ( 2 * ( n - i ) ) ) - 1 );
+        const __mmask8 mask = _cvtu32_mask8( ( 1U << ( 2 * ( n - i ) ) ) - 1 );
         
         r00 = _mm512_maskz_loadu_pd( mask, px );
         r01 = _mm512_maskz_loadu_pd( mask, py );

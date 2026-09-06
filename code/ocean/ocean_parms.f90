@@ -4,15 +4,15 @@ module ocean_parms
   
 #if !defined ( wallclock ) && !defined ( benchmark )
   !! Resolution and output frequency
-  integer, parameter :: nd_ocean = 73
-  integer, parameter :: jmax_ocean = 177
+  integer, parameter :: nd_ocean = 97
+  integer, parameter :: jmax_ocean = 321
   integer, parameter :: n_iter_ocean = 100
   
   !! Control parameters
-  real(kind=dbl), parameter :: r_ud_ocean = 0.90_dbl
+  real(kind=dbl), parameter :: r_ud_ocean = 1451._dbl / 1551._dbl
   real(kind=dbl), parameter :: Pr_ocean   = 10._dbl
-  real(kind=dbl), parameter :: Ra_ocean   = 6.670d6
-  real(kind=dbl), parameter :: Ek_ocean   = 6.0d-4
+  real(kind=dbl), parameter :: Ra_ocean   = 1.330d8
+  real(kind=dbl), parameter :: Ek_ocean   = 7.0d-5
   
   !! Boundary conditions and diffusion scheme
   character(len=*), parameter :: therm_bnd_ocean = 'basic'  !! 'basic', 'fluxd'
@@ -21,8 +21,8 @@ module ocean_parms
   
   !! Initialization of dynamical state
   logical,          parameter :: init_through_file_ocean = .false.
-  integer,          parameter :: nd_init_ocean           = 73
-  integer,          parameter :: jmax_init_ocean         = 213
+  integer,          parameter :: nd_init_ocean           = 97
+  integer,          parameter :: jmax_init_ocean         = 321
   character(len=*), parameter :: init_temp_file          = 'inittemp'
   character(len=*), parameter :: init_velc_file          = 'initvelc'
   
