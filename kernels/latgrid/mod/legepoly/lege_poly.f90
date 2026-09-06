@@ -127,14 +127,14 @@ module lege_poly
       integer,        intent(in)    :: n, ma1
       real(kind=dbl), intent(in)    :: cff, cosx(ndbl,4), sinx(ndbl,4), cc(4,n)
       real(kind=dbl), intent(inout) :: pmm(ndbl,4)
-      real(kind=dbl), intent(out)   :: pmj1(ndbl,4), pmj(ndbl,4), swork(ndbl,4,4,n)
+      real(kind=dbl), intent(out)   :: pmj1(ndbl,4), pmj(ndbl,4), swork(ndbl,16,n)
     end subroutine bwd_set_sub
     
     module subroutine bwd_rec_sub(n, nma, fmj, cosx2, cc, pmj1, pmj, swork)
       integer,        intent(in)    :: n, nma
       real(kind=dbl), intent(in)    :: fmj(3,nma), cosx2(ndbl,4), cc(4,n,nma)
       real(kind=dbl), intent(inout) :: pmj1(ndbl,4), pmj(ndbl,4)
-      real(kind=dbl), intent(out)   :: swork(ndbl,4,4,n)
+      real(kind=dbl), intent(out)   :: swork(ndbl,16,n)
     end subroutine bwd_rec_sub
     
     module subroutine bwd_rsc_sub(n, cosx, swork, sumN, sumS)

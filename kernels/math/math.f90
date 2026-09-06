@@ -57,15 +57,14 @@ module math
       complex(kind=dbl), intent(out) :: curl1(length), curl2(length), curl3(length)
     end subroutine curl_ptp_j_sub
     
-    module subroutine eee2xyz_sub(n, sumPTP, cxyz)
-      integer,           intent(in)  :: n
-      complex(kind=dbl), intent(in)  :: sumPTP(n,3)
-      complex(kind=dbl), intent(out) :: cxyz(3,n)
-    end subroutine eee2xyz_sub
+    module subroutine ee2xy_sub(n, cx, cy) bind(C, name="ee2xy_c")
+      integer, value,    intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
+    end subroutine ee2xy_sub
     
-    module subroutine xy2ee_sub(length, cx, cy)
-      integer, value,    intent(in)    :: length
-      complex(kind=dbl), intent(inout) :: cx(length), cy(length)
+    module subroutine xy2ee_sub(n, cx, cy) bind(C, name="xy2ee_c")
+      integer, value,    intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
     end subroutine xy2ee_sub
     
     module subroutine trans_4_carray_sub(length, arr_from, arr_to)
@@ -74,11 +73,17 @@ module math
       complex(kind=dbl), intent(out) :: arr_to(length,4)
     end subroutine trans_4_carray_sub
     
-    module subroutine trshf_3_carray_sub(length, v1, v2, v3, ca)
+    module subroutine trshf_3_3_carray_sub(length, arr_from, arr_to)
+      integer,           intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: arr_from(length,3)
+      complex(kind=dbl), intent(out) :: arr_to(3,length)
+    end subroutine trshf_3_3_carray_sub
+    
+    module subroutine trshf_3x3_9_carray_sub(length, v1, v2, v3, ca)
       integer,           intent(in)  :: length
       complex(kind=dbl), intent(in)  :: v1(length,3), v2(length,3), v3(length,3)
       complex(kind=dbl), intent(out) :: ca(9,length)
-    end subroutine trshf_3_carray_sub
+    end subroutine trshf_3x3_9_carray_sub
     
     module subroutine grad_pp_j_sub(length, fac1, fac2, fac3, fac4, darr, arr, grad1, grad3) bind(C, name="grad_pp_j_c")
       integer,        value, intent(in)  :: length

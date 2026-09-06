@@ -41,22 +41,22 @@ submodule (lege_poly) bwd_rec
             p3 = pmj(i0,3)
             p4 = pmj(i0,4)
             
-            swork(i0,1,1,i3) = swork(i0,1,1,i3) + p1 * cc1
-            swork(i0,2,1,i3) = swork(i0,2,1,i3) + p2 * cc1
-            swork(i0,3,1,i3) = swork(i0,3,1,i3) + p3 * cc1
-            swork(i0,4,1,i3) = swork(i0,4,1,i3) + p4 * cc1
-            swork(i0,1,2,i3) = swork(i0,1,2,i3) + p1 * cc2
-            swork(i0,2,2,i3) = swork(i0,2,2,i3) + p2 * cc2
-            swork(i0,3,2,i3) = swork(i0,3,2,i3) + p3 * cc2
-            swork(i0,4,2,i3) = swork(i0,4,2,i3) + p4 * cc2
-            swork(i0,1,3,i3) = swork(i0,1,3,i3) + p1 * cc3
-            swork(i0,2,3,i3) = swork(i0,2,3,i3) + p2 * cc3
-            swork(i0,3,3,i3) = swork(i0,3,3,i3) + p3 * cc3
-            swork(i0,4,3,i3) = swork(i0,4,3,i3) + p4 * cc3
-            swork(i0,1,4,i3) = swork(i0,1,4,i3) + p1 * cc4
-            swork(i0,2,4,i3) = swork(i0,2,4,i3) + p2 * cc4
-            swork(i0,3,4,i3) = swork(i0,3,4,i3) + p3 * cc4
-            swork(i0,4,4,i3) = swork(i0,4,4,i3) + p4 * cc4
+            swork(i0, 1,i3) = swork(i0, 1,i3) + p1 * cc1
+            swork(i0, 2,i3) = swork(i0, 2,i3) + p2 * cc1
+            swork(i0, 3,i3) = swork(i0, 3,i3) + p3 * cc1
+            swork(i0, 4,i3) = swork(i0, 4,i3) + p4 * cc1
+            swork(i0, 5,i3) = swork(i0, 5,i3) + p1 * cc2
+            swork(i0, 6,i3) = swork(i0, 6,i3) + p2 * cc2
+            swork(i0, 7,i3) = swork(i0, 7,i3) + p3 * cc2
+            swork(i0, 8,i3) = swork(i0, 8,i3) + p4 * cc2
+            swork(i0, 9,i3) = swork(i0, 9,i3) + p1 * cc3
+            swork(i0,10,i3) = swork(i0,10,i3) + p2 * cc3
+            swork(i0,11,i3) = swork(i0,11,i3) + p3 * cc3
+            swork(i0,12,i3) = swork(i0,12,i3) + p4 * cc3
+            swork(i0,13,i3) = swork(i0,13,i3) + p1 * cc4
+            swork(i0,14,i3) = swork(i0,14,i3) + p2 * cc4
+            swork(i0,15,i3) = swork(i0,15,i3) + p3 * cc4
+            swork(i0,16,i3) = swork(i0,16,i3) + p4 * cc4
           end do
       end do
     end do

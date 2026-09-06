@@ -97,7 +97,7 @@ submodule (ocean) timescheme
       
       !! Transpose and shuffle the data into contiguous storage, meaning from
       !! v(l-1), v(l), v(l+1), q(l-1), q(l), ... into v(l-1), q(l-1), curlv(l-1), ...
-      call trshf_3_carray_sub( length = this%jms, &
+      call trshf_3x3_9_carray_sub( length = this%jms, &
                                v1     = v,        &
                                v2     = gradT,    &
                                v3     = curlv,    &

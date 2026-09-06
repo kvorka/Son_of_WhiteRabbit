@@ -1,7 +1,7 @@
 submodule (math) ctra3v
   implicit none; contains
   
-  module procedure trshf_3_carray_sub
+  module procedure trshf_3x3_9_carray_sub
     integer :: i
     
     !$omp simd
@@ -17,6 +17,6 @@ submodule (math) ctra3v
       ca(9,i) = v3(i,3)
     end do
     
-  end procedure trshf_3_carray_sub
+  end procedure trshf_3x3_9_carray_sub
   
 end submodule ctra3v
