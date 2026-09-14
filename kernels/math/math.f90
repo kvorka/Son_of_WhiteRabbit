@@ -1,10 +1,13 @@
 module math
+#include "cvec.h"
   use iso_c_binding, only : c_double, c_ptr, c_f_pointer
   use iso_fortran_env, only : real128
   implicit none; public
   
-  integer, parameter :: dbl = c_double
-  integer, parameter :: qbl = real128
+  integer, parameter :: dbl  = c_double
+  integer, parameter :: qbl  = real128
+  integer, parameter :: alig = alignement
+  integer, parameter :: ndbl = vlen
   
   real(kind=dbl),    parameter :: zero  = 0._dbl
   real(kind=qbl),    parameter :: qzero = 0._qbl
@@ -15,14 +18,6 @@ module math
   real(kind=dbl),    parameter :: s4pi  = sqrt(4*pi)
   complex(kind=dbl), parameter :: czero = cmplx(zero, zero, kind=dbl)
   complex(kind=dbl), parameter :: cunit = cmplx(zero, one, kind=dbl)
-  
-#if defined (mem64)
-  integer, parameter :: alig = 64  !! memory alignement: AVX512
-  integer, parameter :: ndbl = 8   !! number of doubles in one reg. AVX512
-#elif defined (mem32)
-  integer, parameter :: alig = 32  !! memory alignement: AVX
-  integer, parameter :: ndbl = 4   !! number of doubles in one reg. AVX
-#endif
   
   interface
     module type(c_ptr) function fortmalloc(alignmt, n) bind(C, name='aligned_alloc')

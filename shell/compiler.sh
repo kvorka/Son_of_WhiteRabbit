@@ -1,16 +1,44 @@
 #!/bin/bash
 ###########################################################################################
-####                                 COMPILER SET UP                                   ####
+####                                  GFORTRAN SET UP                                  ####
 ###########################################################################################
-case $compiler in
-    ifx)
-        source ./shell/ifx.sh
-    ;;
-    
-    gfortran)
-        source ./shell/gfortran.sh
-    ;;
-esac
+fcompile="gfortran-12 \
+                -Ofast \
+                -march=native \
+                -mno-vzeroupper \
+                -finline-functions \
+                -fno-bounds-check \
+                -fno-tree-loop-distribute-patterns \
+                -fcx-limited-range \
+                -fargument-noalias-global \
+                -fstrict-aliasing \
+                -fomit-frame-pointer \
+                -fno-stack-protector \
+                -flto=auto \
+                -fwhole-program \
+                -fopenmp \
+                -D$code_type \
+                -Dmem32 \
+                -cpp"
+
+ccompile="gcc-12 \
+                -Ofast \
+                -march=native \
+                -mno-vzeroupper \
+                -fcx-limited-range \
+                -fno-bounds-check \
+                -fno-builtin-memcpy \
+                -fno-builtin-memset \
+                -fno-builtin-memmove \
+                -fno-tree-loop-distribute-patterns \
+                -fstrict-aliasing \
+                -fomit-frame-pointer \
+                -fno-stack-protector \
+                -flto=auto \
+                -fwhole-program \
+                -fopenmp-simd \
+                -Dmem32 \
+                -cpp"
 
 ###########################################################################################
 ####                                COMPILE DIR STRUCTURE                              ####

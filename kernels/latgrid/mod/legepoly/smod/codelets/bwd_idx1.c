@@ -14,10 +14,6 @@ void bwd_idx1_c( const int length,
     
     // Main loop
     #pragma omp unroll partial (16) simd uniform (fac)
-    for ( int i = 0; i < 2*length; i++ ) {
-        
-        rcab[i] = fac * pcab[i];
-        
-    }
+    for ( int i = 0; i < 2*length; i++ ) { rcab[i] = fac * pcab[i]; }
     
 }

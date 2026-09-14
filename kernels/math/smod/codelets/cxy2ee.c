@@ -163,8 +163,8 @@ void xy2ee_c( const int n,
     // Main loop
     for ( ; i <= n-16; i += 16 ) {
         
-        r02 = _mm512_loadu_pd( py + 0 );
-        r03 = _mm512_loadu_pd( py + 8 );
+        r02 = _mm512_loadu_pd( py +  0 );
+        r03 = _mm512_loadu_pd( py +  8 );
         r12 = _mm512_loadu_pd( py + 16 );
         r13 = _mm512_loadu_pd( py + 24 );
         
@@ -173,8 +173,8 @@ void xy2ee_c( const int n,
         r12 = _mm512_permute_pd( r12, 0x55 );
         r13 = _mm512_permute_pd( r13, 0x55 );
         
-        r00 = _mm512_loadu_pd( px + 0 );
-        r01 = _mm512_loadu_pd( px + 8 );
+        r00 = _mm512_loadu_pd( px +  0 );
+        r01 = _mm512_loadu_pd( px +  8 );
         r10 = _mm512_loadu_pd( px + 16 );
         r11 = _mm512_loadu_pd( px + 24 );
         
@@ -182,7 +182,6 @@ void xy2ee_c( const int n,
         r03 = _mm512_xor_pd( r03, rsign );
         r12 = _mm512_xor_pd( r12, rsign );
         r13 = _mm512_xor_pd( r13, rsign );
-        
         r00 = _mm512_mul_pd( r00, rfac  );
         r01 = _mm512_mul_pd( r01, rfac  );
         r10 = _mm512_mul_pd( r10, rfac  );
@@ -213,6 +212,7 @@ void xy2ee_c( const int n,
         
     }
     
+    // Remainder loop
     for ( ; i <= n-4; i += 4 ) {
         
         r00 = _mm512_loadu_pd( px );

@@ -1,7 +1,5 @@
 #include <stddef.h>
 #include <complex.h>
-#include <immintrin.h>
-#include <emmintrin.h>
 
 extern inline __attribute__((always_inline))
 void bwd_idx2_c( const int length,
@@ -21,10 +19,6 @@ void bwd_idx2_c( const int length,
     
     // Main loop
     #pragma omp unroll partial (16) simd uniform (fac1,fac2)
-    for ( int i = 0; i < 2*length; i++ ) {
-        
-        rcab[i] = fac1 * pcab1[i] + fac2 * pcab3[i];
-        
-    }
+    for ( int i = 0; i < 2*length; i++ ) { rcab[i] = fac1 * pcab1[i] + fac2 * pcab3[i]; }
     
 }

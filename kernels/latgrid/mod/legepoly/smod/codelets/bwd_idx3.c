@@ -14,10 +14,6 @@ void bwd_idx3_c( const int length,
     
     // Main loop
     #pragma omp unroll partial (16) simd
-    for ( int i = 0; i < 2*length; i++ ) {
-        
-        prcab[i] = pcab[i];
-        
-    }
+    for ( int i = 0; i < 2*length; i++ ) { prcab[i] = pcab[i]; }
     
 }
