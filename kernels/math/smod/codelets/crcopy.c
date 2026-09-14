@@ -19,10 +19,6 @@ void copy_rarray_c( const int istart,
     #elif defined ( mem64 )
     #pragma omp unroll partial (32) simd
     #endif
-    for ( int i = 0; i < length; i++ ) {
-        
-        pt[i] = pf[i];
-        
-    }
+    for ( int i = 0; i < length; i++ ) { pt[i] = pf[i]; }
     
 }

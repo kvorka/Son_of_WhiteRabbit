@@ -19,10 +19,6 @@ void copy3_carray_c( const int length,
     #elif defined ( mem64 )
     #pragma omp unroll partial (32) simd uniform (fac)
     #endif
-    for ( int i = 0; i < 2*length; i++ ) {
-        
-        pt[i] = pt[i] + fac * pf[i];
-        
-    }
+    for ( int i = 0; i < 2*length; i++ ) { pt[i] = pt[i] + fac * pf[i]; }
     
 }

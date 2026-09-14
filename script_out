@@ -11,7 +11,6 @@
 ###########################################################################################
 code_type="output"
 memory="mem32"
-kernel="kernelC"
 compiler="gfortran"
 
 ###########################################################################################
@@ -42,28 +41,21 @@ source ./shell/compiler.sh
 ###########################################################################################
 ####                               1. COMPILING INTERFACES                             ####
 ###########################################################################################
-$fcompile -c ${mathpath}/calloc.f90
 $fcompile -c ${mathpath}/math.f90
 $fcompile -c ${sphidxpath}/sph.f90
 $fcompile -c ${iopath}/binaryio.f90
-$fcompile -c ${oceanpath}/ocean_constants.f90
+$fcompile -c ${oceanpath}/ocean_parms.f90
 $fcompile -c ${outputpath}/output_paths.f90
 $fcompile -c ${outputpath}/output_mod.f90
 
 ###########################################################################################
-####                        2. COMPILING LVL0 IMPLEMENTATIONS                          ####
+####                            2. COMPILING IMPLEMENTATIONS                           ####
 ###########################################################################################
-if [ "$kernel" = "kernelC" ]
-    then
-        compile_lvl C lvl0
-    else
-        compile_lvl F lvl0
-fi
+ccompile_lvl lvl0
+fcompile_lvl lvl0
+fcompile_lvl lvl1
 
-###########################################################################################
-####                        3. COMPILING LVL1 IMPLEMENTATIONS                          ####
-###########################################################################################
-compile_lvl F lvl1
+wait
 
 ###########################################################################################
 ####                                 4. LINKING                                        ####

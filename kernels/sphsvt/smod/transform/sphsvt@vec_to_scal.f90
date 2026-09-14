@@ -21,7 +21,7 @@ submodule (sphsvt) vec_to_scal
         end do
         
         call ee2xy_sub( nca, sumPTP(1,1), sumPTP(1,3) )
-        call trshf_3_3_carray_sub( nca, sumPTP, cc(1,im*this%jmax2-im*(im+1)/2+ij+1) )
+        call trshf_3_3_carray_sub( nca, sumPTP, cc(1,mj(this%jmax1,im,ij)) )
       end do
     
     do im = 1, this%jmax1
@@ -51,7 +51,7 @@ submodule (sphsvt) vec_to_scal
         end do
         
         call ee2xy_sub( nca, sumPTP(1,1), sumPTP(1,3) )
-        call trshf_3_3_carray_sub( nca, sumPTP, cc(1,im*this%jmax2-im*(im+1)/2+ij+1) )
+        call trshf_3_3_carray_sub( nca, sumPTP, cc(1,mj(this%jmax1,im,ij)) )
       end do
     end do
     

@@ -15,18 +15,53 @@ void ee2xy_c( const int n,
     double *restrict px = ( double * ) cx;
     double *restrict py = ( double * ) cy;
     
-    // Iterator
-    int i = 0;
-    
     // Constant register
     const __m256d rfac  = _mm256_set1_pd( 0.7071067811865475 );
     const __m256d rsign = _mm256_set_pd( -0., 0., -0., 0. );
     
     // Registers to be used
-    __m256d r00, r01, r02, r03;
+    __m256d r00, r01, r02, r03, r10, r11, r12, r13;
     
-    // Main loop, no unroll as n is likely low
-    for ( ; i <= n-2; i += 2 ) {
+    // Iterator
+    int i = 0;
+    
+    // Main loop, unrolled only by 2 as n is likely low
+    for ( ; i <= n-4; i += 4 ) {
+        
+        r00 = _mm256_loadu_pd( px + 0 );
+        r10 = _mm256_loadu_pd( px + 4 );
+        r01 = _mm256_loadu_pd( py + 0 );
+        r11 = _mm256_loadu_pd( py + 4 );
+        
+        r02 = _mm256_sub_pd( r00, r01 );
+        r03 = _mm256_add_pd( r00, r01 );
+        r12 = _mm256_sub_pd( r10, r11 );
+        r13 = _mm256_add_pd( r10, r11 );
+        
+        r03 = _mm256_permute_pd( r03, 0x05 );
+        r13 = _mm256_permute_pd( r13, 0x05 );
+        r02 = _mm256_mul_pd( r02, rfac );
+        r12 = _mm256_mul_pd( r12, rfac );
+        
+        r03 = _mm256_mul_pd( r03, rfac );
+        r13 = _mm256_mul_pd( r13, rfac );
+        
+        _mm256_storeu_pd( px+0, r02 );
+        _mm256_storeu_pd( px+4, r12 );
+        
+        r03 = _mm256_xor_pd( r03, rsign );
+        r13 = _mm256_xor_pd( r13, rsign );
+        
+        _mm256_storeu_pd( py+0, r03 );
+        _mm256_storeu_pd( py+4, r13 );
+        
+        px += 8;
+        py += 8;
+        
+    }
+    
+    // Remainder (non-loop)
+    if ( i < n-2 ) {
         
         r00 = _mm256_loadu_pd( px );
         r01 = _mm256_loadu_pd( py );
@@ -40,13 +75,15 @@ void ee2xy_c( const int n,
         r03 = _mm256_mul_pd( r03, rfac );
         
         _mm256_storeu_pd( px, r02 );
-
+        
         r03 = _mm256_xor_pd( r03, rsign );
         
         _mm256_storeu_pd( py, r03 );
         
         px += 4;
         py += 4;
+        
+        i += 2;
         
     }
     
@@ -87,18 +124,53 @@ void ee2xy_c( const int n,
     double *restrict px = ( double * ) cx;
     double *restrict py = ( double * ) cy;
     
-    // Iterator
-    int i = 0;
-    
     // Constant register
     const __m512d rfac  = _mm512_set1_pd( 0.7071067811865475 );
     const __m512d rsign = _mm512_set_pd( -0., 0., -0., 0., -0., 0., -0., 0.);
     
     // Registers to be used
-    __m512d r00, r01, r02, r03;
+    __m512d r00, r01, r02, r03, r10, r11, r12, r13;
     
-    // Main loop, no unroll as n is likely low
-    for ( ; i <= n-4; i += 4 ) {
+    // Iterator
+    int i = 0;
+    
+    // Main loop, unrolled only by 2 as n is likely low
+    for ( ; i <= n-8; i += 8 ) {
+        
+        r00 = _mm512_loadu_pd( px + 0 );
+        r10 = _mm512_loadu_pd( px + 8 );
+        r01 = _mm512_loadu_pd( py + 0 );
+        r11 = _mm512_loadu_pd( py + 8 );
+        
+        r02 = _mm512_sub_pd( r00, r01 );
+        r03 = _mm512_add_pd( r00, r01 );
+        r12 = _mm512_sub_pd( r10, r11 );
+        r13 = _mm512_add_pd( r10, r11 );
+        
+        r03 = _mm512_permute_pd( r03, 0x55 );
+        r13 = _mm512_permute_pd( r13, 0x55 );
+        r02 = _mm512_mul_pd( r02, rfac );
+        r12 = _mm512_mul_pd( r12, rfac );
+        
+        r03 = _mm512_mul_pd( r03, rfac );
+        r13 = _mm512_mul_pd( r13, rfac );
+        
+        _mm512_storeu_pd( px + 0, r02 );
+        _mm512_storeu_pd( px + 8, r12 );
+        
+        r03 = _mm512_xor_pd( r03, rsign );
+        r13 = _mm512_xor_pd( r13, rsign );
+        
+        _mm512_storeu_pd( py + 0, r03 );
+        _mm512_storeu_pd( py + 8, r13 );
+        
+        px += 16;
+        py += 16;
+        
+    }
+    
+    // Remainder (non-loop)
+    if ( i < n-4 ) {
         
         r00 = _mm512_loadu_pd( px );
         r01 = _mm512_loadu_pd( py );
@@ -119,6 +191,8 @@ void ee2xy_c( const int n,
         
         px += 8;
         py += 8;
+        
+        i += 4;
         
     }
     

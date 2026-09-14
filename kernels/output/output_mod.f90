@@ -1,6 +1,6 @@
 module output_mod
   use math
-  use ocean_constants
+  use ocean_parms
   use binaryio
   use output_paths
   implicit none; public

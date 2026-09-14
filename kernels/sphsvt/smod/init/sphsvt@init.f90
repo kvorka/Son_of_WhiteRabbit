@@ -5,7 +5,6 @@ submodule (sphsvt) init
     
     this%jmax  = jmax
     this%jmax1 = jmax+1
-    this%jmax2 = jmax+2
     
     this%jms  = jm(this%jmax  ,this%jmax  )
     this%jms1 = jm(this%jmax+1,this%jmax+1)

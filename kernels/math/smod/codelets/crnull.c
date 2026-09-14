@@ -17,10 +17,6 @@ void zero_rarray_c( const int istart,
     #elif defined ( mem64 )
     #pragma omp unroll partial (32) simd
     #endif
-    for ( int i = 0; i < length-istart; i++ ) {
-        
-        parr[i] = 0.;
-        
-    }
+    for ( int i = 0; i < length-istart; i++ ) { parr[i] = 0.; }
     
 }

@@ -3,7 +3,7 @@ module sphsvt
   implicit none
   
   type, public :: T_sphsvt
-    integer :: jmax, jmax1, jmax2, jms, jms1
+    integer :: jmax, jmax1, jms, jms1
     
     contains
     

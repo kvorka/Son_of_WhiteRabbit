@@ -16,10 +16,6 @@ void zero_carray_c( const int length,
     #elif defined ( mem64 )
     #pragma omp unroll partial (32) simd
     #endif
-    for ( int i = 0; i < 2*length; i++ ) {
-        
-        parr[i] = 0.;
-        
-    }
+    for ( int i = 0; i < 2*length; i++ ) { parr[i] = 0.; }
     
 }
