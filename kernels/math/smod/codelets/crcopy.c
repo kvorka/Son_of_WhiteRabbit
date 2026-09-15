@@ -1,5 +1,4 @@
-#include <stddef.h>
-#include <complex.h>
+#include "../../cvec.h"
 
 extern inline __attribute__((always_inline))
 void copy_rarray_c( const int istart,
@@ -14,11 +13,7 @@ void copy_rarray_c( const int istart,
           double *restrict pt = arr_to;
     
     // Main loop
-    #if defined ( mem32 )
-    #pragma omp unroll partial (16) simd
-    #elif defined ( mem64 )
-    #pragma omp unroll partial (32) simd
-    #endif
+    #pragma omp unroll partial (4*vlen) simd
     for ( int i = 0; i < length; i++ ) { pt[i] = pf[i]; }
     
 }

@@ -47,7 +47,7 @@ void fxzm4a_c( const int m,
                     r01  = _t_load_pd( px2re );
                     r02  = _t_load_pd( px2im );
                     
-                    #if defined ( __FMA__ ) || defined( mem64 )
+                    #if defined ( __FMA__ ) || defined(__AVX512F__)
                     r2re = _t_fnmadd_pd( rt2re, r01, r0re );
                     r2im = _t_fnmadd_pd( rt2im, r01, r0im );
                     
@@ -79,7 +79,7 @@ void fxzm4a_c( const int m,
                     r01  = _t_load_pd( px3re );
                     r02  = _t_load_pd( px3im );
                     
-                    #if defined ( __FMA__ ) || defined( mem64 )
+                    #if defined ( __FMA__ ) || defined(__AVX512F__)
                     r3re = _t_fnmadd_pd( rt2re, r01, r1re );
                     r3im = _t_fnmadd_pd( rt2im, r01, r1im );
                     
@@ -106,7 +106,7 @@ void fxzm4a_c( const int m,
                     r1re = _t_sub_pd( r1re, r3re );
                     r1im = _t_sub_pd( r1im, r3im );
                     
-                    #if defined ( __FMA__ ) || defined( mem64 )
+                    #if defined ( __FMA__ ) || defined(__AVX512F__)
                     r01 = _t_fnmadd_pd( rt1re, r1re, r0re );
                     r02 = _t_fnmadd_pd( rt1im, r1re, r0im );
                     
@@ -137,7 +137,7 @@ void fxzm4a_c( const int m,
                     _t_store_pd( px0re, r0re );
                     _t_store_pd( px0im, r0im );
                     
-                    #if defined ( __FMA__ ) || defined( mem64 )
+                    #if defined ( __FMA__ ) || defined(__AVX512F__)
                     r1re = _t_fnmadd_pd( rt1re, r3im, r2re );
                     r1im = _t_fmadd_pd(  rt1re, r3re, r2im );
                     

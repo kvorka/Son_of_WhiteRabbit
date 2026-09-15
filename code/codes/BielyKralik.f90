@@ -7,7 +7,7 @@ program BielyKralik
   integer        :: k
   real(kind=dbl) :: start, end
   
-#if defined (convection) || defined(benchmark)
+#if defined (convection) || defined (benchmark)
   
   call oceanconv%init_sub( speed = .False. )
   
@@ -36,6 +36,5 @@ program BielyKralik
   write(*,*) ( end - start ) / n_iter_ocean
   
 #endif
-
-end program BielyKralik
   
+end program BielyKralik

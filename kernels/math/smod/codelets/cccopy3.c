@@ -1,5 +1,4 @@
-#include <stddef.h>
-#include <complex.h>
+#include "../../cvec.h"
 
 extern inline __attribute__((always_inline))
 void copy3_carray_c( const int length,
@@ -14,11 +13,7 @@ void copy3_carray_c( const int length,
           double *restrict pt = (       double * ) arr_to;
     
     // Main loop
-    #if defined ( mem32 )
-    #pragma omp unroll partial (16) simd uniform (fac)
-    #elif defined ( mem64 )
-    #pragma omp unroll partial (32) simd uniform (fac)
-    #endif
+    #pragma omp unroll partial (4*vlen) simd uniform (fac)
     for ( int i = 0; i < 2*length; i++ ) { pt[i] = pt[i] + fac * pf[i]; }
     
 }

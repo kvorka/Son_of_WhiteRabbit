@@ -1,5 +1,4 @@
-#include <stddef.h>
-#include <complex.h>
+#include "../../../../../math/cvec.h"
 
 extern inline __attribute__((always_inline))
 void bwd_idx2_c( const int length,

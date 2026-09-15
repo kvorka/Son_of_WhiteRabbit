@@ -1,5 +1,4 @@
-#include <stddef.h>
-#include <complex.h>
+#include "../../cvec.h"
 
 extern inline __attribute__((always_inline))
 void grad_pp_j_c( const int length,
@@ -21,11 +20,7 @@ void grad_pp_j_c( const int length,
           double *restrict p3 = (       double * ) grad3;
     
     // Main loop
-    #if defined ( mem32 )
-    #pragma omp unroll partial (8) simd uniform (fac1,fac2,fac3,fac4)
-    #elif defined ( mem64 )
-    #pragma omp unroll partial (16) simd uniform (fac1,fac2,fac3,fac4)
-    #endif
+    #pragma omp unroll partial (2*vlen) simd uniform (fac1,fac2,fac3,fac4)
     for ( int i = 0; i < 2*length; i++ ) {
         
         p1[i] = fac1 * ( pd[i] + fac2 * pa[i] );

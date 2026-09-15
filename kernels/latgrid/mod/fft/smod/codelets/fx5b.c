@@ -63,7 +63,7 @@ void fxzm5b_c( const int m,
                 r3im = _t_sub_pd( r2im, r2re );
                 r0im = _t_add_pd( r2im, r2re );
                 
-                #if defined ( __FMA__ ) || defined( mem64 )
+                #if defined ( __FMA__ ) || defined(__AVX512F__)
                 r2re = _t_fmadd_pd( rC53, r3re, r4re );
                 r2im = _t_fmadd_pd( rC53, r3im, r4im );
                 
@@ -96,7 +96,7 @@ void fxzm5b_c( const int m,
                 _t_store_pd( px0re, r01 );
                 _t_store_pd( px0im, r02 );
                 
-                #if defined ( __FMA__ ) || defined( mem64 )
+                #if defined ( __FMA__ ) || defined(__AVX512F__)
                 r0re = _t_fnmadd_pd( rC51, r4re, r0re );
                 r0im = _t_fnmadd_pd( rC51, r4im, r0im );
                 
@@ -121,7 +121,7 @@ void fxzm5b_c( const int m,
                 r0re = _t_sub_pd( r0re, r1re );
                 r0im = _t_sub_pd( r0im, r1im );
                 
-                #if defined ( __FMA__ ) || defined( mem64 )
+                #if defined ( __FMA__ ) || defined(__AVX512F__)
                 r3re = _t_fmadd_pd(  rC54, r3re, r1im );
                 r3im = _t_fnmadd_pd( rC54, r3im, r1re );
                 r2im = _t_fnmadd_pd( rC54, r2im, r0re );
