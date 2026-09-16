@@ -9,14 +9,13 @@ submodule (lege_poly) r2c
         ima = 1
         imj = 1
         
-        call fwd_idx3_sub( ncab, rcab(1,ima), cab(1,imj) )
+        call fwd_idx0_sub( ncab, rcab(1,ima), cab(1,imj) )
         
       do ij = 1, (this%jmax-1)/2
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx2_sub( ncab, this%emj(imj-1), rcab(1,ima-1), cab(1,imj-1) )
-        call fwd_idx3_sub( ncab,                  rcab(1,ima  ), cab(1,imj  ) )
+        call fwd_idx1_sub( ncab, this%emj(imj-1), rcab(1,ima-1), cab(1,imj-1) )
       end do
       
       !ij == this%jmax
@@ -24,8 +23,7 @@ submodule (lege_poly) r2c
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx2_sub( ncab, this%emj(imj-1), rcab(1,ima-1), cab(1,imj-1) )
-        call fwd_idx3_sub( ncab,                  rcab(1,ima  ), cab(1,imj  ) )
+        call fwd_idx1_sub( ncab, this%emj(imj-1), rcab(1,ima-1), cab(1,imj-1) )
         
       else
         ima = ima+1
@@ -39,14 +37,13 @@ submodule (lege_poly) r2c
         ima = ima+1
         imj = imj+1
         
-       call fwd_idx3_sub( ncab, rcab(1,ima), cab(1,imj) )
+        call fwd_idx0_sub( ncab, rcab(1,ima), cab(1,imj) )
       
       do ij = 1, (this%jmax-im-1)/2
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx2_sub( ncab, this%emj(imj+im-1), rcab(1,ima-1), cab(1,imj-1) )
-        call fwd_idx3_sub( ncab,                     rcab(1,ima  ), cab(1,imj  ) )
+        call fwd_idx1_sub( ncab, this%emj(imj+im-1), rcab(1,ima-1), cab(1,imj-1) )
       end do
       
       !ij == this%jmax
@@ -54,8 +51,7 @@ submodule (lege_poly) r2c
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx2_sub( ncab, this%emj(imj+im-1), rcab(1,ima-1), cab(1,imj-1) )
-        call fwd_idx3_sub( ncab,                     rcab(1,ima  ), cab(1,imj  ) )
+        call fwd_idx1_sub( ncab, this%emj(imj+im-1), rcab(1,ima-1), cab(1,imj-1) )
         
       else
         ima = ima+1
@@ -70,7 +66,7 @@ submodule (lege_poly) r2c
         ima = ima+1
         imj = imj+1
         
-        call fwd_idx3_sub( ncab, rcab(1,ima), cab(1,imj) )
+        call fwd_idx0_sub( ncab, rcab(1,ima), cab(1,imj) )
         
   end procedure r2c_mj_to_mj_sub
   

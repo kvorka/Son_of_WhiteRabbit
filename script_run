@@ -31,7 +31,8 @@ codepath=code/codes
 ###########################################################################################
 lvl0=( "${mathpath}/smod/codelets" 
        "${legepath}/smod/codelets" 
-       "${fftpath}/smod/codelets" )
+       "${fftpath}/smod/codelets" 
+       "${sphsvtpath}/smod/codelets" )
 
 lvl1=( "${mathpath}/smod" 
        "${sphidxpath}/smod" 

@@ -47,6 +47,16 @@ module sphsvt
     module real(kind=dbl) function cleb1_fn(j1, m1, j2, m2, j, m)
       integer, intent(in) :: j1, m1, j2, m2, j, m
     end function cleb1_fn
+    
+    module subroutine ee2xy_sub(n, cx, cy) bind(C, name="ee2xy_c")
+      integer, value,    intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
+    end subroutine ee2xy_sub
+    
+    module subroutine xy2ee_sub(n, cx, cy) bind(C, name="xy2ee_c")
+      integer, value,    intent(in)    :: n
+      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
+    end subroutine xy2ee_sub
   end interface
   
 end module sphsvt

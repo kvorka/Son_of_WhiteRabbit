@@ -44,16 +44,6 @@ module math
       real(kind=dbl), pointer, intent(inout) :: f_arr(:)
     end subroutine free_aligned_sub
     
-    module subroutine ee2xy_sub(n, cx, cy) bind(C, name="ee2xy_c")
-      integer, value,    intent(in)    :: n
-      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
-    end subroutine ee2xy_sub
-    
-    module subroutine xy2ee_sub(n, cx, cy) bind(C, name="xy2ee_c")
-      integer, value,    intent(in)    :: n
-      complex(kind=dbl), intent(inout) :: cx(*), cy(*)
-    end subroutine xy2ee_sub
-    
     module subroutine trans_4_carray_sub(length, arr_from, arr_to)
       integer,           intent(in)  :: length
       complex(kind=dbl), intent(in)  :: arr_from(4,length)
