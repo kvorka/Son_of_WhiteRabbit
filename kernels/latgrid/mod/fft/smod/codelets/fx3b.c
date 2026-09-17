@@ -49,7 +49,7 @@ void fxzm3b_c( const int m,
                 r0re = _t_load_pd( px0re );
                 r0im = _t_load_pd( px0im );
                 
-                #if defined ( __FMA__ ) || defined(__AVX512F__)
+                #if defined (__FMA__)
                 r1re = _t_fmadd_pd( rC31, r03, r0re );
                 r1im = _t_fmadd_pd( rC31, r04, r0im );
                 

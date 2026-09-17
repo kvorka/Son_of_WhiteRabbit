@@ -1,28 +1,6 @@
 submodule (ocean) timescheme
   implicit none; contains
   
-  module subroutine grid_op_scvv_vcvxv_sub(nfour, grid, gtmp)
-    integer,        intent(in)    :: nfour
-    real(kind=dbl), intent(inout) :: grid(ndbl,4,0:*)
-    real(kind=dbl), intent(out)   :: gtmp(ndbl,4,0:*)
-    integer                       :: i0, i1, i3
-    
-    do i3 = 0, nfour-1
-      call gcopy_sub( 9, grid(1,1,9*i3), gtmp )
-      
-      do i1 = 1, 4
-        !$omp simd
-        do i0 = 1, ndbl
-          grid(i0,i1,0+4*i3) = gtmp(i0,i1,0) * gtmp(i0,i1,3) + gtmp(i0,i1,1) * gtmp(i0,i1,4) + gtmp(i0,i1,2) * gtmp(i0,i1,5)
-          grid(i0,i1,1+4*i3) = gtmp(i0,i1,2) * gtmp(i0,i1,7) - gtmp(i0,i1,1) * gtmp(i0,i1,8)
-          grid(i0,i1,2+4*i3) = gtmp(i0,i1,0) * gtmp(i0,i1,8) - gtmp(i0,i1,2) * gtmp(i0,i1,6)
-          grid(i0,i1,3+4*i3) = gtmp(i0,i1,1) * gtmp(i0,i1,6) - gtmp(i0,i1,0) * gtmp(i0,i1,7)
-        end do
-      end do
-    end do
-    
-  end subroutine grid_op_scvv_vcvxv_sub
-  
   module procedure time_scheme_ocean_sub
     integer                                :: ik, ir, ij, ij0
     type(c_ptr)                            :: c_tWork
@@ -98,10 +76,10 @@ submodule (ocean) timescheme
       !! Transpose and shuffle the data into contiguous storage, meaning from
       !! v(l-1), v(l), v(l+1), q(l-1), q(l), ... into v(l-1), q(l-1), curlv(l-1), ...
       call trshf_3x3_9_carray_sub( length = this%jms, &
-                               v1     = v,        &
-                               v2     = gradT,    &
-                               v3     = curlv,    &
-                               ca     = work2     )
+                                   v1     = v,        &
+                                   v2     = gradT,    &
+                                   v3     = curlv,    &
+                                   ca     = work2     )
       
       !! Transform the 3 vectors into 9 scalars, layout is vx, vy, vz, qx, qy, ...
       call this%rxd%vec2scal_jm_to_mj_sub( nca = 3,     &

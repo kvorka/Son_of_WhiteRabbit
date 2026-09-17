@@ -1,4 +1,4 @@
-#include "../../cvec.h"
+#include "../../../math/cvec.h"
 
 extern inline __attribute__((always_inline))
 void curl_ptp_j_c( const int length,
@@ -58,7 +58,7 @@ void curl_ptp_j_c( const int length,
             r01 = _t_loadu_pd( pdarr2        );
             r11 = _t_loadu_pd( pdarr2 + vlen );
             
-            #if defined (__FMA__) || defined (__AVX512F__)
+            #if defined (__FMA__)
             r02 = _t_fmadd_pd(  rfac3, r00, r01 );
             r03 = _t_fnmadd_pd( rfac5, r00, r01 );
             r12 = _t_fmadd_pd(  rfac3, r10, r11 );
@@ -110,7 +110,7 @@ void curl_ptp_j_c( const int length,
             r00 = _t_loadu_pd( parr2  );
             r01 = _t_loadu_pd( pdarr2 );
             
-            #if defined (__FMA__) || defined (__AVX512F__)
+            #if defined (__FMA__)
             r02 = _t_fmadd_pd(  rfac3, r00, r01 );
             r03 = _t_fnmadd_pd( rfac5, r00, r01 );
             #else
@@ -229,7 +229,7 @@ void curl_ptp_j_c( const int length,
             r01 = _t_loadu_pd( pdarr1        );
             r11 = _t_loadu_pd( pdarr1 + vlen );
             
-            #if defined (__FMA__) || defined (__AVX512F__)
+            #if defined (__FMA__)
             r00 = _t_fnmadd_pd( rfac2, r00, r01 );
             r10 = _t_fnmadd_pd( rfac2, r10, r11 );
             #else
@@ -245,7 +245,7 @@ void curl_ptp_j_c( const int length,
             r03 = _t_loadu_pd( pdarr3        );
             r13 = _t_loadu_pd( pdarr3 + vlen );
             
-            #if defined (__FMA__) || defined (__AVX512F__)
+            #if defined (__FMA__)
             r02 = _t_fmadd_pd(  rfac6, r02, r03 );
             r12 = _t_fmadd_pd(  rfac6, r12, r13 );
             #else
@@ -289,7 +289,7 @@ void curl_ptp_j_c( const int length,
             r02 = _t_loadu_pd( parr3  );
             r03 = _t_loadu_pd( pdarr3 );
             
-            #if defined (__FMA__) || defined (__AVX512F__)
+            #if defined (__FMA__)
             r00 = _t_fnmadd_pd( rfac2, r00, r01 );
             r02 = _t_fmadd_pd(  rfac6, r02, r03 );
             #else

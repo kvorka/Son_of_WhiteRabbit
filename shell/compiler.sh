@@ -2,19 +2,16 @@
 ###########################################################################################
 ####                                     FLAG CHECK                                    ####
 ###########################################################################################
-#code type
-INSTRUCTIONS="-D$code_type"
-
-#AVX-512F
 if gcc-12 -march=native -dM -E -x c /dev/null | grep -q "__AVX512F__"
     then
-        INSTRUCTIONS="-D__AVX512F__"
-fi
+        INSTRUCTIONS="-D$code_type -D__FMA__ -D__AVX512F__"
 
-#FMA
-if gcc-12 -march=native -dM -E -x c /dev/null | grep -q "__FMA__"
+elif gcc-12 -march=native -dM -E -x c /dev/null | grep -q "__FMA__"
     then
-        INSTRUCTIONS="$INSTRUCTIONS -D__FMA__"
+        INSTRUCTIONS="-D$code_type -D__FMA__"
+
+else
+        INSTRUCTIONS="-D$code_type"
 fi
 
 ###########################################################################################

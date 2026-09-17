@@ -1,4 +1,4 @@
-#include "../../cvec.h"
+#include "../../../math/cvec.h"
 
 extern inline __attribute__((always_inline))
 void grad_pp_j_c( const int length,

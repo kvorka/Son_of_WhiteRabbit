@@ -41,7 +41,7 @@ void fxzm2a_c( const int m,
                     r1re = _t_load_pd( px1re );
                     r1im = _t_load_pd( px1im );
                     
-                    #if defined (__FMA__) || defined (__AVX512F__)
+                    #if defined (__FMA__)
                     r03 = _t_fnmadd_pd( rtre, r1re, r0re );
                     r04 = _t_fnmadd_pd( rtim, r1re, r0im );
                     

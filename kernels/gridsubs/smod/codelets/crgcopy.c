@@ -1,4 +1,4 @@
-#include "../../cvec.h"
+#include "../../../math/cvec.h"
 
 extern inline __attribute__((always_inline))
 void gcopy_c( const int n,

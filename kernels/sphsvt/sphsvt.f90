@@ -57,6 +57,24 @@ module sphsvt
       integer, value,    intent(in)    :: n
       complex(kind=dbl), intent(inout) :: cx(*), cy(*)
     end subroutine xy2ee_sub
+    
+    module subroutine trans_4_carray_sub(length, arr_from, arr_to) bind(C, name="trans_4_carray_c")
+      integer, value,    intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: arr_from(*)
+      complex(kind=dbl), intent(out) :: arr_to(*)
+    end subroutine trans_4_carray_sub
+    
+    module subroutine trshf_3_3_carray_sub(length, arr_from, arr_to) bind(C, name="trshf_3_3_carray_c")
+      integer, value,    intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: arr_from(*)
+      complex(kind=dbl), intent(out) :: arr_to(*)
+    end subroutine trshf_3_3_carray_sub
+    
+    module subroutine trshf_3x3_9_carray_sub(length, v1, v2, v3, ca) bind(C, name="trshf_3x3_9_carray_c")
+      integer, value,    intent(in)  :: length
+      complex(kind=dbl), intent(in)  :: v1(*), v2(*), v3(*)
+      complex(kind=dbl), intent(out) :: ca(*)
+    end subroutine trshf_3x3_9_carray_sub
   end interface
   
 end module sphsvt

@@ -49,7 +49,7 @@ void fwd_rec_c( const int n,
             r04 = _t_set1_pd( *( fmj + 0 + 3*i4 ) );
             r05 = _t_set1_pd( *( fmj + 1 + 3*i4 ) );
             
-            #if defined (__FMA__) || defined(__AVX512F__)
+            #if defined (__FMA__)
             r00 = _t_fmsub_pd( r04, r00, r05 );
             r01 = _t_fmsub_pd( r04, r01, r05 );
             r02 = _t_fmsub_pd( r04, r02, r05 );
@@ -88,7 +88,7 @@ void fwd_rec_c( const int n,
             _t_store_pd( pmj1 + 2*vlen, r10 );
             _t_store_pd( pmj1 + 3*vlen, r11 );
             
-            #if defined (__FMA__) || defined(__AVX512F__)
+            #if defined (__FMA__)
             r00 = _t_fmsub_pd( r00, r08, r04 );
             r01 = _t_fmsub_pd( r01, r09, r05 );
             r02 = _t_fmsub_pd( r02, r10, r06 );
@@ -130,7 +130,7 @@ void fwd_rec_c( const int n,
             r10 = _t_load_pd( psw2 + vlen );
             r11 = _t_load_pd( psw3 + vlen );
             
-            #if defined (__FMA__) || defined(__AVX512F__)
+            #if defined (__FMA__)
             r04 = _t_fmadd_pd( r01, r08, r04 );
             r05 = _t_fmadd_pd( r01, r09, r05 );
             r06 = _t_fmadd_pd( r01, r10, r06 );
@@ -152,7 +152,7 @@ void fwd_rec_c( const int n,
             r10 = _t_load_pd( psw2 + 2*vlen );
             r11 = _t_load_pd( psw3 + 2*vlen );
             
-            #if defined (__FMA__) || defined(__AVX512F__)
+            #if defined (__FMA__)
             r04 = _t_fmadd_pd( r02, r08, r04 );
             r05 = _t_fmadd_pd( r02, r09, r05 );
             r06 = _t_fmadd_pd( r02, r10, r06 );
@@ -174,7 +174,7 @@ void fwd_rec_c( const int n,
             r10 = _t_load_pd( psw2 + 3*vlen );
             r11 = _t_load_pd( psw3 + 3*vlen );
             
-            #if defined (__FMA__) || defined(__AVX512F__)
+            #if defined (__FMA__)
             r04 = _t_fmadd_pd( r03, r08, r04 );
             r05 = _t_fmadd_pd( r03, r09, r05 );
             r06 = _t_fmadd_pd( r03, r10, r06 );
