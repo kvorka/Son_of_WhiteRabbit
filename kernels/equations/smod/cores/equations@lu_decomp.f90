@@ -22,10 +22,12 @@ submodule (equations) lu_decomp
     end do
     
     do j = 1, this%n
-      k   = min(this%ld+j,this%n)
-      pom = zero
+      k = min(this%ld+j,this%n)
       
-      do l = j, k
+      i   = j
+      pom = abs(this%U(1,j))
+      
+      do l = j+1, k
         if ( abs(this%U(1,l)) > pom ) then
           i   = l
           pom = abs(this%U(1,l))
