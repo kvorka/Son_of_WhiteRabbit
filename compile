@@ -1,14 +1,58 @@
 #!/bin/bash
 ###########################################################################################
 ####                                    CODE TYPE                                      ####
-####                          wallclock, benchmark, convection                         ####
+####                     wallclock, benchmark, convection, output                      ####
 ###########################################################################################
 code_type="benchmark"
+fcompiler="gfortran-12"
+ccompiler="gcc-12"
 
 ###########################################################################################
-####                              PREPARING THE COMPILER                               ####
+####                                 INSTRUCTIONS CHECK                                ####
 ###########################################################################################
-source ./shell/compiler.sh
+if $ccompiler -march=native -dM -E -x c /dev/null | grep -q "__AVX512F__"; then
+       instructions="-D$code_type -D__FMA__ -D__AVX512F__"
+elif $ccompiler -march=native -dM -E -x c /dev/null | grep -q "__FMA__"; then
+       instructions="-D$code_type -D__FMA__"
+else
+       instructions="-D$code_type"
+fi
+
+###########################################################################################
+####                                 COMPILERS SET UP                                  ####
+###########################################################################################
+flags="-Ofast -march=native -mprefer-vector-width=512 -mno-vzeroupper -fstrict-aliasing \
+       -fno-tree-loop-distribute-patterns -fcx-limited-range -fno-bounds-check -fopenmp \
+       -fomit-frame-pointer -fno-stack-protector -fargument-noalias-global -flto=auto \
+       -fwhole-program $instructions -cpp"
+
+fcompile="$fcompiler $flags"
+ccompile="$ccompiler $flags -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-memmove"
+
+###########################################################################################
+####                                COMPILE DIR STRUCTURE                              ####
+###########################################################################################
+function fcompile_lvl() {
+       
+       local -n dirs=$1
+       
+       for dir in "${dirs[@]}"
+              do
+                     find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
+              done
+       
+}
+
+function ccompile_lvl() {
+       
+       local -n dirs=$1
+       
+       for dir in "${dirs[@]}"
+              do
+                     find "$dir" -maxdepth 1 -name "*.c" -exec $ccompile -c {} + &
+              done
+       
+}
 
 ###########################################################################################
 ####                                PATHS TO LIBRARIES                                 ####
@@ -25,19 +69,20 @@ eqspath=kernels/equations
 iopath=kernels/binaryio
 objpath=kernels/object
 oceanpath=code/ocean
+outputpath=kernels/output
 codepath=code/codes
 
 ###########################################################################################
 ####                                  DIRS STRUCTURE                                   ####
 ###########################################################################################
-lvl0=( "${mathpath}/smod/codelets" 
+lvlC=( "${mathpath}/smod/codelets" 
        "${legepath}/smod/codelets" 
        "${fftpath}/smod/codelets" 
        "${sphsvtpath}/smod/codelets" 
        "${grdsubspath}/smod/codelets" 
        "${objpath}/smod/codelets" )
 
-lvl1=( "${mathpath}/smod" 
+lvlF=( "${mathpath}/smod" 
        "${sphidxpath}/smod" 
        "${fftpath}/smod/init" 
        "${fftpath}/smod/cores" 
@@ -66,7 +111,8 @@ lvl1=( "${mathpath}/smod"
        "${objpath}/smod/variables" 
        "${objpath}/smod/dvariablesdr" 
        "${objpath}/smod/dvariablesdS" 
-       "${oceanpath}/smod/" )
+       "${oceanpath}/smod/" 
+       "${outputpath}/smod" )
 
 ###########################################################################################
 ####                               1. COMPILING INTERFACES                             ####
@@ -84,35 +130,44 @@ $fcompile -c ${iopath}/binaryio.f90
 $fcompile -c ${objpath}/physicalobject.f90
 $fcompile -c ${oceanpath}/ocean_parms.f90
 $fcompile -c ${oceanpath}/ocean.f90
+$fcompile -c ${outputpath}/output_paths.f90
+$fcompile -c ${outputpath}/output_mod.f90
 
 ###########################################################################################
 ####                           2. COMPILING IMPLEMENTATIONS                            ####
 ###########################################################################################
-ccompile_lvl lvl0
-fcompile_lvl lvl0
-fcompile_lvl lvl1
+ccompile_lvl lvlC
+fcompile_lvl lvlF
 
 wait
 
 ###########################################################################################
 ####                                 3. LINKING                                        ####
 ###########################################################################################
-$fcompile ${codepath}/BielyKralik.f90 *.o -o "Test_"$code_type".out"
+case $code_type in
+       
+       wallclock)
+              $fcompile ${codepath}/BielyKralik.f90 *.o -o "Test_wallclock.out"
+       ;;
+       
+       output)
+              $fcompile ${codepath}/OutputOcean.f90 *.o -o "Test_output.out"
+              
+              rm -f temp_averaged.spec velc_averaged.spec flux_averaged.spec || true
+       ;;
+       
+       *)
+              $fcompile ${codepath}/BielyKralik.f90 *.o -o "Test_"$code_type".out"
+              
+              rm -rf data || true
+              
+              mkdir -p data/data_ocean_temp data/data_ocean_veloc \
+                            data/data_ocean_fluxu data/data_ocean_fluxd
+       ;;
 
-###########################################################################################
-####                             PREPARING THE DIRECTORIES                             ####
-###########################################################################################
-if [ "$code_type" != "wallclock" ]
-    then
-        rm -rf data || true
-        
-        mkdir -p data/data_ocean_temp \
-                 data/data_ocean_veloc \
-                 data/data_ocean_fluxu \
-                 data/data_ocean_fluxd
-fi
+esac
 
 ###########################################################################################
 ####                                       CLEANING                                    ####
 ###########################################################################################
-libclean
+rm *.smod *.mod *.o || true

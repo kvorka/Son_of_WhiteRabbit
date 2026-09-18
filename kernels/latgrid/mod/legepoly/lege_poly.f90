@@ -144,30 +144,30 @@ module lege_poly
       real(kind=dbl), intent(inout) :: cr(4*nf,*)
     end subroutine fwd_legesum_sub
     
-    module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork)
-      integer,        intent(in)    :: n, ma1
-      real(kind=dbl), intent(in)    :: cff, cosx(ndbl,4), sinx(ndbl,4), cc(4,n)
-      real(kind=dbl), intent(inout) :: pmm(ndbl,4)
-      real(kind=dbl), intent(out)   :: pmj1(ndbl,4), pmj(ndbl,4), swork(ndbl,16,n)
+    module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork) bind(C, name="bwd_set_c")
+      integer, value, intent(in)    :: n, ma1
+      real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), cc(*)
+      real(kind=dbl), intent(inout) :: pmm(*)
+      real(kind=dbl), intent(out)   :: pmj1(*), pmj(*), swork(*)
     end subroutine bwd_set_sub
     
-    module subroutine bwd_rec_sub(n, nma, fmj, cosx2, cc, pmj1, pmj, swork)
-      integer,        intent(in)    :: n, nma
-      real(kind=dbl), intent(in)    :: fmj(3,nma), cosx2(ndbl,4), cc(4,n,nma)
-      real(kind=dbl), intent(inout) :: pmj1(ndbl,4), pmj(ndbl,4)
-      real(kind=dbl), intent(out)   :: swork(ndbl,16,n)
+    module subroutine bwd_rec_sub(n, nma, fmj, cosx2, cc, pmj1, pmj, swork) bind(C, name="bwd_rec_c")
+      integer, value, intent(in)    :: n, nma
+      real(kind=dbl), intent(in)    :: fmj(*), cosx2(*), cc(*)
+      real(kind=dbl), intent(inout) :: pmj1(*), pmj(*)
+      real(kind=dbl), intent(out)   :: swork(*)
     end subroutine bwd_rec_sub
     
-    module subroutine bwd_rsc_sub(n, cosx, swork, sumN, sumS)
-      integer,        intent(in)  :: n
-      real(kind=dbl), intent(in)  :: cosx(ndbl,4), swork(ndbl,4,2,n,2)
-      real(kind=dbl), intent(out) :: sumN(ndbl,4,n,2), sumS(ndbl,4,n,2)
+    module subroutine bwd_rsc_sub(n, cosx, swork, sumN, sumS) bind(C, name="bwd_rsc_c")
+      integer, value, intent(in)  :: n
+      real(kind=dbl), intent(in)  :: cosx(*), swork(*)
+      real(kind=dbl), intent(out) :: sumN(*), sumS(*)
     end subroutine bwd_rsc_sub
     
-    module subroutine fwd_rsc_sub(n, w, cosx, sumN, sumS, swork)
-      integer,        intent(in)  :: n
-      real(kind=dbl), intent(in)  :: w(ndbl,4), cosx(ndbl,4), sumN(ndbl,4,n,2), sumS(ndbl,4,n,2)
-      real(kind=dbl), intent(out) :: swork(ndbl,4,2,n,2)
+    module subroutine fwd_rsc_sub(n, w, cosx, sumN, sumS, swork) bind(C, name="fwd_rsc_c")
+      integer, value, intent(in)  :: n
+      real(kind=dbl), intent(in)  :: w(*), cosx(*), sumN(*), sumS(*)
+      real(kind=dbl), intent(out) :: swork(*)
     end subroutine fwd_rsc_sub
     
     module subroutine fwd_set_sub(n, ma1, cff, cosx, sinx, swork, pmm, pmj1, pmj, cr) bind(C, name="fwd_set_c")
