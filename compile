@@ -68,9 +68,9 @@ grdsubspath=kernels/gridsubs
 eqspath=kernels/equations
 iopath=kernels/binaryio
 objpath=kernels/object
-oceanpath=code/ocean
 outputpath=kernels/output
-codepath=code/codes
+oceanpath=ocean
+codepath=codes
 
 ###########################################################################################
 ####                                  DIRS STRUCTURE                                   ####
@@ -129,9 +129,9 @@ $fcompile -c ${eqspath}/equations.f90
 $fcompile -c ${iopath}/binaryio.f90
 $fcompile -c ${objpath}/physicalobject.f90
 $fcompile -c ${oceanpath}/ocean_parms.f90
-$fcompile -c ${oceanpath}/ocean.f90
 $fcompile -c ${outputpath}/output_paths.f90
 $fcompile -c ${outputpath}/output_mod.f90
+$fcompile -c ${oceanpath}/ocean.f90
 
 ###########################################################################################
 ####                           2. COMPILING IMPLEMENTATIONS                            ####
