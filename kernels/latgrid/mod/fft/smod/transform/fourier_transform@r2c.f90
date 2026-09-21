@@ -5,7 +5,7 @@ submodule (fourier_transform) r2c
     integer :: i
     
     call fxztal( this%n, this%it(this%n/2-1), this%t, m, x )
-    call fxzshf( this%n, this%it, m, x )
+    call fxzshf( this%n, this%it, imm, m, x )
     
     call fxaddsub( m, x(1,1,0), x(1,2,0) )
     

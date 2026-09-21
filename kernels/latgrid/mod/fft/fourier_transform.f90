@@ -47,9 +47,10 @@ module fourier_transform
       real(kind=dbl), intent(out) :: t(2,0:n-1)
     end subroutine fxzini
     
-    module subroutine fxzshf(n, it, m, x)
-      integer,        intent(in)    :: n, m, it(0:*)
-      real(kind=dbl), intent(inout) :: x(8*m*ndbl,0:n/2-1)
+    module subroutine fxzshf(n, it, ioff, m, x) bind(C, name="fxzshf_c")
+      integer, value, intent(in)    :: n, m, ioff
+      integer,        intent(in)    :: it(*)
+      real(kind=dbl), intent(inout) :: x(*)
     end subroutine fxzshf
     
     module subroutine fxztal(n, it, t, m, x) bind(C, name="fxztal_c")
@@ -58,12 +59,6 @@ module fourier_transform
       real(kind=dbl), intent(in)    :: t(*)
       real(kind=dbl), intent(inout) :: x(*)
     end subroutine fxztal
-    
-    module subroutine fxcpy(m, arr_from, arr_to) bind(C, name="fxcpy_c")
-      integer, value, intent(in)  :: m
-      real(kind=dbl), intent(in)  :: arr_from(*)
-      real(kind=dbl), intent(out) :: arr_to(*)
-    end subroutine fxcpy
     
     module subroutine fxaddsub(m, arr1, arr2) bind(C, name="fxaddsub_c")
       integer, value, intent(in)    :: m

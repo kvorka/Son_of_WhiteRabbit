@@ -19,7 +19,7 @@ submodule (fourier_transform) c2r
     end if
     
     call fxztal( this%n, this%it(this%n/2-1), this%t, m, x )
-    call fxzshf( this%n, this%it, m, x )
+    call fxzshf( this%n, this%it, imm, m, x )
     
   end procedure fft_c2r_sub
   
