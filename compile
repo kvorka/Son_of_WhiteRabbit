@@ -76,7 +76,7 @@ codepath=codes
 ####                                  DIRS STRUCTURE                                   ####
 ###########################################################################################
 lvlC=( "${mathpath}/smod/codelets" 
-       "${legepath}/smod/codelets" 
+       "${legepath}/smod/cores" 
        "${fftpath}/smod/codelets" 
        "${sphsvtpath}/smod/codelets" 
        "${grdsubspath}/smod/codelets" 

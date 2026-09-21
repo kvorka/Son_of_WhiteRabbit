@@ -1,6 +1,4 @@
-#ifndef PMJ_REC_H
-#define PMJ_REC_H
-
+#pragma once
 #include "../../../../../math/cvec.h"
 
 static inline __attribute__((always_inline))
@@ -86,5 +84,3 @@ void pmj_rec_c( const double *restrict fmj,
     _t_store_pd( pmj + 3*vlen, r03 );
     
 }
-
-#endif

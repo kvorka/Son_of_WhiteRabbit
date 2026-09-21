@@ -1,5 +1,4 @@
-#ifndef CVEC_H
-#define CVEC_H
+#pragma once
 
 /*********************************************************
     This part is going to be read by fortran prepro-
@@ -82,6 +81,4 @@
         #define _t_fnmsub_pd(a, b, c) _mm512_fnmsub_pd((a),(b),(c))
         
     #endif
-#endif
-
 #endif

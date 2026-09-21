@@ -1,6 +1,4 @@
-#ifndef PMJ_SET_H
-#define PMJ_SET_H
-
+#pragma once
 #include "../../../../../math/cvec.h"
 
 static inline __attribute__((always_inline))
@@ -88,5 +86,3 @@ void pmj_set_c( const int ma1,
     }
     
 }
-
-#endif
