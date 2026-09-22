@@ -1,14 +1,18 @@
 module math
-#include "cvec.h"
-  use iso_c_binding, only : c_double, c_ptr, c_loc, c_f_pointer
-  use iso_fortran_env, only : real128
+  use iso_c_binding,   only : c_ptr, c_f_pointer
+  use iso_fortran_env, only : real64, real128
   implicit none; public
   
-  integer, parameter :: dbl  = c_double
-  integer, parameter :: qbl  = real128
-  integer, parameter :: alig = alignement
-  integer, parameter :: ndbl = vlen
+#if defined (__AVX512F__)
+  integer, parameter :: alig = 64
+  integer, parameter :: ndbl = 8
+#else
+  integer, parameter :: alig = 32
+  integer, parameter :: ndbl = 4
+#endif
   
+  integer,           parameter :: dbl   = real64
+  integer,           parameter :: qbl   = real128
   real(kind=dbl),    parameter :: zero  = 0._dbl
   real(kind=qbl),    parameter :: qzero = 0._qbl
   real(kind=dbl),    parameter :: one   = 1._dbl

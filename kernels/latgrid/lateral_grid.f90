@@ -46,15 +46,14 @@ module lateral_grid
       integer,                intent(in)    :: nf, nb
       complex(kind=dbl),      intent(in)    :: cc(nb,*)
       complex(kind=dbl),      intent(inout) :: cr(nf,*)
-      real(kind=dbl),         intent(out)   :: rcc(*)
-      real(kind=dbl),         intent(out)   :: rcr(*)
+      real(kind=dbl),         intent(out)   :: rcc(*), rcr(*)
       real(kind=dbl), target, intent(out)   :: work(*)
       
       interface
         module subroutine g_sub(nfour, gxyz, gtemp)
           integer,        intent(in)    :: nfour
-          real(kind=dbl), intent(inout) :: gxyz(ndbl,4,0:*)
-          real(kind=dbl), intent(out)   :: gtemp(ndbl,4,0:*)
+          real(kind=dbl), intent(inout) :: gxyz(4*ndbl,0:*)
+          real(kind=dbl), intent(out)   :: gtemp(4*ndbl,0:*)
         end subroutine g_sub
       end interface
     end subroutine transform_sub
