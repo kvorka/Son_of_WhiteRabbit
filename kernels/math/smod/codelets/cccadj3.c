@@ -13,7 +13,7 @@ void cadj3_carray_c( const int length,
           double *restrict pt = (       double * ) arr_to;
     
     // Main loop
-    #pragma omp unroll partial (2*vlen) simd uniform (fac)
+    #pragma omp unroll partial (vlen2) simd uniform (fac)
     for ( int i = 0; i < 2*length; i += 2 ) {
         
         pt[i  ] = pt[i  ] + fac * pf[i  ];

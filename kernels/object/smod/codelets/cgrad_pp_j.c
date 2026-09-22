@@ -20,7 +20,7 @@ void grad_pp_j_c( const int length,
           double *restrict p3 = (       double * ) grad3;
     
     // Main loop
-    #pragma omp unroll partial (2*vlen) simd uniform (fac1,fac2,fac3,fac4)
+    #pragma omp unroll partial (vlen2) simd uniform (fac1,fac2,fac3,fac4)
     for ( int i = 0; i < 2*length; i++ ) {
         
         p1[i] = fac1 * ( pd[i] + fac2 * pa[i] );

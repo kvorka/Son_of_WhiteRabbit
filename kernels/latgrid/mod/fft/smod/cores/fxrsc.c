@@ -7,7 +7,7 @@ void fxrsc_c( const int m,
 
 {
     
-    #pragma omp unroll (4*vlen) simd uniform (fac) aligned (arr:alignement)
-    for ( int i = 0; i < 4 * vlen * m; i++ ) { arr[i] = fac * arr[i]; }
+    #pragma omp unroll (vlen4) simd uniform (fac) aligned (arr:alignement)
+    for ( int i = 0; i < vlen4 * m; i++ ) { arr[i] = fac * arr[i]; }
     
 }

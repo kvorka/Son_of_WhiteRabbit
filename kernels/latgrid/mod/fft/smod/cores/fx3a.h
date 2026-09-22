@@ -14,8 +14,8 @@ void fxzm3a_c( const int m,
     const int l3 = l / 3;
     
     // Walking pointer difference between real and imag part
-    const ptrdiff_t step  = 4 * vlen * m;
-    const ptrdiff_t step2 = 4 * vlen * m * l3 * 4;
+    const ptrdiff_t step  = vlen4 * m;
+    const ptrdiff_t step2 = vlen4 * m * l3 * 4;
     
     // Memory addresses
     double *restrict px0re = x + step * ( 0 + 2 * l3 * 0 );

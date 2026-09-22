@@ -11,8 +11,8 @@ void fxaddsub_c( const int m,
     double add;
     
     // Main loop
-    #pragma omp unroll (4*vlen) simd aligned (arr1,arr2:alignement)
-    for ( int i = 0; i < 4 * vlen * m; i++ ) {
+    #pragma omp unroll (vlen4) simd aligned (arr1,arr2:alignement)
+    for ( int i = 0; i < vlen4 * m; i++ ) {
         
         add     = arr1[i];
         arr1[i] = arr1[i] + arr2[i];

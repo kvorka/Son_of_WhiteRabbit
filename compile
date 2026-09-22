@@ -8,53 +8,6 @@ fcompiler="gfortran-12"
 ccompiler="gcc-12"
 
 ###########################################################################################
-####                                 INSTRUCTIONS CHECK                                ####
-###########################################################################################
-if $ccompiler -march=native -dM -E -x c /dev/null | grep -q "__AVX512F__"; then
-       instructions="-D$code_type -D__FMA__ -D__AVX512F__"
-elif $ccompiler -march=native -dM -E -x c /dev/null | grep -q "__FMA__"; then
-       instructions="-D$code_type -D__FMA__"
-else
-       instructions="-D$code_type"
-fi
-
-###########################################################################################
-####                                 COMPILERS SET UP                                  ####
-###########################################################################################
-flags="-Ofast -march=native -mprefer-vector-width=512 -mno-vzeroupper -fstrict-aliasing \
-       -fno-tree-loop-distribute-patterns -fcx-limited-range -fno-bounds-check -fopenmp \
-       -fomit-frame-pointer -fno-stack-protector -fargument-noalias-global -flto=auto \
-       -fwhole-program $instructions -cpp"
-
-fcompile="$fcompiler $flags"
-ccompile="$ccompiler $flags -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-memmove"
-
-###########################################################################################
-####                                COMPILE DIR STRUCTURE                              ####
-###########################################################################################
-function fcompile_lvl() {
-       
-       local -n dirs=$1
-       
-       for dir in "${dirs[@]}"
-              do
-                     find "$dir" -maxdepth 1 -name "*.f90" -exec $fcompile -c {} + &
-              done
-       
-}
-
-function ccompile_lvl() {
-       
-       local -n dirs=$1
-       
-       for dir in "${dirs[@]}"
-              do
-                     find "$dir" -maxdepth 1 -name "*.c" -exec $ccompile -c {} + &
-              done
-       
-}
-
-###########################################################################################
 ####                                PATHS TO LIBRARIES                                 ####
 ###########################################################################################
 mathpath=kernels/math
@@ -114,29 +67,62 @@ lvlF=( "${mathpath}/smod"
        "${outputpath}/smod" )
 
 ###########################################################################################
-####                               1. COMPILING INTERFACES                             ####
+####                                 INSTRUCTIONS CHECK                                ####
 ###########################################################################################
-$fcompile -c ${mathpath}/math.f90
-$fcompile -c ${sphidxpath}/sph.f90
-$fcompile -c ${fftpath}/fourier_transform.f90
-$fcompile -c ${legepath}/lege_poly.f90
-$fcompile -c ${sphsvtpath}/sphsvt.f90
-$fcompile -c ${latgridpath}/lateral_grid.f90
-$fcompile -c ${radgridpath}/radial_grid.f90
-$fcompile -c ${grdsubspath}/gridsubs.f90
-$fcompile -c ${eqspath}/equations.f90
-$fcompile -c ${iopath}/binaryio.f90
-$fcompile -c ${objpath}/physicalobject.f90
-$fcompile -c ${oceanpath}/ocean_parms.f90
-$fcompile -c ${outputpath}/output_paths.f90
-$fcompile -c ${outputpath}/output_mod.f90
-$fcompile -c ${oceanpath}/ocean.f90
+if $ccompiler -march=native -dM -E -x c /dev/null | grep -q "__AVX512F__"; then
+       instructions="-D$code_type -D__FMA__ -D__AVX512F__"
+elif $ccompiler -march=native -dM -E -x c /dev/null | grep -q "__FMA__"; then
+       instructions="-D$code_type -D__FMA__"
+else
+       instructions="-D$code_type"
+fi
+
+###########################################################################################
+####                                 COMPILERS SET UP                                  ####
+###########################################################################################
+flags="-Ofast -march=native -mprefer-vector-width=512 -mno-vzeroupper -fstrict-aliasing \
+       -fno-tree-loop-distribute-patterns -fcx-limited-range -fno-bounds-check -fopenmp \
+       -fomit-frame-pointer -fno-stack-protector -fargument-noalias-global -flto=auto \
+       -fwhole-program $instructions -cpp"
+
+fcompile="$fcompiler $flags"
+ccompile="$ccompiler $flags -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-memmove"
+
+###########################################################################################
+####                               1. COMPILING INTERFACES                             ####
+####  There are dependencies, obviously. The Jesus of this code is math.f90, which is  ####
+####  included everywhere. To speed up this part, an ugly format with &/wait is used.  ####
+###########################################################################################
+$fcompile -c "${mathpath}/math.f90" &
+wait
+
+$fcompile -c "${sphidxpath}/sph.f90" &
+$fcompile -c "${fftpath}/fourier_transform.f90" &
+$fcompile -c "${legepath}/lege_poly.f90" &
+$fcompile -c "${radgridpath}/radial_grid.f90" &
+$fcompile -c "${grdsubspath}/gridsubs.f90" &
+$fcompile -c "${eqspath}/equations.f90" &
+$fcompile -c "${iopath}/binaryio.f90" &
+$fcompile -c "${oceanpath}/ocean_parms.f90" &
+$fcompile -c "${outputpath}/output_paths.f90" &
+wait
+
+$fcompile -c "${sphsvtpath}/sphsvt.f90" &
+$fcompile -c "${latgridpath}/lateral_grid.f90" &
+$fcompile -c "${outputpath}/output_mod.f90" &
+wait
+
+$fcompile -c "${objpath}/physicalobject.f90" &
+wait
+
+$fcompile -c "${oceanpath}/ocean.f90"
+wait
 
 ###########################################################################################
 ####                           2. COMPILING IMPLEMENTATIONS                            ####
 ###########################################################################################
-ccompile_lvl lvlC
-fcompile_lvl lvlF
+find "${lvlC[@]}" -maxdepth 1 -name "*.c"   -print0 | xargs -0 -r -P 0 -n 1 $ccompile -c &
+find "${lvlF[@]}" -maxdepth 1 -name "*.f90" -print0 | xargs -0 -r -P 0 -n 1 $fcompile -c &
 
 wait
 

@@ -15,7 +15,7 @@ void swap_carray_c( const int length,
     double temp;
     
     // Main loop
-    #pragma omp unroll partial (4*vlen) simd
+    #pragma omp unroll partial (vlen4) simd
     for ( int i = 0; i < 2*length; i++ ) {
         
         temp  = p1[i];

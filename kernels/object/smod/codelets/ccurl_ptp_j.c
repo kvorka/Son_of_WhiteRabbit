@@ -53,10 +53,10 @@ void curl_ptp_j_c( const int length,
         // Main loop unrolled by 4/8 complex numbers
         for ( ; i <= length-vlen; i += vlen ) {
             
-            r00 = _t_loadu_pd( parr2         );
-            r10 = _t_loadu_pd( parr2  + vlen );
-            r01 = _t_loadu_pd( pdarr2        );
-            r11 = _t_loadu_pd( pdarr2 + vlen );
+            r00 = _t_loadu_pd( parr2  + vlen0 );
+            r10 = _t_loadu_pd( parr2  + vlen1 );
+            r01 = _t_loadu_pd( pdarr2 + vlen0 );
+            r11 = _t_loadu_pd( pdarr2 + vlen1 );
             
             #if defined (__FMA__)
             r02 = _t_fmadd_pd(  rfac3, r00, r01 );
@@ -88,19 +88,19 @@ void curl_ptp_j_c( const int length,
             r02 = _t_xor_pd( r02, rsign );
             r12 = _t_xor_pd( r12, rsign );
             
-            _t_storeu_pd( pcrl1       , r02 );
-            _t_storeu_pd( pcrl1 + vlen, r12 );
+            _t_storeu_pd( pcrl1 + vlen0, r02 );
+            _t_storeu_pd( pcrl1 + vlen1, r12 );
             
             r03 = _t_xor_pd( r03, rsign );
             r13 = _t_xor_pd( r13, rsign );
             
-            _t_storeu_pd( pcrl3       , r03 );
-            _t_storeu_pd( pcrl3 + vlen, r13 );
+            _t_storeu_pd( pcrl3 + vlen0, r03 );
+            _t_storeu_pd( pcrl3 + vlen1, r13 );
             
-            parr2  += 2*vlen;
-            pdarr2 += 2*vlen;
-            pcrl1  += 2*vlen;
-            pcrl3  += 2*vlen;
+            parr2  += vlen2;
+            pdarr2 += vlen2;
+            pcrl1  += vlen2;
+            pcrl3  += vlen2;
             
         }
         
@@ -224,10 +224,10 @@ void curl_ptp_j_c( const int length,
         // Main loop unrolled by 4/8 complex numbers
         for ( ; i <= length-vlen; i += vlen ) {
             
-            r00 = _t_loadu_pd( parr1         );
-            r10 = _t_loadu_pd( parr1  + vlen );
-            r01 = _t_loadu_pd( pdarr1        );
-            r11 = _t_loadu_pd( pdarr1 + vlen );
+            r00 = _t_loadu_pd( parr1  + vlen0 );
+            r10 = _t_loadu_pd( parr1  + vlen1 );
+            r01 = _t_loadu_pd( pdarr1 + vlen0 );
+            r11 = _t_loadu_pd( pdarr1 + vlen1 );
             
             #if defined (__FMA__)
             r00 = _t_fnmadd_pd( rfac2, r00, r01 );
@@ -240,14 +240,14 @@ void curl_ptp_j_c( const int length,
             r10 = _t_sub_pd( r11, r10 );
             #endif
             
-            r02 = _t_loadu_pd( parr3         );
-            r12 = _t_loadu_pd( parr3  + vlen );
-            r03 = _t_loadu_pd( pdarr3        );
-            r13 = _t_loadu_pd( pdarr3 + vlen );
+            r02 = _t_loadu_pd( parr3  + vlen0 );
+            r12 = _t_loadu_pd( parr3  + vlen1 );
+            r03 = _t_loadu_pd( pdarr3 + vlen0 );
+            r13 = _t_loadu_pd( pdarr3 + vlen1 );
             
             #if defined (__FMA__)
-            r02 = _t_fmadd_pd(  rfac6, r02, r03 );
-            r12 = _t_fmadd_pd(  rfac6, r12, r13 );
+            r02 = _t_fmadd_pd( rfac6, r02, r03 );
+            r12 = _t_fmadd_pd( rfac6, r12, r13 );
             #else
             r02 = _t_mul_pd( rfac6, r02 );
             r12 = _t_mul_pd( rfac6, r12 );
@@ -270,14 +270,14 @@ void curl_ptp_j_c( const int length,
             r00 = _t_xor_pd( r00, rsign );
             r10 = _t_xor_pd( r10, rsign );
             
-            _t_storeu_pd( pcrl2,        r00 );
-            _t_storeu_pd( pcrl2 + vlen, r10 );
+            _t_storeu_pd( pcrl2 + vlen0, r00 );
+            _t_storeu_pd( pcrl2 + vlen1, r10 );
             
-            parr1  += 2*vlen;
-            pdarr1 += 2*vlen;
-            parr3  += 2*vlen;
-            pdarr3 += 2*vlen;
-            pcrl2  += 2*vlen;
+            parr1  += vlen2;
+            pdarr1 += vlen2;
+            parr3  += vlen2;
+            pdarr3 += vlen2;
+            pcrl2  += vlen2;
             
         }
         

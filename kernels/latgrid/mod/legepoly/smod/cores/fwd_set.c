@@ -28,18 +28,18 @@ void fwd_set_c( const int n,
     
     // Load the polynomials and hope, that the compiler
     // will just rename the registers
-    r00 = _t_load_pd( pmj + 0*vlen );
-    r01 = _t_load_pd( pmj + 1*vlen );
-    r02 = _t_load_pd( pmj + 2*vlen );
-    r03 = _t_load_pd( pmj + 3*vlen );
+    r00 = _t_load_pd( pmj + vlen0 );
+    r01 = _t_load_pd( pmj + vlen1 );
+    r02 = _t_load_pd( pmj + vlen2 );
+    r03 = _t_load_pd( pmj + vlen3 );
     
     // Memory address of partial sums and coeffs
     double *pcr = cr;
     
-    const double *psw0 = swork +  0*vlen;
-    const double *psw1 = swork +  4*vlen;
-    const double *psw2 = swork +  8*vlen;
-    const double *psw3 = swork + 12*vlen;
+    const double *psw0 = swork + vlen0;
+    const double *psw1 = swork + vlen4;
+    const double *psw2 = swork + vlen8;
+    const double *psw3 = swork + vlen12;
     
     // Loop over number of spectral rows
     for ( int i2 = 0; i2 < n; i2++ ) {
@@ -76,10 +76,10 @@ void fwd_set_c( const int n,
         r07 = _t_add_pd( r07, r11 );
         #endif
         
-        r08 = _t_load_pd( psw0 + 2*vlen );
-        r09 = _t_load_pd( psw1 + 2*vlen );
-        r10 = _t_load_pd( psw2 + 2*vlen );
-        r11 = _t_load_pd( psw3 + 2*vlen );
+        r08 = _t_load_pd( psw0 + vlen2 );
+        r09 = _t_load_pd( psw1 + vlen2 );
+        r10 = _t_load_pd( psw2 + vlen2 );
+        r11 = _t_load_pd( psw3 + vlen2 );
         
         #if defined (__FMA__)
         r04 = _t_fmadd_pd( r02, r08, r04 );
@@ -98,10 +98,10 @@ void fwd_set_c( const int n,
         r07 = _t_add_pd( r07, r11 );
         #endif
         
-        r08 = _t_load_pd( psw0 + 3*vlen );
-        r09 = _t_load_pd( psw1 + 3*vlen );
-        r10 = _t_load_pd( psw2 + 3*vlen );
-        r11 = _t_load_pd( psw3 + 3*vlen );
+        r08 = _t_load_pd( psw0 + vlen3 );
+        r09 = _t_load_pd( psw1 + vlen3 );
+        r10 = _t_load_pd( psw2 + vlen3 );
+        r11 = _t_load_pd( psw3 + vlen3 );
         
         #if defined (__FMA__)
         r04 = _t_fmadd_pd( r03, r08, r04 );
@@ -149,12 +149,11 @@ void fwd_set_c( const int n,
         
         _mm256_storeu_pd( pcr, reg0 );
         
-        psw0 += 16*vlen;
-        psw1 += 16*vlen;
-        psw2 += 16*vlen;
-        psw3 += 16*vlen;
-        
-        pcr += 4;
+        pcr  += 4;
+        psw0 += 4 * vlen4;
+        psw1 += 4 * vlen4;
+        psw2 += 4 * vlen4;
+        psw3 += 4 * vlen4;
         
     }
     

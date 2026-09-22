@@ -9,8 +9,25 @@
     
     typedef __m512d __td;
     
-    #define vlen 8
+    #define vlen   8
     #define alignement 64
+    
+    #define vlen0    0
+    #define vlen1    8
+    #define vlen2   16
+    #define vlen3   24
+    #define vlen4   32
+    #define vlen5   40
+    #define vlen6   48
+    #define vlen7   56
+    #define vlen8   64
+    #define vlen9   72
+    #define vlen10  80
+    #define vlen11  88
+    #define vlen12  96
+    #define vlen13 104
+    #define vlen14 112
+    #define vlen15 120
     
     #define cmask 0x55
     
@@ -40,8 +57,25 @@
     
     typedef __m256d __td;
     
-    #define vlen 4
+    #define vlen   4
     #define alignement 32
+    
+    #define vlen0   0
+    #define vlen1   4
+    #define vlen2   8
+    #define vlen3  12
+    #define vlen4  16
+    #define vlen5  20
+    #define vlen6  24
+    #define vlen7  28
+    #define vlen8  32
+    #define vlen9  36
+    #define vlen10 40
+    #define vlen11 44
+    #define vlen12 48
+    #define vlen13 52
+    #define vlen14 56
+    #define vlen15 60
     
     #define cmask 0x05
     

@@ -66,8 +66,8 @@ void xy2ee_c( const int n,
         _t_storeu_pd( py + vlen, r07 );
         #endif
         
-        px += 2*vlen;
-        py += 2*vlen;
+        px += vlen2;
+        py += vlen2;
         
     }
     

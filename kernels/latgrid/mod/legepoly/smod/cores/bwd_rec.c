@@ -32,20 +32,20 @@ void bwd_rec_c( const int n,
         
         // Load the polynomials and hope, that the compiler
         // will just rename the registers
-        r00 = _t_load_pd( pmj + 0*vlen );
-        r01 = _t_load_pd( pmj + 1*vlen );
-        r02 = _t_load_pd( pmj + 2*vlen );
-        r03 = _t_load_pd( pmj + 3*vlen );
+        r00 = _t_load_pd( pmj + vlen0 );
+        r01 = _t_load_pd( pmj + vlen1 );
+        r02 = _t_load_pd( pmj + vlen2 );
+        r03 = _t_load_pd( pmj + vlen3 );
         
         // Loop over number of spectral rows
         for ( int i3 = 0; i3 < n; i3++ ) {
             
             r04 = _t_set1_pd( *( pcc + 0 ) );
             
-            r05 = _t_load_pd( psw + 0*vlen );
-            r06 = _t_load_pd( psw + 1*vlen );
-            r07 = _t_load_pd( psw + 2*vlen );
-            r08 = _t_load_pd( psw + 3*vlen );
+            r05 = _t_load_pd( psw + vlen0 );
+            r06 = _t_load_pd( psw + vlen1 );
+            r07 = _t_load_pd( psw + vlen2 );
+            r08 = _t_load_pd( psw + vlen3 );
             
             #if defined (__FMA__)
             r05 = _t_fmadd_pd( r00, r04, r05 );
@@ -64,17 +64,17 @@ void bwd_rec_c( const int n,
             r08 = _t_add_pd( r12, r08 );
             #endif
             
-            _t_store_pd( psw + 0*vlen, r05 );
-            _t_store_pd( psw + 1*vlen, r06 );
-            _t_store_pd( psw + 2*vlen, r07 );
-            _t_store_pd( psw + 3*vlen, r08 );
+            _t_store_pd( psw + vlen0, r05 );
+            _t_store_pd( psw + vlen1, r06 );
+            _t_store_pd( psw + vlen2, r07 );
+            _t_store_pd( psw + vlen3, r08 );
             
             r04 = _t_set1_pd( *( pcc + 1 ) );
             
-            r05 = _t_load_pd( psw + 4*vlen );
-            r06 = _t_load_pd( psw + 5*vlen );
-            r07 = _t_load_pd( psw + 6*vlen );
-            r08 = _t_load_pd( psw + 7*vlen );
+            r05 = _t_load_pd( psw + vlen4 );
+            r06 = _t_load_pd( psw + vlen5 );
+            r07 = _t_load_pd( psw + vlen6 );
+            r08 = _t_load_pd( psw + vlen7 );
             
             #if defined (__FMA__)
             r05 = _t_fmadd_pd( r00, r04, r05 );
@@ -93,17 +93,17 @@ void bwd_rec_c( const int n,
             r08 = _t_add_pd( r12, r08 );
             #endif
             
-            _t_store_pd( psw + 4*vlen, r05 );
-            _t_store_pd( psw + 5*vlen, r06 );
-            _t_store_pd( psw + 6*vlen, r07 );
-            _t_store_pd( psw + 7*vlen, r08 );
+            _t_store_pd( psw + vlen4, r05 );
+            _t_store_pd( psw + vlen5, r06 );
+            _t_store_pd( psw + vlen6, r07 );
+            _t_store_pd( psw + vlen7, r08 );
             
             r04 = _t_set1_pd( *( pcc + 2 ) );
             
-            r05 = _t_load_pd( psw +  8*vlen );
-            r06 = _t_load_pd( psw +  9*vlen );
-            r07 = _t_load_pd( psw + 10*vlen );
-            r08 = _t_load_pd( psw + 11*vlen );
+            r05 = _t_load_pd( psw + vlen8  );
+            r06 = _t_load_pd( psw + vlen9  );
+            r07 = _t_load_pd( psw + vlen10 );
+            r08 = _t_load_pd( psw + vlen11 );
             
             #if defined (__FMA__)
             r05 = _t_fmadd_pd( r00, r04, r05 );
@@ -122,17 +122,17 @@ void bwd_rec_c( const int n,
             r08 = _t_add_pd( r12, r08 );
             #endif
             
-            _t_store_pd( psw +  8*vlen, r05 );
-            _t_store_pd( psw +  9*vlen, r06 );
-            _t_store_pd( psw + 10*vlen, r07 );
-            _t_store_pd( psw + 11*vlen, r08 );
+            _t_store_pd( psw + vlen8 , r05 );
+            _t_store_pd( psw + vlen9 , r06 );
+            _t_store_pd( psw + vlen10, r07 );
+            _t_store_pd( psw + vlen11, r08 );
             
             r04 = _t_set1_pd( *( pcc + 3 ) );
             
-            r05 = _t_load_pd( psw + 12*vlen );
-            r06 = _t_load_pd( psw + 13*vlen );
-            r07 = _t_load_pd( psw + 14*vlen );
-            r08 = _t_load_pd( psw + 15*vlen );
+            r05 = _t_load_pd( psw + vlen12 );
+            r06 = _t_load_pd( psw + vlen13 );
+            r07 = _t_load_pd( psw + vlen14 );
+            r08 = _t_load_pd( psw + vlen15 );
             
             #if defined (__FMA__)
             r05 = _t_fmadd_pd( r00, r04, r05 );
@@ -151,13 +151,13 @@ void bwd_rec_c( const int n,
             r08 = _t_add_pd( r12, r08 );
             #endif
             
-            _t_store_pd( psw + 12*vlen, r05 );
-            _t_store_pd( psw + 13*vlen, r06 );
-            _t_store_pd( psw + 14*vlen, r07 );
-            _t_store_pd( psw + 15*vlen, r08 );
+            _t_store_pd( psw + vlen12, r05 );
+            _t_store_pd( psw + vlen13, r06 );
+            _t_store_pd( psw + vlen14, r07 );
+            _t_store_pd( psw + vlen15, r08 );
             
-            pcc +=  4;
-            psw += 16 * vlen;
+            pcc += 4;
+            psw += 4 * vlen4;
             
         }
         

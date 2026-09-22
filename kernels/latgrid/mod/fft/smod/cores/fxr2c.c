@@ -18,8 +18,8 @@ void fxr2c_c( const int m,
     double x1, x2, x3, x4, addre, subre, addim, subim;
     
     // Main loop
-    #pragma omp unroll (2*vlen) simd uniform (t1,t2) aligned (x11,x12,x21,x22:alignement)
-    for ( int i = 0; i < 4 * vlen * m; i++ ) {
+    #pragma omp unroll (vlen2) simd uniform (t1,t2) aligned (x11,x12,x21,x22:alignement)
+    for ( int i = 0; i < vlen4 * m; i++ ) {
         
         x1 = x11[i];
         x2 = x21[i];

@@ -22,10 +22,10 @@ void bwd_set_c( const int n,
     
     // Load the polynomials and hope, that the compiler
     // will just rename the registers
-    r00 = _t_load_pd( pmj + 0*vlen );
-    r01 = _t_load_pd( pmj + 1*vlen );
-    r02 = _t_load_pd( pmj + 2*vlen );
-    r03 = _t_load_pd( pmj + 3*vlen );
+    r00 = _t_load_pd( pmj + vlen0 );
+    r01 = _t_load_pd( pmj + vlen1 );
+    r02 = _t_load_pd( pmj + vlen2 );
+    r03 = _t_load_pd( pmj + vlen3 );
     
     // Memory address of partial sums and coeffs
     const double *pcc = cc;
@@ -40,10 +40,10 @@ void bwd_set_c( const int n,
         r07 = _t_mul_pd( r02, r04 );
         r08 = _t_mul_pd( r03, r04 );
         
-        _t_store_pd( psw + 0*vlen, r05 );
-        _t_store_pd( psw + 1*vlen, r06 );
-        _t_store_pd( psw + 2*vlen, r07 );
-        _t_store_pd( psw + 3*vlen, r08 );
+        _t_store_pd( psw + vlen0, r05 );
+        _t_store_pd( psw + vlen1, r06 );
+        _t_store_pd( psw + vlen2, r07 );
+        _t_store_pd( psw + vlen3, r08 );
         
         r04 = _t_set1_pd( *( pcc + 1 ) );
         
@@ -52,10 +52,10 @@ void bwd_set_c( const int n,
         r07 = _t_mul_pd( r02, r04 );
         r08 = _t_mul_pd( r03, r04 );
         
-        _t_store_pd( psw + 4*vlen, r05 );
-        _t_store_pd( psw + 5*vlen, r06 );
-        _t_store_pd( psw + 6*vlen, r07 );
-        _t_store_pd( psw + 7*vlen, r08 );
+        _t_store_pd( psw + vlen4, r05 );
+        _t_store_pd( psw + vlen5, r06 );
+        _t_store_pd( psw + vlen6, r07 );
+        _t_store_pd( psw + vlen7, r08 );
         
         r04 = _t_set1_pd( *( pcc + 2 ) );
         
@@ -64,10 +64,10 @@ void bwd_set_c( const int n,
         r07 = _t_mul_pd( r02, r04 );
         r08 = _t_mul_pd( r03, r04 );
         
-        _t_store_pd( psw +  8*vlen, r05 );
-        _t_store_pd( psw +  9*vlen, r06 );
-        _t_store_pd( psw + 10*vlen, r07 );
-        _t_store_pd( psw + 11*vlen, r08 );
+        _t_store_pd( psw + vlen8,  r05 );
+        _t_store_pd( psw + vlen9,  r06 );
+        _t_store_pd( psw + vlen10, r07 );
+        _t_store_pd( psw + vlen11, r08 );
         
         r04 = _t_set1_pd( *( pcc + 3 ) );
         
@@ -76,13 +76,13 @@ void bwd_set_c( const int n,
         r07 = _t_mul_pd( r02, r04 );
         r08 = _t_mul_pd( r03, r04 );
         
-        _t_store_pd( psw + 12*vlen, r05 );
-        _t_store_pd( psw + 13*vlen, r06 );
-        _t_store_pd( psw + 14*vlen, r07 );
-        _t_store_pd( psw + 15*vlen, r08 );
+        _t_store_pd( psw + vlen12, r05 );
+        _t_store_pd( psw + vlen13, r06 );
+        _t_store_pd( psw + vlen14, r07 );
+        _t_store_pd( psw + vlen15, r08 );
         
-        pcc +=  4;
-        psw += 16 * vlen;
+        pcc += 4;
+        psw += 4 * vlen4;
         
     }
     

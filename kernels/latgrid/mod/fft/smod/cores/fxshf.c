@@ -8,7 +8,7 @@ void fxzshf_c( const int n,
 {
     
     // Howmany FFTs are we handeling
-    const int xsize1 = 8 * vlen * m;
+    const int xsize1 = 2 * vlen4 * m;
     
     // Aligned temporal store for shuffling
     double *restrict y = aligned_alloc( alignement, 8*xsize1 );

@@ -29,20 +29,20 @@ void fwd_rec_c( const int n,
     for ( int i4 = 0; i4 < nma; i4++ ) {
         
         // Reset partial sums references
-        psw0 = swork +  0*vlen;
-        psw1 = swork +  4*vlen;
-        psw2 = swork +  8*vlen;
-        psw3 = swork + 12*vlen;
+        psw0 = swork + vlen0;
+        psw1 = swork + vlen4;
+        psw2 = swork + vlen8;
+        psw3 = swork + vlen12;
         
         // Legendre polynomial reccurence
         pmj_rec_c( fmj+3*i4, cosx2, pmj1, pmj );
         
         // Load the polynomials and hope, that the compiler
         // will just rename the registers
-        r00 = _t_load_pd( pmj + 0*vlen );
-        r01 = _t_load_pd( pmj + 1*vlen );
-        r02 = _t_load_pd( pmj + 2*vlen );
-        r03 = _t_load_pd( pmj + 3*vlen );
+        r00 = _t_load_pd( pmj + vlen0 );
+        r01 = _t_load_pd( pmj + vlen1 );
+        r02 = _t_load_pd( pmj + vlen2 );
+        r03 = _t_load_pd( pmj + vlen3 );
         
         // Loop over number of spectral rows
         for ( int i2 = 0; i2 < n; i2++ ) {
@@ -57,10 +57,10 @@ void fwd_rec_c( const int n,
             r06 = _t_mul_pd( r00, r06 );
             r07 = _t_mul_pd( r00, r07 );
             
-            r08 = _t_load_pd( psw0 + vlen );
-            r09 = _t_load_pd( psw1 + vlen );
-            r10 = _t_load_pd( psw2 + vlen );
-            r11 = _t_load_pd( psw3 + vlen );
+            r08 = _t_load_pd( psw0 + vlen1 );
+            r09 = _t_load_pd( psw1 + vlen1 );
+            r10 = _t_load_pd( psw2 + vlen1 );
+            r11 = _t_load_pd( psw3 + vlen1 );
             
             #if defined (__FMA__)
             r04 = _t_fmadd_pd( r01, r08, r04 );
@@ -79,10 +79,10 @@ void fwd_rec_c( const int n,
             r07 = _t_add_pd( r07, r11 );
             #endif
             
-            r08 = _t_load_pd( psw0 + 2*vlen );
-            r09 = _t_load_pd( psw1 + 2*vlen );
-            r10 = _t_load_pd( psw2 + 2*vlen );
-            r11 = _t_load_pd( psw3 + 2*vlen );
+            r08 = _t_load_pd( psw0 + vlen2 );
+            r09 = _t_load_pd( psw1 + vlen2 );
+            r10 = _t_load_pd( psw2 + vlen2 );
+            r11 = _t_load_pd( psw3 + vlen2 );
             
             #if defined (__FMA__)
             r04 = _t_fmadd_pd( r02, r08, r04 );
@@ -101,10 +101,10 @@ void fwd_rec_c( const int n,
             r07 = _t_add_pd( r07, r11 );
             #endif
             
-            r08 = _t_load_pd( psw0 + 3*vlen );
-            r09 = _t_load_pd( psw1 + 3*vlen );
-            r10 = _t_load_pd( psw2 + 3*vlen );
-            r11 = _t_load_pd( psw3 + 3*vlen );
+            r08 = _t_load_pd( psw0 + vlen3 );
+            r09 = _t_load_pd( psw1 + vlen3 );
+            r10 = _t_load_pd( psw2 + vlen3 );
+            r11 = _t_load_pd( psw3 + vlen3 );
             
             #if defined (__FMA__)
             r04 = _t_fmadd_pd( r03, r08, r04 );
@@ -152,12 +152,11 @@ void fwd_rec_c( const int n,
             
             _mm256_storeu_pd( pcr, reg0 );
             
-            psw0 += 16*vlen;
-            psw1 += 16*vlen;
-            psw2 += 16*vlen;
-            psw3 += 16*vlen;
-                
-            pcr += 4;
+            pcr  += 4;
+            psw0 += 4 * vlen4;
+            psw1 += 4 * vlen4;
+            psw2 += 4 * vlen4;
+            psw3 += 4 * vlen4;
             
         }
         
