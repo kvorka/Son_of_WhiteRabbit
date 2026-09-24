@@ -1,10 +1,11 @@
-#include "fxcpy.h"
+#pragma once
+#include "fxcp.h"
 
-void fxzshf_c( const int n,
-               const int *restrict it,
-               const int ioff,
-               const int m,
-                     double *restrict x )
+static void fxzshf_c( const int n,
+                      const int *restrict it,
+                      const int m,
+                            double *restrict x )
+
 {
     
     // Howmany FFTs are we handeling
@@ -44,8 +45,8 @@ void fxzshf_c( const int n,
             
             j += 1;
             
-            fxcpy_c( m, x+xsize1*(i31-ioff), x+xsize1* i30       );
-            fxcpy_c( m, y,                   x+xsize1*(i31-ioff) );
+            fxcpy_c( m, x+xsize1*(i31+20000), x+xsize1* i30        );
+            fxcpy_c( m, y,                    x+xsize1*(i31+20000) );
             
         }
         

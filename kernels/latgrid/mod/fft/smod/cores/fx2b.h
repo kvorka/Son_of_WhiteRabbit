@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxzm2b_c( const int m,
                const int l,
                double *restrict x )

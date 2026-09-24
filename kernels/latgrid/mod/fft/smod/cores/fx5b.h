@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxzm5b_c( const int m,
                const int l,
                      double *restrict x )
@@ -43,23 +43,24 @@ void fxzm5b_c( const int m,
                 
                 r0im = _t_load_pd( px1re );
                 r0re = _t_load_pd( px4re );
-                r2im = _t_load_pd( px1im );
-                r2re = _t_load_pd( px4im );
                 
                 r1re = _t_add_pd( r0im, r0re );
                 r4re = _t_sub_pd( r0im, r0re );
                 
-                r0im = _t_load_pd( px2re );
-                r0re = _t_load_pd( px3re );
+                r2im = _t_load_pd( px1im );
+                r2re = _t_load_pd( px4im );
                 
                 r1im = _t_add_pd( r2im, r2re );
                 r4im = _t_sub_pd( r2im, r2re );
                 
+                r01 = _t_load_pd( px2re );
+                r02 = _t_load_pd( px3re );
+                
+                r3re = _t_sub_pd( r01, r02 );
+                r0re = _t_add_pd( r01, r02 );
+                
                 r2im = _t_load_pd( px2im );
                 r2re = _t_load_pd( px3im );
-                
-                r3re = _t_sub_pd( r0im, r0re );
-                r0re = _t_add_pd( r0im, r0re );
                 
                 r3im = _t_sub_pd( r2im, r2re );
                 r0im = _t_add_pd( r2im, r2re );
@@ -141,21 +142,25 @@ void fxzm5b_c( const int m,
                 
                 _t_store_pd( px4re, r2im );
                 _t_store_pd( px4im, r2re );
-                _t_store_pd( px3re, r3im );
-                _t_store_pd( px3im, r3re );
                 
                 r1re = _t_add_pd( r1re, r1re );
                 r1im = _t_add_pd( r1im, r1im );
+                
+                _t_store_pd( px3re, r3im );
+                _t_store_pd( px3im, r3re );
+                
                 r0re = _t_add_pd( r0re, r0re );
                 r0im = _t_add_pd( r0im, r0im );
                 
                 r1re = _t_sub_pd( r1re, r3im );
                 r1im = _t_sub_pd( r1im, r3re );
-                r0re = _t_sub_pd( r0re, r2im );
-                r0im = _t_sub_pd( r0im, r2re );
                 
                 _t_store_pd( px2re, r1re );
                 _t_store_pd( px2im, r1im );
+                
+                r0re = _t_sub_pd( r0re, r2im );
+                r0im = _t_sub_pd( r0im, r2re );
+                
                 _t_store_pd( px1re, r0re );
                 _t_store_pd( px1im, r0im );
                 

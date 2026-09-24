@@ -4,21 +4,16 @@ submodule (fourier_transform) r2c
   module procedure fft_r2c_sub
     integer :: i
     
-    call fxztal( this%n, this%it(this%n/2-1), this%t, m, x )
-    call fxzshf( this%n, this%it, imm, m, x )
+    call fxztal( this%n, this%it, this%t, m, x )
     
-    call fxaddsub( m, x(1,1,0), x(1,2,0) )
+    call fxrc0( m, x(1,1,0), x(1,2,0) )
     
     do i = 1, (this%n-2)/4
-      call fxr2c( m, this%t(this%n+2*i-1),  x(1,1,i), &
-                                          & x(1,2,i), &
-                                          & x(1,1,this%n/2-i), &
-                                          & x(1,2,this%n/2-i)  )
+      call fxrcf( -1._dbl, 0.5_dbl, m, this%t(this%n+2*i-1), &
+                & x(1,1,i), x(1,2,i), x(1,1,this%n/2-i), x(1,2,this%n/2-i) )
     end do
     
-    if ( mod(this%n,4) == 0 ) then
-      call fxrsc( m, -1._dbl, x(1,2,this%n/4) )
-    end if
+    if ( mod(this%n,4) == 0 ) call fxrsc( m, -1._dbl, x(1,2,this%n/4) )
     
   end procedure fft_r2c_sub
   

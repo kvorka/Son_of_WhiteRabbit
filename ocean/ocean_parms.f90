@@ -51,7 +51,7 @@ module ocean_parms
   
 #elif defined ( benchmark )
   integer,          parameter :: nd_ocean        = 73
-  integer,          parameter :: jmax_ocean      = 125
+  integer,          parameter :: jmax_ocean      = 147
   integer,          parameter :: n_iter_ocean    = 100
   real(kind=dbl),   parameter :: r_ud_ocean      = 0.60_dbl
   real(kind=dbl),   parameter :: Pr_ocean        = 1._dbl

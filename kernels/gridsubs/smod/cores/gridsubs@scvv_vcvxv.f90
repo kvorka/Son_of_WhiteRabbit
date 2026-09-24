@@ -5,8 +5,7 @@ submodule (gridsubs) scvv_vcvxv
     integer :: i3
     
     do i3 = 0, nfour-1
-      call gcopy_sub( 9, grid(1,9*i3), gtmp )
-      call scvv_vcvxv_sub( gtmp, grid(1,4*i3) )
+      call scvv_vcvxv_sub( grid(36*ndbl*i3), grid(16*ndbl*i3), gtmp )
     end do
     
   end procedure grid_op_scvv_vcvxv_sub

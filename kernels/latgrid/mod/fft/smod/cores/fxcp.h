@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxcpy_c( const int m,
               const double *restrict arr_from,
                     double *restrict arr_to )

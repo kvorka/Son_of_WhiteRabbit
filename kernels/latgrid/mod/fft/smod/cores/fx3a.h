@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxzm3a_c( const int m,
                const int k,
                const int l,
@@ -58,8 +58,8 @@ void fxzm3a_c( const int m,
                     r1im = _t_mul_pd( rt2re, r2im );
                     
                     #if defined (__FMA__)
-                    r01  = _t_fmsub_pd(  rt1re, r0re, r01  );
-                    r02  = _t_fmadd_pd(  rt1re, r0im, r02  );
+                    r01  = _t_fmsub_pd(  rt1re, r0re, r01 );
+                    r02  = _t_fmadd_pd(  rt1re, r0im, r02 );
                     r1re = _t_fnmadd_pd( rt2im, r2im, r1re );
                     r1im = _t_fmadd_pd(  rt2im, r2re, r1im );
                     #else
@@ -68,20 +68,19 @@ void fxzm3a_c( const int m,
                     r2im = _t_mul_pd( rt2im, r2im );
                     r2re = _t_mul_pd( rt2im, r2re );
                     
-                    r01  = _t_sub_pd( r0re, r01  );
-                    r02  = _t_add_pd( r0im, r02  );
+                    r01  = _t_sub_pd( r0re, r01 );
+                    r02  = _t_add_pd( r0im, r02 );
                     r1re = _t_sub_pd( r1re, r2im );
                     r1im = _t_add_pd( r1im, r2re );
                     #endif
                     
                     r1re = _t_sub_pd( r01, r1re );
                     r1im = _t_sub_pd( r02, r1im );
-                    r2re = _t_add_pd( r01, r01  );
-                    r2im = _t_add_pd( r02, r02  );
+                    r2re = _t_add_pd( r01, r01 );
+                    r2im = _t_add_pd( r02, r02 );
                     
-                    r01 = _t_sub_pd( r2re, r1re );
-                    r02 = _t_sub_pd( r2im, r1im );
-                    
+                    r01  = _t_sub_pd( r2re, r1re );
+                    r02  = _t_sub_pd( r2im, r1im );
                     r0re = _t_load_pd( px0re );
                     r0im = _t_load_pd( px0im );
                     

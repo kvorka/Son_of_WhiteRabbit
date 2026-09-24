@@ -9,7 +9,7 @@ void copy_rarray_c( const int istart,
 {
     
     // Starting memory addresses
-    const double *restrict pf = arr_from + istart -1;
+    const double *restrict pf = arr_from + istart - 1;
           double *restrict pt = arr_to;
     
     // Main loop

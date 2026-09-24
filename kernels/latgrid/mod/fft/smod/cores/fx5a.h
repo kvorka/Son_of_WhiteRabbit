@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxzm5a_c( const int m,
                const int k,
                const int l,
@@ -38,9 +38,9 @@ void fxzm5a_c( const int m,
     // Registers to be used
     __td rt1re, rt1im, rt2re, rt2im,
          rt3re, rt3im, rt4re, rt4im,
-         r00, r01, r02, r03,
-         r04, r05, r06, r07,
-         r08, r09, r10, r11;
+         r0re, r0im, r1re, r1im,
+         r2re, r2im, r3re, r3im,
+         r4re, r4im, r01, r02, r03, r04;
     
     for ( int i4 = 0; i4 < k; i4++ ) {
         
@@ -59,201 +59,190 @@ void fxzm5a_c( const int m,
                 
                 for ( int i1 = 0; i1 < 4; i1++ ) {
                     
-                    r10 = _t_load_pd( px1re );
-                    r11 = _t_load_pd( px1im );
+                    r0re = _t_load_pd( px1re );
+                    r0im = _t_load_pd( px1im );
                     
-                    r02 = _t_mul_pd( rt1re, r10 );
-                    r03 = _t_mul_pd( rt1re, r11 );
+                    r1re = _t_mul_pd( rt1re, r0re );
+                    r1im = _t_mul_pd( rt1re, r0im );
                     
-                    #if defined (__FMA__)
-                    r02 = _t_fnmadd_pd( rt1im, r11, r02 );
-                    r03 = _t_fmadd_pd(  rt1im, r10, r03 );
-                    #else
-                    r04 = _t_mul_pd( rt1im, r11 );
-                    r05 = _t_mul_pd( rt1im, r10 );
+                    r3re = _t_load_pd( px2re );
+                    r3im = _t_load_pd( px2im );
                     
-                    r02 = _t_sub_pd( r02, r04 );
-                    r03 = _t_add_pd( r03, r05 );
-                    #endif
-                    
-                    r10 = _t_load_pd( px2re );
-                    r11 = _t_load_pd( px2im );
-                    
-                    r04 = _t_mul_pd( rt2re, r10 );
-                    r05 = _t_mul_pd( rt2re, r11 );
+                    r2re = _t_mul_pd( rt2re, r3re );
+                    r2im = _t_mul_pd( rt2re, r3im );
                     
                     #if defined (__FMA__)
-                    r04 = _t_fnmadd_pd( rt2im, r11, r04 );
-                    r05 = _t_fmadd_pd(  rt2im, r10, r05 );
+                    r1re = _t_fnmadd_pd( rt1im, r0im, r1re );
+                    r1im = _t_fmadd_pd(  rt1im, r0re, r1im );
+                    r2re = _t_fnmadd_pd( rt2im, r3im, r2re );
+                    r2im = _t_fmadd_pd(  rt2im, r3re, r2im );
                     #else
-                    r06 = _t_mul_pd( rt2im, r11 );
-                    r07 = _t_mul_pd( rt2im, r10 );
+                    r0im = _t_mul_pd( rt1im, r0im );
+                    r0re = _t_mul_pd( rt1im, r0re );
+                    r3im = _t_mul_pd( rt2im, r3im );
+                    r3re = _t_mul_pd( rt2im, r3re );
                     
-                    r04 = _t_sub_pd( r04, r06 );
-                    r05 = _t_add_pd( r05, r07 );
+                    r1re = _t_sub_pd( r1re, r0im );
+                    r1im = _t_add_pd( r1im, r0re );
+                    r2re = _t_sub_pd( r2re, r3im );
+                    r2im = _t_add_pd( r2im, r3re );
                     #endif
                     
-                    r10 = _t_load_pd( px3re );
-                    r11 = _t_load_pd( px3im );
+                    r01 = _t_load_pd( px3re );
+                    r02 = _t_load_pd( px3im );
+                    r03 = _t_load_pd( px4re );
+                    r04 = _t_load_pd( px4im );
                     
                     #if defined (__FMA__)
-                    r06 = _t_fnmadd_pd( rt3re, r10, r04 );
-                    r07 = _t_fnmadd_pd( rt3re, r11, r05 );
+                    r3re = _t_fnmadd_pd( rt3re, r01, r2re );
+                    r3im = _t_fnmadd_pd( rt3re, r02, r2im );
+                    r0re = _t_fnmadd_pd( rt4re, r03, r1re );
+                    r0im = _t_fnmadd_pd( rt4re, r04, r1im );
                     
-                    r06 = _t_fmadd_pd(  rt3im, r11, r06 );
-                    r07 = _t_fnmadd_pd( rt3im, r10, r07 );
+                    r1re = _t_add_pd( r1re, r1re );
+                    r1im = _t_add_pd( r1im, r1im );
+                    r2re = _t_add_pd( r2re, r2re );
+                    r2im = _t_add_pd( r2im, r2im );
+                    
+                    r3re = _t_fmadd_pd(  rt3im, r02, r3re );
+                    r3im = _t_fnmadd_pd( rt3im, r01, r3im );
+                    r0re = _t_fmadd_pd(  rt4im, r04, r0re );
+                    r0im = _t_fnmadd_pd( rt4im, r03, r0im );
                     #else
-                    r06 = _t_mul_pd( rt3re, r10 );
-                    r07 = _t_mul_pd( rt3re, r11 );
+                    r3re = _t_mul_pd( rt3re, r01 );
+                    r3im = _t_mul_pd( rt3re, r02 );
+                    r0re = _t_mul_pd( rt4re, r03 );
+                    r0im = _t_mul_pd( rt4re, r04 );
                     
-                    r06 = _t_sub_pd( r04, r06 );
-                    r07 = _t_sub_pd( r05, r07 );
+                    r3re = _t_sub_pd( r2re, r3re );
+                    r3im = _t_sub_pd( r2im, r3im );
+                    r0re = _t_sub_pd( r1re, r0re );
+                    r0im = _t_sub_pd( r1im, r0im );
                     
-                    r11 = _t_mul_pd( rt3im, r11 );
-                    r10 = _t_mul_pd( rt3im, r10 );
+                    r1re = _t_add_pd( r1re, r1re );
+                    r1im = _t_add_pd( r1im, r1im );
+                    r2re = _t_add_pd( r2re, r2re );
+                    r2im = _t_add_pd( r2im, r2im );
                     
-                    r06 = _t_add_pd( r06, r11 );
-                    r07 = _t_sub_pd( r07, r10 );
+                    r02 = _t_mul_pd( rt3im, r02 );
+                    r01 = _t_mul_pd( rt3im, r01 );
+                    r04 = _t_mul_pd( rt4im, r04 );
+                    r03 = _t_mul_pd( rt4im, r03 );
+                    
+                    r3re = _t_add_pd( r3re, r02 );
+                    r3im = _t_sub_pd( r3im, r01 );
+                    r0re = _t_add_pd( r0re, r04 );
+                    r0im = _t_sub_pd( r0im, r03 );
                     #endif
                     
-                    r10 = _t_load_pd( px4re );
-                    r11 = _t_load_pd( px4im );
+                    r1re = _t_sub_pd( r1re, r0re );
+                    r1im = _t_sub_pd( r1im, r0im );
+                    r4re = _t_sub_pd( r2re, r3re );
+                    r4im = _t_sub_pd( r2im, r3im );
                     
                     #if defined (__FMA__)
-                    r00 = _t_fnmadd_pd( rt4re, r10, r02 );
-                    r01 = _t_fnmadd_pd( rt4re, r11, r03 );
-                    
-                    r00 = _t_fmadd_pd(  rt4im, r11, r00 );
-                    r01 = _t_fnmadd_pd( rt4im, r10, r01 );
+                    r2re = _t_fmadd_pd( rC53, r3re, r0re );
+                    r2im = _t_fmadd_pd( rC53, r3im, r0im );
+                    r03  = _t_fmsub_pd( rC53, r0re, r3re );
+                    r04  = _t_fmsub_pd( rC53, r0im, r3im );
                     #else
-                    r00 = _t_mul_pd( rt4re, r10 );
-                    r01 = _t_mul_pd( rt4re, r11 );
+                    r2re = _t_mul_pd( rC53, r3re );
+                    r2im = _t_mul_pd( rC53, r3im );
+                    r03  = _t_mul_pd( rC53, r0re );
+                    r04  = _t_mul_pd( rC53, r0im );
                     
-                    r00 = _t_sub_pd( r02, r00 );
-                    r01 = _t_sub_pd( r03, r01 );
-                    
-                    r11 = _t_mul_pd( rt4im, r11 );
-                    r10 = _t_mul_pd( rt4im, r10 );
-                    
-                    r00 = _t_add_pd( r00, r11 );
-                    r01 = _t_sub_pd( r01, r10 );
+                    r2re = _t_add_pd( r2re, r0re );
+                    r2im = _t_add_pd( r2im, r0im );
+                    r03  = _t_sub_pd( r03,  r3re );
+                    r04  = _t_sub_pd( r04,  r3im );
                     #endif
                     
-                    r02 = _t_add_pd( r02, r02 );
-                    r03 = _t_add_pd( r03, r03 );
-                    r10 = _t_add_pd( r04, r04 );
-                    r11 = _t_add_pd( r05, r05 );
+                    r0re = _t_add_pd( r1re, r4re );
+                    r0im = _t_add_pd( r1im, r4im );
                     
-                    r02 = _t_sub_pd( r02, r00 );
-                    r03 = _t_sub_pd( r03, r01 );
-                    r08 = _t_sub_pd( r10,  r06 );
-                    r09 = _t_sub_pd( r11,  r07 );
+                    r1re = _t_sub_pd( r1re, r4re );
+                    r1im = _t_sub_pd( r1im, r4im );
+                    
+                    r4re = _t_load_pd( px0re );
+                    r4im = _t_load_pd( px0im );
+                    
+                    r01 = _t_add_pd( r4re, r0re );
+                    r02 = _t_add_pd( r4im, r0im );
                     
                     #if defined (__FMA__)
-                    r04 = _t_fmadd_pd( rC53, r06, r00 );
-                    r05 = _t_fmadd_pd( rC53, r07, r01 );
+                    r4re = _t_fnmadd_pd( rC51, r0re, r4re );
+                    r4im = _t_fnmadd_pd( rC51, r0im, r4im );
                     
-                    r06 = _t_fmsub_pd( rC53, r00, r06 );
-                    r07 = _t_fmsub_pd( rC53, r01, r07 );
+                    _t_store_pd( px0re, r01 );
+                    _t_store_pd( px0im, r02 );
+                    
+                    r1re = _t_fnmadd_pd( rC52, r1re, r4re );
+                    r1im = _t_fnmadd_pd( rC52, r1im, r4im );
+                    
+                    r4re = _t_add_pd( r4re, r4re );
+                    r4im = _t_add_pd( r4im, r4im );
+                    r3re = _t_fmadd_pd(  rC54, r03, r1im );
+                    r3im = _t_fnmadd_pd( rC54, r04, r1re );
                     #else
-                    r04 = _t_mul_pd( rC53, r06 );
-                    r05 = _t_mul_pd( rC53, r07 );
+                    _t_store_pd( px0re, r01 );
+                    _t_store_pd( px0im, r02 );
                     
-                    r04 = _t_add_pd( r00, r04 );
-                    r05 = _t_add_pd( r01, r05 );
+                    r3re = _t_mul_pd( rC52, r1re );
+                    r3im = _t_mul_pd( rC52, r1im );
+                    r01  = _t_mul_pd( rC51, r0re );
+                    r02  = _t_mul_pd( rC51, r0im );
                     
-                    r10 = _t_mul_pd( rC53, r00 );
-                    r11 = _t_mul_pd( rC53, r01 );
+                    r4re = _t_sub_pd( r4re, r01 );
+                    r4im = _t_sub_pd( r4im, r02 );
                     
-                    r06 = _t_sub_pd( r10, r06 );
-                    r07 = _t_sub_pd( r11, r07 );
+                    r1re = _t_sub_pd( r4re, r3re );
+                    r1im = _t_sub_pd( r4im, r3im );
+                    
+                    r4re = _t_add_pd( r4re, r4re );
+                    r4im = _t_add_pd( r4im, r4im );
+                    r3re = _t_mul_pd( rC54, r03 );
+                    r3im = _t_mul_pd( rC54, r04 );
+                    
+                    r3re = _t_add_pd( r1im, r3re );
+                    r3im = _t_sub_pd( r1re, r3im );
                     #endif
                     
-                    r00 = _t_add_pd( r02, r08 );
-                    r01 = _t_add_pd( r03, r09 );
+                    r4re = _t_sub_pd( r4re, r1re );
+                    r4im = _t_sub_pd( r4im, r1im );
                     
-                    r02 = _t_sub_pd( r02, r08 );
-                    r03 = _t_sub_pd( r03, r09 );
-                    
-                    r10 = _t_load_pd( px0re );
-                    r11 = _t_load_pd( px0im );
+                    _t_store_pd( px3re, r3im );
+                    _t_store_pd( px3im, r3re );
                     
                     #if defined (__FMA__)
-                    r08 = _t_fnmadd_pd( rC51, r00, r10 );
-                    r09 = _t_fnmadd_pd( rC51, r01, r11 );
-                    
-                    r02 = _t_fnmadd_pd( rC52, r02, r08 );
-                    r03 = _t_fnmadd_pd( rC52, r03, r09 );
+                    r2re = _t_fmadd_pd(  rC54, r2re, r4im );
+                    r2im = _t_fnmadd_pd( rC54, r2im, r4re );
                     #else
-                    r08 = _t_mul_pd( rC51, r00 );
-                    r09 = _t_mul_pd( rC51, r01 );
-                    r02 = _t_mul_pd( rC52, r02 );
-                    r03 = _t_mul_pd( rC52, r03 );
+                    r2im = _t_mul_pd( rC54, r2im );
+                    r2re = _t_mul_pd( rC54, r2re );
                     
-                    r08 = _t_sub_pd( r10, r08 );
-                    r09 = _t_sub_pd( r11, r09 );
-
-                    r02 = _t_sub_pd( r08, r02 );
-                    r03 = _t_sub_pd( r09, r03 );
+                    r2im = _t_sub_pd( r4re, r2im );
+                    r2re = _t_add_pd( r4im, r2re );
                     #endif
                     
-                    r08 = _t_add_pd( r08, r08 );
-                    r09 = _t_add_pd( r09, r09 );
+                    r1re = _t_add_pd( r1re, r1re );
+                    r1im = _t_add_pd( r1im, r1im );
                     
-                    r08 = _t_sub_pd( r08, r02 );
-                    r09 = _t_sub_pd( r09, r03 );
+                    _t_store_pd( px4re, r2im );
+                    _t_store_pd( px4im, r2re );
                     
-                    r00 = _t_add_pd( r10, r00 );
-                    r01 = _t_add_pd( r11, r01 );
+                    r1re = _t_sub_pd( r1re, r3im );
+                    r1im = _t_sub_pd( r1im, r3re );
+                    r4re = _t_add_pd( r4re, r4re );
+                    r4im = _t_add_pd( r4im, r4im );
                     
-                    _t_store_pd( px0re, r00 );
-                    _t_store_pd( px0im, r01 );
+                    _t_store_pd( px2re, r1re );
+                    _t_store_pd( px2im, r1im );
                     
-                    #if defined (__FMA__)
-                    r10 = _t_fnmadd_pd( rC54, r07, r02 );
-                    r11 = _t_fmadd_pd(  rC54, r06, r03 );
-                    #else
-                    r10 = _t_mul_pd( rC54, r07 );
-                    r11 = _t_mul_pd( rC54, r06 );
+                    r4re = _t_sub_pd( r4re, r2im );
+                    r4im = _t_sub_pd( r4im, r2re );
                     
-                    r10 = _t_sub_pd( r02, r10 );
-                    r11 = _t_add_pd( r03, r11 );
-                    #endif
-                    
-                    _t_store_pd( px3re, r10 );
-                    _t_store_pd( px3im, r11 );
-                    
-                    r02 = _t_add_pd( r02, r02 );
-                    r03 = _t_add_pd( r03, r03 );
-                    
-                    #if defined (__FMA__)
-                    r00 = _t_fnmadd_pd( rC54, r05, r08 );
-                    r01 = _t_fmadd_pd(  rC54, r04, r09 );
-                    #else
-                    r00 = _t_mul_pd( rC54, r05 );
-                    r01 = _t_mul_pd( rC54, r04 );
-                    
-                    r00 = _t_sub_pd( r08, r00 );
-                    r01 = _t_add_pd( r09, r01 );
-                    #endif
-                    
-                    _t_store_pd( px4re, r00 );
-                    _t_store_pd( px4im, r01 );
-                    
-                    r02 = _t_sub_pd( r02, r10 );
-                    r03 = _t_sub_pd( r03, r11 );
-                    
-                    _t_store_pd( px2re, r02 );
-                    _t_store_pd( px2im, r03 );
-                    
-                    r08 = _t_add_pd( r08, r08 );
-                    r09 = _t_add_pd( r09, r09 );
-                    
-                    r08 = _t_sub_pd( r08, r00 );
-                    r09 = _t_sub_pd( r09, r01 );
-                    
-                    _t_store_pd( px1re, r08 );
-                    _t_store_pd( px1im, r09 );
+                    _t_store_pd( px1re, r4re );
+                    _t_store_pd( px1im, r4im );
                     
                     // Walking to next SIMD line before next
                     // i1 cycle iteration.

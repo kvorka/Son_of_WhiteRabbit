@@ -52,8 +52,8 @@ module lateral_grid
       interface
         module subroutine g_sub(nfour, gxyz, gtemp)
           integer,        intent(in)    :: nfour
-          real(kind=dbl), intent(inout) :: gxyz(4*ndbl,0:*)
-          real(kind=dbl), intent(out)   :: gtemp(4*ndbl,0:*)
+          real(kind=dbl), intent(inout) :: gxyz(0:*)
+          real(kind=dbl), intent(out)   :: gtemp(0:*)
         end subroutine g_sub
       end interface
     end subroutine transform_sub

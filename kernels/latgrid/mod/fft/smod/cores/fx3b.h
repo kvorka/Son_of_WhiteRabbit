@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxzm3b_c( const int m,
                const int l,
                      double *restrict x )
@@ -71,11 +71,13 @@ void fxzm3b_c( const int m,
                 
                 r0re = _t_add_pd( r0re, r03 );
                 r0im = _t_add_pd( r0im, r04 );
-                r1re = _t_add_pd( r1re, r1re );
-                r1im = _t_add_pd( r1im, r1im );
                 
                 _t_store_pd( px0re, r0re );
                 _t_store_pd( px0im, r0im );
+                
+                r1re = _t_add_pd( r1re, r1re );
+                r1im = _t_add_pd( r1im, r1im );
+                
                 _t_store_pd( px2re, r2re );
                 _t_store_pd( px2im, r2im );
                 

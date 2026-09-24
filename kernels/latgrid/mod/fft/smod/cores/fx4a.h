@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../../math/cvec.h"
 
-extern inline __attribute__((always_inline))
+static inline __attribute__((always_inline))
 void fxzm4a_c( const int m,
                const int k,
                const int l,
@@ -54,7 +54,6 @@ void fxzm4a_c( const int m,
                     
                     r0re = _t_add_pd( r0re, r0re );
                     r0im = _t_add_pd( r0im, r0im );
-                    
                     r2re = _t_fmadd_pd(  rt2im, r02, r2re );
                     r2im = _t_fnmadd_pd( rt2re, r02, r2im );
                     #else
@@ -144,7 +143,6 @@ void fxzm4a_c( const int m,
                     
                     r2re = _t_add_pd( r2re, r2re );
                     r2im = _t_add_pd( r2im, r2im );
-                    
                     r1re = _t_fnmadd_pd( rt1im, r3re, r1re );
                     r1im = _t_fnmadd_pd( rt1im, r3im, r1im );
                     #else

@@ -112,7 +112,7 @@ submodule (fourier_transform) fxi
           
             do
               if ( isj == j ) then
-                it(ic) = it(ic) + imm
+                it(ic) = it(ic) - 20000
                 exit
               end if
               

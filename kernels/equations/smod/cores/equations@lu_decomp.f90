@@ -36,7 +36,7 @@ submodule (equations) lu_decomp
       
       this%I(j) = i
       
-      if (i /= j) then
+      if ( i /= j ) then
         !$omp simd
         do l = 1, this%ldu
           pom         = this%U(l,j)
