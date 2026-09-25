@@ -3,7 +3,7 @@
 ####                                    CODE TYPE                                      ####
 ####                     wallclock, benchmark, convection, output                      ####
 ###########################################################################################
-code_type="wallclock"
+code_type="benchmark"
 fcompiler="gfortran-12"
 ccompiler="gcc-12"
 

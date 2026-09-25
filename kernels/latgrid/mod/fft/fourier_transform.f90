@@ -63,12 +63,17 @@ module fourier_transform
       real(kind=dbl), intent(inout) :: arr1(*), arr2(*)
     end subroutine fxrc0
     
-    module subroutine fxrcf(sign, scale, m, t, x11, x12, x21, x22) bind(C, name="fxrcf_c")
-      integer,        value, intent(in)    :: m
-      real(kind=dbl), value, intent(in)    :: sign, scale
-      real(kind=dbl),        intent(in)    :: t(*)
-      real(kind=dbl),        intent(inout) :: x11(*), x12(*), x21(*), x22(*)
-    end subroutine fxrcf
+    module subroutine fxc2r(m, t, x11, x12, x21, x22) bind(C, name="fxc2r_c")
+      integer, value, intent(in)    :: m
+      real(kind=dbl), intent(in)    :: t(*)
+      real(kind=dbl), intent(inout) :: x11(*), x12(*), x21(*), x22(*)
+    end subroutine fxc2r
+    
+    module subroutine fxr2c(m, t, x11, x12, x21, x22) bind(C, name="fxr2c_c")
+      integer, value, intent(in)    :: m
+      real(kind=dbl), intent(in)    :: t(*)
+      real(kind=dbl), intent(inout) :: x11(*), x12(*), x21(*), x22(*)
+    end subroutine fxr2c
   end interface
   
 end module fourier_transform

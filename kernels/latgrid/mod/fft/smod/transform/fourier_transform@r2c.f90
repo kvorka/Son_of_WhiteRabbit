@@ -9,8 +9,10 @@ submodule (fourier_transform) r2c
     call fxrc0( m, x(1,1,0), x(1,2,0) )
     
     do i = 1, (this%n-2)/4
-      call fxrcf( -1._dbl, 0.5_dbl, m, this%t(this%n+2*i-1), &
-                & x(1,1,i), x(1,2,i), x(1,1,this%n/2-i), x(1,2,this%n/2-i) )
+      call fxr2c( m, this%t(this%n+2*i-1), x(1,1,i), &
+                                         & x(1,2,i), &
+                                         & x(1,1,this%n/2-i), &
+                                         & x(1,2,this%n/2-i)  )
     end do
     
     if ( mod(this%n,4) == 0 ) call fxrsc( m, -1._dbl, x(1,2,this%n/4) )
