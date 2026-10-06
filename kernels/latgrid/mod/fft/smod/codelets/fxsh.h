@@ -45,7 +45,7 @@ static void fxzshf_c( const int n,
             
             j += 1;
             
-            fxcpy_c( m, x+xsize1*(i31+20000), x+xsize1* i30        );
+            fxcpy_c( m, x+xsize1*(i31+20000), x+xsize1*(i30      ) );
             fxcpy_c( m, y,                    x+xsize1*(i31+20000) );
             
         }

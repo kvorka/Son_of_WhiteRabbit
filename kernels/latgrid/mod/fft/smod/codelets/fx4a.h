@@ -54,6 +54,7 @@ void fxzm4a_c( const int m,
                     
                     r0re = _t_add_pd( r0re, r0re );
                     r0im = _t_add_pd( r0im, r0im );
+                    
                     r2re = _t_fmadd_pd(  rt2im, r02, r2re );
                     r2im = _t_fnmadd_pd( rt2re, r02, r2im );
                     #else

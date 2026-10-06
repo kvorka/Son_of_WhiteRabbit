@@ -1,4 +1,4 @@
-submodule (lege_poly) c2r
+submodule (lege_poly) bwd_idx
   implicit none; contains
   
   module procedure c2r_mj_to_mj_sub
@@ -70,4 +70,4 @@ submodule (lege_poly) c2r
         
   end procedure c2r_mj_to_mj_sub
   
-end submodule c2r
+end submodule bwd_idx

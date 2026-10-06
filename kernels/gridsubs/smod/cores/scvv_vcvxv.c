@@ -1,4 +1,4 @@
-#include "gcopy.h"
+#include "../codelets/gcopy.h"
 
 extern inline __attribute__((always_inline))
 void scvv_vcvxv_c( const double *restrict gin,
@@ -21,7 +21,7 @@ void scvv_vcvxv_c( const double *restrict gin,
         #define in(row,i)  gtmp[(row) * vlen4 + (i)]
         #define out(row,i) gout[(row) * vlen4 + (i)]
         
-        #pragma omp unroll (vlen) simd aligned (gtmp,gout:alignement)
+        #pragma omp simd aligned (gtmp,gout:alignement)
         for ( int i = 0; i < vlen4; i++ ) {
             
             out(0,i) = in(0,i) * in(3,i) + in(1,i) * in(4,i) + in(2,i) * in(5,i);

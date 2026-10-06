@@ -28,6 +28,7 @@
     #define vlen13 104
     #define vlen14 112
     #define vlen15 120
+    #define vlen16 128
     
     #define cmask 0x55
     
@@ -76,6 +77,7 @@
     #define vlen13 52
     #define vlen14 56
     #define vlen15 60
+    #define vlen16 64
     
     #define cmask 0x05
     

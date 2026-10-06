@@ -136,6 +136,22 @@ module lege_poly
       real(kind=dbl), intent(out) :: pmm(*), pmj1(*), pmj(*), swork(*), sumN(8*nb*ndbl,0:*), sumS(8*nb*ndbl,0:*)
     end subroutine bwd_legesum_sub
     
+    module subroutine bwd_m_sub(n, m, nma, fmj, cosx, sinx, cosx2, cc, pmm, pmj, pmj1, swork, sumN, sumS) &
+    & bind(C, name="bwd_m_c")
+      integer, value, intent(in)    :: n, m, nma
+      real(kind=dbl), intent(in)    :: fmj(*), cosx(*), sinx(*), cosx2(*), cc(*)
+      real(kind=dbl), intent(inout) :: pmm(*)
+      real(kind=dbl), intent(out)   :: pmj(*), pmj1(*), swork(*), sumN(*), sumS(*)
+    end subroutine bwd_m_sub
+    
+    module subroutine bwd_end_sub(n, m, fmj, cosx, sinx, cc, pmm, pmj, pmj1, swork, sumN, sumS) &
+    & bind(C, name="bwd_end_c")
+      integer, value, intent(in)    :: n, m
+      real(kind=dbl), intent(in)    :: fmj(*), cosx(*), sinx(*), cc(*)
+      real(kind=dbl), intent(inout) :: pmm(*)
+      real(kind=dbl), intent(out)   :: pmj(*), pmj1(*), swork(*), sumN(*), sumS(*)
+    end subroutine bwd_end_sub
+    
     module subroutine fwd_legesum_sub(this, nf, sumN, sumS, cr, cosx, sinx, cosx2, weight, pmm, pmj1, pmj, swork)
       class(T_legep), intent(in)    :: this
       integer,        intent(in)    :: nf
@@ -144,44 +160,21 @@ module lege_poly
       real(kind=dbl), intent(inout) :: cr(4*nf,*)
     end subroutine fwd_legesum_sub
     
-    module subroutine bwd_set_sub(n, ma1, cff, cosx, sinx, cc, pmm, pmj1, pmj, swork) bind(C, name="bwd_set_c")
-      integer, value, intent(in)    :: n, ma1
-      real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), cc(*)
-      real(kind=dbl), intent(inout) :: pmm(*)
-      real(kind=dbl), intent(out)   :: pmj1(*), pmj(*), swork(*)
-    end subroutine bwd_set_sub
-    
-    module subroutine bwd_rec_sub(n, nma, fmj, cosx2, cc, pmj1, pmj, swork) bind(C, name="bwd_rec_c")
-      integer, value, intent(in)    :: n, nma
-      real(kind=dbl), intent(in)    :: fmj(*), cosx2(*), cc(*)
-      real(kind=dbl), intent(inout) :: pmj1(*), pmj(*)
-      real(kind=dbl), intent(out)   :: swork(*)
-    end subroutine bwd_rec_sub
-    
-    module subroutine bwd_rsc_sub(n, cosx, swork, sumN, sumS) bind(C, name="bwd_rsc_c")
-      integer, value, intent(in)  :: n
-      real(kind=dbl), intent(in)  :: cosx(*), swork(*)
-      real(kind=dbl), intent(out) :: sumN(*), sumS(*)
-    end subroutine bwd_rsc_sub
-    
-    module subroutine fwd_rsc_sub(n, w, cosx, sumN, sumS, swork) bind(C, name="fwd_rsc_c")
-      integer, value, intent(in)  :: n
-      real(kind=dbl), intent(in)  :: w(*), cosx(*), sumN(*), sumS(*)
-      real(kind=dbl), intent(out) :: swork(*)
-    end subroutine fwd_rsc_sub
-    
-    module subroutine fwd_set_sub(n, ma1, cff, cosx, sinx, swork, pmm, pmj1, pmj, cr) bind(C, name="fwd_set_c")
-      integer, value, intent(in)    :: n, ma1
-      real(kind=dbl), intent(in)    :: cff, cosx(*), sinx(*), swork(*)
-      real(kind=dbl), intent(out)   :: pmj1(*), pmj(*)
+    module subroutine fwd_m_sub(n, m, nma, fmj, cosx, sinx, cosx2, weight, sumN, sumS, pmm, pmj, pmj1, swork, cr) &
+    & bind(C, name="fwd_m_c")
+      integer, value, intent(in)    :: n, m, nma
+      real(kind=dbl), intent(in)    :: fmj(*), cosx(*), sinx(*), cosx2(*), weight(*), sumN(*), sumS(*)
       real(kind=dbl), intent(inout) :: pmm(*), cr(*)
-    end subroutine fwd_set_sub
+      real(kind=dbl), intent(out)   :: pmj(*), pmj1(*), swork(*)
+    end subroutine fwd_m_sub
     
-    module subroutine fwd_rec_sub(n, nma, fmj, cosx2, swork, pmj1, pmj, cr) bind(C, name="fwd_rec_c")
-      integer, value, intent(in)    :: n, nma
-      real(kind=dbl), intent(in)    :: fmj(*), cosx2(*), swork(*)
-      real(kind=dbl), intent(inout) :: pmj1(*), pmj(*), cr(*)
-    end subroutine fwd_rec_sub
+    module subroutine fwd_end_sub(n, m, fmj, cosx, sinx, weight, sumN, sumS, pmm, pmj, pmj1, swork, cr) &
+    & bind(C, name="fwd_end_c")
+      integer, value, intent(in)    :: n, m
+      real(kind=dbl), intent(in)    :: fmj(*), cosx(*), sinx(*), weight(*), sumN(*), sumS(*)
+      real(kind=dbl), intent(inout) :: pmm(*), cr(*)
+      real(kind=dbl), intent(out)   :: pmj(*), pmj1(*), swork(*)
+    end subroutine fwd_end_sub
   end interface
   
 end module lege_poly

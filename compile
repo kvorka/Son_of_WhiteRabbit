@@ -28,19 +28,18 @@ codepath=codes
 ###########################################################################################
 ####                                  DIRS STRUCTURE                                   ####
 ###########################################################################################
-lvlC=( "${mathpath}/smod/codelets" 
+lvlC=( "${mathpath}/smod/cores" 
        "${legepath}/smod/cores" 
        "${fftpath}/smod/cores" 
-       "${sphsvtpath}/smod/codelets" 
-       "${grdsubspath}/smod/codelets" 
-       "${objpath}/smod/codelets" )
+       "${sphsvtpath}/smod/cores" 
+       "${grdsubspath}/smod/cores" 
+       "${objpath}/smod/cores" )
 
 lvlF=( "${mathpath}/smod" 
        "${sphidxpath}/smod" 
        "${fftpath}/smod/init" 
        "${fftpath}/smod/transform" 
        "${legepath}/smod/init" 
-       "${legepath}/smod/indexing" 
        "${legepath}/smod/transform" 
        "${sphsvtpath}/smod/init" 
        "${sphsvtpath}/smod/cleb" 
@@ -50,9 +49,9 @@ lvlF=( "${mathpath}/smod"
        "${radgridpath}/smod/differences" 
        "${radgridpath}/smod/integration" 
        "${radgridpath}/smod/interpolation" 
-       "${grdsubspath}/smod/cores" 
+       "${grdsubspath}/smod/subs" 
        "${eqspath}/smod/init" 
-       "${eqspath}/smod/cores" 
+       "${eqspath}/smod/lu" 
        "${iopath}/smod" 
        "${objpath}/smod/init" 
        "${objpath}/smod/forces" 
@@ -71,7 +70,7 @@ lvlF=( "${mathpath}/smod"
 ###########################################################################################
 macros=$($ccompiler -march=native -dM -E -x c /dev/null)
 
-echo "$macros" | grep -q "__FMA__"     && instructions="$instructions -D__FMA__"
+echo "$macros" | grep -q "__FMA__"     && instructions="-D__FMA__"
 echo "$macros" | grep -q "__AVX512F__" && instructions="$instructions -D__AVX512F__"
 
 ###########################################################################################

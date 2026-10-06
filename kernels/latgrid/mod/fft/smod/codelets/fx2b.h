@@ -36,16 +36,18 @@ void fxzm2b_c( const int m,
                 
                 r1re = _t_sub_pd( r0re, r1re );
                 r1im = _t_sub_pd( r0im, r1im );
+                
                 r01  = _t_add_pd( r0re, r0re );
                 r02  = _t_add_pd( r0im, r0im );
+                
+                _t_store_pd( px1re, r1re );
+                _t_store_pd( px1im, r1im );
                 
                 r0re = _t_sub_pd( r01, r1re );
                 r0im = _t_sub_pd( r02, r1im );
                 
                 _t_store_pd( px0re, r0re );
                 _t_store_pd( px0im, r0im );
-                _t_store_pd( px1re, r1re );
-                _t_store_pd( px1im, r1im );
                 
                 // Walking to next SIMD line before next
                 // i1 cycle iteration.

@@ -1,4 +1,4 @@
-submodule (lege_poly) r2c
+submodule (lege_poly) fwd_idx
   implicit none; contains
   
   module procedure r2c_mj_to_mj_sub
@@ -70,4 +70,4 @@ submodule (lege_poly) r2c
         
   end procedure r2c_mj_to_mj_sub
   
-end submodule r2c
+end submodule fwd_idx
