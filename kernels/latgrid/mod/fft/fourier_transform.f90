@@ -11,12 +11,12 @@ module fourier_transform
     contains
     
     procedure, public, pass :: init_sub => fft_init_sub
-    procedure, public, pass :: fft_c2r_sub
-    procedure, public, pass :: fft_r2c_sub
+    procedure, public, pass :: fft_c2r_sub, fft_r2c_sub
     procedure, public, pass :: deallocate_sub => fft_deallocate_sub
     
   end type T_fft
   
+  !! Class routines
   interface
     module subroutine fft_init_sub(this, n)
       class(T_fft), intent(inout) :: this
@@ -38,7 +38,10 @@ module fourier_transform
       integer,        intent(in)    :: m
       real(kind=dbl), intent(inout) :: x(4*m*ndbl,2,0:this%n/2-1)
     end subroutine fft_c2r_sub
-    
+  end interface
+  
+  !! Cores
+  interface
     module subroutine fxzini(n, it, t)
       integer,        intent(in)  :: n
       integer,        intent(out) :: it(n)

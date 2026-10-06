@@ -12,7 +12,7 @@ void copy_carray_c( const int length,
           double *restrict pt = (       double * ) arr_to;
     
     // Main loop
-    #pragma omp unroll partial (vlen4) simd
+    #pragma omp unroll partial (vlen8) simd
     for ( int i = 0; i < 2*length; i++ ) { pt[i] = pf[i]; }
     
 }

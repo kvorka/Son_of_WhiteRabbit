@@ -22,8 +22,9 @@ submodule (ocean) timescheme
     !!** res working array, which is 2*9+1 rxd%jms1 sized arrays. With nb=9 and nf=4 we set also rcc/rcr. **!!
     !!******************************************************************************************************!!
     call this%rxd%alloc_work_rxd_sub( 19, vWork )
-    call this%lat_grid%lgp%alloc_rscal_sub( 9, rccWork )
-    call this%lat_grid%lgp%alloc_rscal_sub( 4, rcrWork )
+    
+    call this%lat_grid%alloc_rcc_lgrid_sub( 9, rccWork )
+    call this%lat_grid%alloc_rcc_lgrid_sub( 4, rcrWork )
     
     !$omp parallel private (c_tWork, tWork, rccWork, rcrWork, vWork, T, v, gradT, curlv, work1, work2, work3)
     

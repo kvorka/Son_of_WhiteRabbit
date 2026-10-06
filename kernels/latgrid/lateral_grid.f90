@@ -18,7 +18,7 @@ module lateral_grid
     contains
     
     procedure :: init_sub       => init_harmonics_sub
-    procedure :: alloc_work_lgrid_sub
+    procedure :: alloc_work_lgrid_sub, alloc_rcc_lgrid_sub
     procedure :: transform_sub
     procedure :: deallocate_sub => deallocate_harmonics_sub
     
@@ -40,6 +40,12 @@ module lateral_grid
       type(c_ptr),                         intent(out) :: c_work
       real(kind=dbl), pointer, contiguous, intent(out) :: work(:)
     end subroutine alloc_work_lgrid_sub
+    
+    module subroutine alloc_rcc_lgrid_sub(this, ns, rscal)
+      class(T_lateralGrid),        intent(in)  :: this
+      integer,                     intent(in)  :: ns
+      real(kind=dbl), allocatable, intent(out) :: rscal(:)
+    end subroutine alloc_rcc_lgrid_sub
     
     module subroutine transform_sub(this, nf, nb, cc, cr, rcc, rcr, work, g_sub)
       class(T_lateralGrid),   intent(in)    :: this

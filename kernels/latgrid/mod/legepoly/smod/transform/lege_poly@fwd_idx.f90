@@ -1,21 +1,29 @@
 submodule (lege_poly) fwd_idx
   implicit none; contains
   
-  module procedure r2c_mj_to_mj_sub
-    integer :: im, ij, imj, ima
+  module procedure index_fwd_sub
+    integer :: i, im, ij, imj, ima
     
     im = 0
       !ij == im
         ima = 1
         imj = 1
         
-        call fwd_idx0_sub( ncab, rcab(1,ima), cab(1,imj) )
-        
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj) = cmplx( rcab(1,i,2,ima), rcab(2,i,2,ima), kind=dbl )
+        end do
+      
       do ij = 1, (this%jmax-1)/2
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx1_sub( ncab, this%emj(imj-1), rcab(1,ima-1), cab(1,imj-1) )
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj-1) =  this%emj(imj+0) * cmplx( rcab(1,i,1,ima+0), rcab(2,i,1,ima+0), kind=dbl ) + &
+                        & this%emj(imj-1) * cmplx( rcab(1,i,1,ima-1), rcab(2,i,1,ima-1), kind=dbl )
+          cab(i,imj)   =                    cmplx( rcab(1,i,2,ima+0), rcab(2,i,2,ima+0), kind=dbl )
+        end do
       end do
       
       !ij == this%jmax
@@ -23,13 +31,22 @@ submodule (lege_poly) fwd_idx
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx1_sub( ncab, this%emj(imj-1), rcab(1,ima-1), cab(1,imj-1) )
-        
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj-1) =  this%emj(imj+0) * cmplx( rcab(1,i,1,ima+0), rcab(2,i,1,ima+0), kind=dbl ) + &
+                        & this%emj(imj-1) * cmplx( rcab(1,i,1,ima-1), rcab(2,i,1,ima-1), kind=dbl )
+          cab(i,imj)   =                    cmplx( rcab(1,i,2,ima+0), rcab(2,i,2,ima+0), kind=dbl )
+        end do
+      
       else
         ima = ima+1
         imj = imj+1
         
-        call fwd_idx2_sub( ncab, this%emj(imj), rcab(1,ima-1), cab(1,imj) )
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj) =  this%emj(imj+1) * cmplx( rcab(1,i,1,ima+0), rcab(2,i,1,ima+0), kind=dbl ) + &
+                      & this%emj(imj+0) * cmplx( rcab(1,i,1,ima-1), rcab(2,i,1,ima-1), kind=dbl )
+        end do
       end if
     
     do im = 1, this%jmax-1
@@ -37,27 +54,44 @@ submodule (lege_poly) fwd_idx
         ima = ima+1
         imj = imj+1
         
-        call fwd_idx0_sub( ncab, rcab(1,ima), cab(1,imj) )
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj) = cmplx( rcab(1,i,2,ima), rcab(2,i,2,ima), kind=dbl )
+        end do
       
-      do ij = 1, (this%jmax-im-1)/2
+      do ij = 1, ( this%jmax-im-1 ) / 2
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx1_sub( ncab, this%emj(imj+im-1), rcab(1,ima-1), cab(1,imj-1) )
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj-1) =  this%emj(imj+im+0) * cmplx( rcab(1,i,1,ima+0), rcab(2,i,1,ima+0), kind=dbl ) + &
+                        & this%emj(imj+im-1) * cmplx( rcab(1,i,1,ima-1), rcab(2,i,1,ima-1), kind=dbl )
+          cab(i,imj)   =                       cmplx( rcab(1,i,2,ima+0), rcab(2,i,2,ima+0), kind=dbl )
+        end do
       end do
       
       !ij == this%jmax
-      if ( mod((this%jmax-im),2) == 0 ) then
+      if ( mod( ( this%jmax-im ), 2 ) == 0 ) then
         ima = ima+1
         imj = imj+2
         
-        call fwd_idx1_sub( ncab, this%emj(imj+im-1), rcab(1,ima-1), cab(1,imj-1) )
-        
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj-1) =  this%emj(imj+im+0) * cmplx( rcab(1,i,1,ima+0), rcab(2,i,1,ima+0), kind=dbl ) + &
+                        & this%emj(imj+im-1) * cmplx( rcab(1,i,1,ima-1), rcab(2,i,1,ima-1), kind=dbl )
+          cab(i,imj)   =                       cmplx( rcab(1,i,2,ima+0), rcab(2,i,2,ima+0), kind=dbl )
+        end do
+      
       else
         ima = ima+1
         imj = imj+1
         
-        call fwd_idx2_sub( ncab, this%emj(imj+im), rcab(1,ima-1), cab(1,imj) )
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj) =  this%emj(imj+im+1) * cmplx( rcab(1,i,1,ima+0), rcab(2,i,1,ima+0), kind=dbl ) + &
+                      & this%emj(imj+im+0) * cmplx( rcab(1,i,1,ima-1), rcab(2,i,1,ima-1), kind=dbl )
+        end do
       end if
     end do
     
@@ -66,8 +100,11 @@ submodule (lege_poly) fwd_idx
         ima = ima+1
         imj = imj+1
         
-        call fwd_idx0_sub( ncab, rcab(1,ima), cab(1,imj) )
-        
-  end procedure r2c_mj_to_mj_sub
+        !$omp simd
+        do i = 1, ncab
+          cab(i,imj) = cmplx( rcab(1,i,2,ima), rcab(2,i,2,ima), kind=dbl )
+        end do
+    
+  end procedure index_fwd_sub
   
 end submodule fwd_idx

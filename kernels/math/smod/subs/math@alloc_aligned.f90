@@ -1,7 +1,5 @@
 submodule (math) alloc_aligned
-  implicit none
-  
-  contains
+  implicit none; contains
   
   module procedure alloc_aligned_sub
     

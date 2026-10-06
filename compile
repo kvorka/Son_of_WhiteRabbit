@@ -35,7 +35,7 @@ lvlC=( "${mathpath}/smod/cores"
        "${grdsubspath}/smod/cores" 
        "${objpath}/smod/cores" )
 
-lvlF=( "${mathpath}/smod" 
+lvlF=( "${mathpath}/smod/subs" 
        "${sphidxpath}/smod" 
        "${fftpath}/smod/init" 
        "${fftpath}/smod/transform" 
@@ -66,20 +66,17 @@ lvlF=( "${mathpath}/smod"
        "${outputpath}/smod" )
 
 ###########################################################################################
-####                                 INSTRUCTIONS CHECK                                ####
-###########################################################################################
-macros=$($ccompiler -march=native -dM -E -x c /dev/null)
-
-echo "$macros" | grep -q "__FMA__"     && instructions="-D__FMA__"
-echo "$macros" | grep -q "__AVX512F__" && instructions="$instructions -D__AVX512F__"
-
-###########################################################################################
 ####                                 COMPILERS SET UP                                  ####
 ###########################################################################################
 flags="-Ofast -march=native -mprefer-vector-width=512 -mno-vzeroupper -fstrict-aliasing \
        -fno-tree-loop-distribute-patterns -fcx-limited-range -fno-bounds-check -fopenmp \
        -fomit-frame-pointer -fno-stack-protector -fargument-noalias-global -flto=auto \
-       -fwhole-program -D$code_type $instructions -cpp"
+       -fwhole-program -D$code_type -cpp"
+
+macros=$($ccompiler $flags -dM -E -x c /dev/null)
+
+echo "$macros" | grep -q "__FMA__"     && flags="$flags -D__FMA__"
+echo "$macros" | grep -q "__AVX512F__" && flags="$flags -D__AVX512F__"
 
 fcompile="$fcompiler $flags"
 ccompile="$ccompiler $flags -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-memmove"

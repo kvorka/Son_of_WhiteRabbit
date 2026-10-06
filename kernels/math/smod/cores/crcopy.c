@@ -13,7 +13,7 @@ void copy_rarray_c( const int istart,
           double *restrict pt = arr_to;
     
     // Main loop
-    #pragma omp unroll partial (vlen4) simd
+    #pragma omp unroll partial (vlen8) simd
     for ( int i = 0; i < length; i++ ) { pt[i] = pf[i]; }
     
 }

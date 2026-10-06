@@ -11,7 +11,7 @@ void zero_rarray_c( const int istart,
     double *restrict parr = arr + istart;
     
     // Main loop
-    #pragma omp unroll partial (vlen4) simd
+    #pragma omp unroll partial (vlen8) simd
     for ( int i = 0; i < length-istart; i++ ) { parr[i] = 0.; }
     
 }

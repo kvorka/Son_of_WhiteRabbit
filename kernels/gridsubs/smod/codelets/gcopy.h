@@ -8,7 +8,7 @@ void gcopy_c( const int n,
 
 {
     
-    #pragma omp unroll (vlen4) simd aligned (gin,gtmp:alignement)
+    #pragma omp unroll partial (vlen8) simd aligned (gin,gtmp:alignement)
     for ( int i = 0; i < n * vlen4; i++ ) { gtmp[i] = gin[i]; }
     
 }
