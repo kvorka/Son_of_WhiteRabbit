@@ -115,7 +115,7 @@ submodule (lege_poly) init
     !!* Initialize the recursion coefficients.                             *!!
     !!**********************************************************************!!
     allocate( this%emj((this%jmax+3)*(this%jmax+2)/2) )
-      
+    
     do im = 0, this%jmax+1
       do ij = im, this%jmax+1
         this%emj(im*(this%jmax+2)-im*(im+1)/2+ij+1) = real( sqrt((ij**2-im**2)/(4*ij**2-qone)), kind=dbl )
