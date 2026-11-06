@@ -34,10 +34,12 @@ void xy2ee_c( const int n,
         
         r02 = _t_xor_pd( r02, rsign );
         r03 = _t_xor_pd( r03, rsign );
+        
         r00 = _t_mul_pd( r00, rfac  );
         r01 = _t_mul_pd( r01, rfac  );
         
-        #if defined ( __FMA__ ) || defined (__AVX512F__)
+        #if defined ( __FMA__ )
+        
         r04 = _t_fmadd_pd( rfac, r02, r00 );
         r06 = _t_fmadd_pd( rfac, r03, r01 );
         
@@ -49,7 +51,9 @@ void xy2ee_c( const int n,
         
         _t_storeu_pd( py,        r05 );
         _t_storeu_pd( py + vlen, r07 );
+        
         #else
+        
         r02 = _t_mul_pd( r02, rfac );
         r03 = _t_mul_pd( r03, rfac );
         
@@ -64,6 +68,7 @@ void xy2ee_c( const int n,
         
         _t_storeu_pd( py,        r05 );
         _t_storeu_pd( py + vlen, r07 );
+        
         #endif
         
         px += vlen2;
@@ -74,22 +79,26 @@ void xy2ee_c( const int n,
     // Remainder (non-loop)
     if ( i <= n-vlen/2 ) {
         
-        r00 = _t_loadu_pd( px );
         r02 = _t_loadu_pd( py );
+        r00 = _t_loadu_pd( px );
         
-        r00 = _t_mul_pd( rfac, r00 );
         r02 = _t_permute_pd( r02, cmask );
+        r00 = _t_mul_pd( rfac, r00 );
         
         r02 = _t_xor_pd( r02, rsign );
         
         #if defined ( __FMA__ )
+        
         r04 = _t_fmadd_pd( rfac, r02, r00 );
         r05 = _t_fmsub_pd( rfac, r02, r00 );
+        
         #else
+        
         r02 = _t_mul_pd( rfac, r02 );
         
         r04 = _t_add_pd( r02, r00 );
         r05 = _t_sub_pd( r02, r00 );
+        
         #endif
         
         _t_storeu_pd( px, r04 );
@@ -113,22 +122,26 @@ void xy2ee_c( const int n,
             // Other registers to be used
             __m128d s00, s02, s04, s05;
             
-            s00 = _mm_loadu_pd( px );
             s02 = _mm_loadu_pd( py );
+            s00 = _mm_loadu_pd( px );
             
-            s00 = _mm_mul_pd( sfac, s00 );
             s02 = _mm_shuffle_pd( s02, s02, 1 );
+            s00 = _mm_mul_pd( sfac, s00 );
             
             s02 = _mm_xor_pd( s02, ssign );
             
             #if defined ( __FMA__ )
+            
             s04 = _mm_fmadd_pd( sfac, s02, s00 );
             s05 = _mm_fmsub_pd( sfac, s02, s00 );
+            
             #else
+            
             s02 = _mm_mul_pd( sfac, s02 );
             
             s04 = _mm_add_pd( s02, s00 );
             s05 = _mm_sub_pd( s02, s00 );
+            
             #endif
             
             _mm_storeu_pd( px, s04 );
@@ -139,8 +152,8 @@ void xy2ee_c( const int n,
             // Mask for remainder
             const __mmask8 mask = _cvtu32_mask8( (1U << ( 2 * ( n - i ) )) - 1 );
             
-            r00 = _mm512_maskz_loadu_pd( mask, px );
             r02 = _mm512_maskz_loadu_pd( mask, py );
+            r00 = _mm512_maskz_loadu_pd( mask, px );
             
             r02 = _mm512_permute_pd( r02, 0x55 );
             

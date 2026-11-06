@@ -27,18 +27,21 @@ void ee2xy_c( const int n,
     for ( ; i <= n-vlen; i += vlen ) {
         
         r00 = _t_loadu_pd( px        );
-        r10 = _t_loadu_pd( px + vlen );
         r01 = _t_loadu_pd( py        );
-        r11 = _t_loadu_pd( py + vlen );
         
         r02 = _t_sub_pd( r00, r01 );
         r03 = _t_add_pd( r00, r01 );
+        
+        r10 = _t_loadu_pd( px + vlen );
+        r11 = _t_loadu_pd( py + vlen );
+        
         r12 = _t_sub_pd( r10, r11 );
         r13 = _t_add_pd( r10, r11 );
         
         r03 = _t_permute_pd( r03, cmask );
-        r13 = _t_permute_pd( r13, cmask );
         r02 = _t_mul_pd( r02, rfac );
+        
+        r13 = _t_permute_pd( r13, cmask );
         r12 = _t_mul_pd( r12, rfac );
         
         r03 = _t_mul_pd( r03, rfac );

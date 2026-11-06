@@ -1,4 +1,4 @@
-submodule (output_mod) save_snpsht
+submodule (outputobject) save_snpsht
   implicit none; contains
   
   subroutine save_snpsht_flux_sub()

@@ -1,4 +1,4 @@
-submodule (output_mod) save_spectra
+submodule (outputobject) save_spectra
   implicit none; contains
   
   subroutine save_spectra_flux_sub()

@@ -1,4 +1,4 @@
-submodule (output_mod) avrg_spectra
+submodule (outputobject) avrg_spectra
   implicit none
   
   real(kind=dbl), parameter :: dtime = one / ( avrg_end - avrg_start )

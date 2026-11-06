@@ -1,4 +1,4 @@
-submodule (output_mod) nuss_curve
+submodule (outputobject) nuss_curve
   implicit none; contains
   
   module procedure nuss_curve_sub

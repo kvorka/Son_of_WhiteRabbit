@@ -1,4 +1,4 @@
-submodule (output_mod) out_spectra
+submodule (outputobject) out_spectra
   implicit none; contains
   
   module procedure out_spectra_2d_sub

@@ -1,5 +1,5 @@
 program OutputOcean
-  use output_mod
+  use outputobject
   implicit none
   
   call nuss_curve_sub()

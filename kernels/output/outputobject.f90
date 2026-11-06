@@ -1,4 +1,4 @@
-module output_mod
+module outputobject
   use math
   use ocean_parms
   use binaryio
@@ -56,4 +56,4 @@ module output_mod
     end subroutine save_snpsht_velc_sub
   end interface
   
-end module output_mod
+end module outputobject
