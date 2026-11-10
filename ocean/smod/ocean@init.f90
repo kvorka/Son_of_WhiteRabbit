@@ -38,29 +38,14 @@ submodule (ocean) init
     !$omp parallel do private (ij)
     do ik = 0, (this%jmax-1)/2
       ij = ik
-        call this%temp(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false. )
-        call this%torr(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false. )
-        call this%mech(ij)%init_sub( mm=ij, nvar=5*this%nd+2, nrhs=this%nd+1, ld=9, lu=8, def_rhs2=.true.  )
+        call this%temp(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false., def_nlm2=.false. )
+        call this%torr(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false., def_nlm2=.false. )
+        call this%mech(ij)%init_sub( mm=ij, nvar=5*this%nd+2, nrhs=this%nd+1, ld=9, lu=8, def_rhs2=.true.,  def_nlm2=.true.  )
       
       ij = this%jmax-ik
-        call this%temp(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false. )
-        call this%torr(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false. )
-        call this%mech(ij)%init_sub( mm=ij, nvar=5*this%nd+2, nrhs=this%nd+1, ld=9, lu=8, def_rhs2=.true.  )
-    end do
-    !$omp end parallel do
-    
-    !! Initialize the non-linear terms
-    allocate( this%ntemp(this%jms,2:this%nd) )
-    allocate( this%ntorr(this%jms,2:this%nd) )
-    allocate( this%nsph1(this%jms,2:this%nd) )
-    allocate( this%nsph2(this%jms,2:this%nd) )
-    
-    !$omp parallel do
-    do ir = 2, this%nd
-      call zero_carray_sub( this%jms, this%ntemp(1,ir) )
-      call zero_carray_sub( this%jms, this%ntorr(1,ir) )
-      call zero_carray_sub( this%jms, this%nsph1(1,ir) )
-      call zero_carray_sub( this%jms, this%nsph2(1,ir) )
+        call this%temp(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false., def_nlm2=.false. )
+        call this%torr(ij)%init_sub( mm=ij, nvar=2*this%nd+1, nrhs=this%nd+1, ld=3, lu=3, def_rhs2=.false., def_nlm2=.false. )
+        call this%mech(ij)%init_sub( mm=ij, nvar=5*this%nd+2, nrhs=this%nd+1, ld=9, lu=8, def_rhs2=.true.,  def_nlm2=.true.  )
     end do
     !$omp end parallel do
     
@@ -230,11 +215,6 @@ submodule (ocean) init
     
     close(11)
     close(12)
-    
-    deallocate( this%ntemp )
-    deallocate( this%ntorr )
-    deallocate( this%nsph1 )
-    deallocate( this%nsph2 )
     
     call this%deallocEqs_sub( this%temp )
     call this%deallocEqs_sub( this%torr )

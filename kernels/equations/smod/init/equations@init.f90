@@ -5,6 +5,7 @@ submodule (equations) init
     
     !! Number of variables
     this%n   = nvar
+    this%mm  = mm
     this%mm1 = mm+1
     
     !! Variables needed for LU decomposition and multiplying 
@@ -18,14 +19,12 @@ submodule (equations) init
     allocate( this%L( this%ld , this%n ) ) ; this%L = zero
     allocate( this%I( this%n )           ) ; this%I = 0
     
-    !! Memory allocation for solution, right hand side 
-    !! and optional second rhs holder
-    allocate( this%sol(0:mm,this%n) )
-    allocate( this%rhs1(0:mm,nrhs)  )
+    !! Memory allocation for solution and right-hand side
+    allocate( this%sol(0:mm,this%n), this%rhs1(0:mm,nrhs), this%nlm1(0:mm,2:nrhs-1) )
     
-    if ( def_rhs2 ) then
-      allocate( this%rhs2(0:mm,nrhs)  )
-    end if
+    !! Optional right-hand side
+    if ( def_rhs2 ) allocate( this%rhs2(0:mm,1:nrhs  ) )
+    if ( def_nlm2 ) allocate( this%nlm2(0:mm,2:nrhs-1) )
     
   end procedure init_equations_sub
   
@@ -38,10 +37,10 @@ submodule (equations) init
     
     deallocate( this%sol  )
     deallocate( this%rhs1 )
+    deallocate( this%nlm1 )
     
-    if ( allocated(this%rhs2) ) then
-      deallocate( this%rhs2 )
-    end if
+    if ( allocated( this%rhs2 ) ) deallocate( this%rhs2 )
+    if ( allocated( this%nlm2 ) ) deallocate( this%nlm2 )
     
   end procedure deallocate_equations_sub
   

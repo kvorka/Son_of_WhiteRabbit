@@ -12,13 +12,13 @@ module physicalobject
   type, abstract, public :: T_physicalObject
     character(len=5) :: mechanical_bnd, thermal_bnd, diffusion_type
     integer          :: nd, jmax, jms, jmv, poc
-    real(kind=dbl)   :: t, dt, cf, ab, r_ud, Pr, Ra, Ek
+    real(kind=dbl)   :: t, dt, cf, ab, r_ud
+    real(kind=dbl)   :: Pr, Ra, Ek
     
     type(T_radialGrid)             :: rad_grid
     type(T_lateralGrid)            :: lat_grid
     type(T_sphsvt)                 :: rxd
     type(T_equations), allocatable :: temp(:), torr(:), mech(:)
-    complex(kind=dbl), allocatable :: nsph1(:,:), nsph2(:,:), ntorr(:,:), ntemp(:,:)
     
     contains
     

@@ -2,12 +2,14 @@ submodule (ocean) timescheme
   implicit none; contains
   
   module procedure time_scheme_ocean_sub
-    integer                                :: ik, ir, ij, ij0
+    integer                                :: ik, ir, ij
     type(c_ptr)                            :: c_tWork
     real(kind=dbl),    allocatable         :: rccWork(:), rcrWork(:)
     real(kind=dbl),    pointer, contiguous :: tWork(:)
     complex(kind=dbl), allocatable, target :: vWork(:)
-    complex(kind=dbl), pointer, contiguous :: T(:), gradT(:), v(:), curlv(:), work1(:), work2(:), work3(:)
+    complex(kind=dbl), pointer, contiguous :: T(:), gradT(:), v(:), curlv(:), &
+                                            & work1(:), work2(:), work3(:),   &
+                                            & ntemp(:), npol1(:), ntorr(:), npol2(:)
     
     !!******************************************************************************************************!!
     !!** Move time by one time-step.                                                                      **!!
@@ -26,24 +28,7 @@ submodule (ocean) timescheme
     call this%lat_grid%alloc_rcc_lgrid_sub( 9, rccWork )
     call this%lat_grid%alloc_rcc_lgrid_sub( 4, rcrWork )
     
-    !$omp parallel private (c_tWork, tWork, rccWork, rcrWork, vWork, T, v, gradT, curlv, work1, work2, work3)
-    
-    !!******************************************************************************************************!!
-    !!** At first, copy the non-linear terms from previous time-step into right-hand sides. These are re- **!!
-    !!** scaled by a corresponding Adams-Bashforth time-step coefficient.                                 **!!
-    !!******************************************************************************************************!!
-    !$omp do private (ir,ij0) schedule (guided,2)
-    do ij = 0, this%jmax
-      do ir = 2, this%nd
-        ij0 = jm(ij,0)
-        
-        call copy2_carray_sub( ij+1, 1-this%ab, this%ntemp(ij0,ir), this%temp(ij)%rhs1(0,ir) )
-        call copy2_carray_sub( ij+1, 1-this%ab, this%ntorr(ij0,ir), this%torr(ij)%rhs1(0,ir) )
-        call copy2_carray_sub( ij+1, 1-this%ab, this%nsph1(ij0,ir), this%mech(ij)%rhs1(0,ir) )
-        call copy2_carray_sub( ij+1, 1-this%ab, this%nsph2(ij0,ir), this%mech(ij)%rhs2(0,ir) )
-      end do
-    end do
-    !$omp end do
+    !$omp parallel private (c_tWork,tWork,rccWork,rcrWork,vWork,T,v,gradT,curlv,work1,work2,work3,ntemp,npol1,ntorr,npol2)
     
     !!******************************************************************************************************!!
     !!** Aligned memory allocations for transform guided by high number of backword transforms.           **!!
@@ -62,10 +47,33 @@ submodule (ocean) timescheme
     work2 => vWork( 1 + 10 * this%rxd%jms1 : 19 * this%rxd%jms1 )
     work3 => vWork( 1 +  2 * this%rxd%jms1 :  5 * this%rxd%jms1 )
     
+    ntemp => work2( 1                    : 1 * this%rxd%jms )
+    npol1 => work2( 1 + 1 * this%rxd%jms : 2 * this%rxd%jms )
+    ntorr => work2( 1 + 2 * this%rxd%jms : 3 * this%rxd%jms )
+    npol2 => work2( 1 + 3 * this%rxd%jms : 4 * this%rxd%jms )
+    
+    !!******************************************************************************************************!!
+    !!** At first, copy the non-linear terms from previous time-step into right-hand sides. These are re- **!!
+    !!** scaled by a corresponding Adams-Bashforth time-step coefficient.                                 **!!
+    !!******************************************************************************************************!!
+    !$omp do
+    do ik = 0, (this%jmax-1)/2
+      call this%temp(ik)%copy2_nlm1_sub( this%nd-1, 1-this%ab )
+      call this%torr(ik)%copy2_nlm1_sub( this%nd-1, 1-this%ab )
+      call this%mech(ik)%copy2_nlm1_sub( this%nd-1, 1-this%ab )
+      call this%mech(ik)%copy2_nlm2_sub( this%nd-1, 1-this%ab )
+      
+      call this%temp(this%jmax-ik)%copy2_nlm1_sub( this%nd-1, 1-this%ab )
+      call this%torr(this%jmax-ik)%copy2_nlm1_sub( this%nd-1, 1-this%ab )
+      call this%mech(this%jmax-ik)%copy2_nlm1_sub( this%nd-1, 1-this%ab )
+      call this%mech(this%jmax-ik)%copy2_nlm2_sub( this%nd-1, 1-this%ab )
+    end do
+    !$omp end do
+    
     !!******************************************************************************************************!!
     !!** Main radial loop computing the non-linear terms for this time-step.                              **!!
     !!******************************************************************************************************!!
-    !$omp do
+    !$omp do private(ij)
     do ir = 2, this%nd
       !! Get vorticity and temperature gradient with scaling factors
       call this%curlv_ptp_rr_jm_sub( ir, v, curlv, 1/this%Pr, work2 )
@@ -103,20 +111,24 @@ submodule (ocean) timescheme
                                arr_to   = work1          )
       
       !! Copy and shuffle the data for vgradT into ntemp.
-      call this%rxd%scal2scal_mj_to_jm_sub( cr  = work1,           &
-                                            cjm = this%ntemp(1,ir) )
+      call this%rxd%scal2scal_mj_to_jm_sub( cr = work1, cjm = ntemp  )
       
       !! Copy and shuffle the data for curlv into nsph1, ntorr, nsph2.
-      call this%rxd%scal2vec_mj_to_jm_sub( cr   = work3,            &
-                                           cjm1 = this%nsph1(1,ir), &
-                                           cjm2 = this%ntorr(1,ir), &
-                                           cjm3 = this%nsph2(1,ir)  )
+      call this%rxd%scal2vec_mj_to_jm_sub( cr = work3, cjm1 = npol1, cjm2 = ntorr, cjm3 = npol2  )
       
       !! Add the thermal buoyancy force with Newtonian gravity profile.
       call this%buoy_rr_jml_sub( fac  = this%Ra / ( 1 - this%r_ud )**2 / this%rad_grid%rr(ir)**2, &
-                                 src  = T,                &
-                                 pol1 = this%nsph1(1,ir), &
-                                 pol2 = this%nsph2(1,ir)  )
+                                 src  = T,     &
+                                 pol1 = npol1, &
+                                 pol2 = npol2  )
+      
+      !! Final transposition and copy into non-linear terms storage
+      do ij = 0, this%jmax
+        call this%temp(ij)%fill_nlm1_sub( ir, ntemp )
+        call this%torr(ij)%fill_nlm1_sub( ir, ntorr )
+        call this%mech(ij)%fill_nlm1_sub( ir, npol1 )
+        call this%mech(ij)%fill_nlm2_sub( ir, npol2 )
+      end do
     end do
     !$omp end do
     
@@ -129,16 +141,17 @@ submodule (ocean) timescheme
     !!** Add the non-linear terms computed in this time-step to the right-hand side. The non-linear terms **!!
     !!** are weighted by the appropriate Addams-Bashforth factor.                                         **!!
     !!******************************************************************************************************!!
-    !$omp do private (ir,ij0) schedule (guided,2)
-    do ij = 0, this%jmax
-      do ir = 2, this%nd
-        ij0 = jm(ij,0)
-        
-        call copy3_carray_sub( ij+1, this%ab, this%ntemp(ij0,ir), this%temp(ij)%rhs1(0,ir) )
-        call copy3_carray_sub( ij+1, this%ab, this%ntorr(ij0,ir), this%torr(ij)%rhs1(0,ir) )
-        call copy3_carray_sub( ij+1, this%ab, this%nsph1(ij0,ir), this%mech(ij)%rhs1(0,ir) )
-        call copy3_carray_sub( ij+1, this%ab, this%nsph2(ij0,ir), this%mech(ij)%rhs2(0,ir) )
-      end do
+    !$omp do
+    do ik = 0, (this%jmax-1)/2
+      call this%temp(ik)%copy3_nlm1_sub( this%nd-1, this%ab )
+      call this%torr(ik)%copy3_nlm1_sub( this%nd-1, this%ab )
+      call this%mech(ik)%copy3_nlm1_sub( this%nd-1, this%ab )
+      call this%mech(ik)%copy3_nlm2_sub( this%nd-1, this%ab )
+      
+      call this%temp(this%jmax-ik)%copy3_nlm1_sub( this%nd-1, this%ab )
+      call this%torr(this%jmax-ik)%copy3_nlm1_sub( this%nd-1, this%ab )
+      call this%mech(this%jmax-ik)%copy3_nlm1_sub( this%nd-1, this%ab )
+      call this%mech(this%jmax-ik)%copy3_nlm2_sub( this%nd-1, this%ab )
     end do
     !$omp end do
     
@@ -147,14 +160,13 @@ submodule (ocean) timescheme
     !!******************************************************************************************************!!
     !$omp do
     do ik = 0, (this%jmax-1)/2
-      call this%solve_temp_ij_sub( ik          )
-      call this%solve_temp_ij_sub( this%jmax-ik)
+      call this%solve_temp_ij_sub(ik)
+      call this%solve_torr_ij_sub(ik)
+      call this%solve_mech_ij_sub(ik)
       
-      call this%solve_torr_ij_sub( ik           )
-      call this%solve_torr_ij_sub( this%jmax-ik )
-      
-      call this%solve_mech_ij_sub( ik           )
-      call this%solve_mech_ij_sub( this%jmax-ik )
+      call this%solve_temp_ij_sub(this%jmax-ik)
+      call this%solve_torr_ij_sub(this%jmax-ik)
+      call this%solve_mech_ij_sub(this%jmax-ik)
     end do
     !$omp end do
     
