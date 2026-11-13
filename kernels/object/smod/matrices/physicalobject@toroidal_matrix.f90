@@ -17,9 +17,11 @@ submodule (physicalobject) toroidal_visc_matrix
   
   module procedure mat_torr_sub
     integer        :: ir, is
-    real(kind=dbl) :: fac
+    real(kind=dbl) :: fac, diff
     
     matica = zero
+    
+    diff = this%hdiff_fn(j) * this%vEk
     
     ir = 1
       is = 1
@@ -40,11 +42,11 @@ submodule (physicalobject) toroidal_visc_matrix
       if ( ir > 1 ) then
         fac = 1 / this%rad_grid%rr(ir)**2
         
-        matica(1,is) = a * this%rad_grid%dd(ir,-2) * fac
-        matica(3,is) = a * this%rad_grid%dd(ir,-1) * fac
-        matica(4,is) = -1 / ( this%Pr * this%dt ) - a * this%hdiff_fn(j) * j*(j+1) * fac
-        matica(5,is) = a * this%rad_grid%dd(ir,+1) * fac
-        matica(7,is) = a * this%rad_grid%dd(ir,+2) * fac
+        matica(1,is) = a * this%rad_grid%dd(ir,-2) * fac * diff
+        matica(3,is) = a * this%rad_grid%dd(ir,-1) * fac * diff
+        matica(4,is) = -1 / this%dt - a * j*(j+1)  * fac * diff
+        matica(5,is) = a * this%rad_grid%dd(ir,+1) * fac * diff
+        matica(7,is) = a * this%rad_grid%dd(ir,+2) * fac * diff
       end if
       
       matica(1,is+1) = -this%rad_grid%d(ir,-2)

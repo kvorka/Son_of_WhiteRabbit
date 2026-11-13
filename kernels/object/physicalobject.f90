@@ -13,7 +13,7 @@ module physicalobject
     character(len=5) :: mechanical_bnd, thermal_bnd, diffusion_type
     integer          :: nd, jmax, jms, jmv, poc
     real(kind=dbl)   :: t, dt, cf, ab, r_ud
-    real(kind=dbl)   :: Pr, Ra, Ek
+    real(kind=dbl)   :: tEk, vEk, Roc2
     
     type(T_radialGrid)             :: rad_grid
     type(T_lateralGrid)            :: lat_grid
@@ -30,7 +30,7 @@ module physicalobject
                      & velc3_ptp_rr_jm_sub, curlv_ptp_rr_jm_sub, mat_temp_sub, mat_mech_sub, mat_torr_sub, prepare_mat_mech_sub, &
                      & prepare_mat_temp_sub, prepare_mat_torr_sub, solve_temp_ij_sub, solve_torr_ij_sub, solve_mech_ij_sub,      &
                      & hdiff_fn, buoy_rr_jml_sub, substract_globrot_sub, grad_ptp_sub, curl_ptp_sub, writefile_sub, reynolds_fn, &
-                     & nuss_fn, deallocEqs_sub
+                     & reynolds_c_fn, reynolds_z_fn, nuss_fn, bnd_flux_fn, deallocEqs_sub
     
   end type T_physicalObject
   
@@ -228,10 +228,21 @@ module physicalobject
       class(T_physicalObject), intent(in) :: this
     end function nuss_fn
     
-    module real(kind=dbl) function reynolds_fn(this, choice)
-      class(T_physicalObject), intent(in)           :: this
-      character(len=*),        intent(in), optional :: choice
+    module real(kind=dbl) function bnd_flux_fn(this)
+      class(T_physicalObject), intent(in) :: this
+    end function bnd_flux_fn
+    
+    module real(kind=dbl) function reynolds_fn(this)
+      class(T_physicalObject), intent(in) :: this
     end function reynolds_fn
+    
+    module real(kind=dbl) function reynolds_c_fn(this)
+      class(T_physicalObject), intent(in) :: this
+    end function reynolds_c_fn
+    
+    module real(kind=dbl) function reynolds_z_fn(this)
+      class(T_physicalObject), intent(in) :: this
+    end function reynolds_z_fn
     
     !! Interfaces :: finalizer
     module subroutine deallocEqs_sub(this, eqs_array)

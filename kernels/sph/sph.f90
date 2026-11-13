@@ -20,6 +20,18 @@ module sph
       complex(kind=dbl), intent(in) :: cajml(*)
       real(kind=dbl)                :: vp
     end function vectnorm2_fn
+    
+    module function vectnorm2_c_fn(np, cajml) result(vp)
+      integer,           intent(in) :: np
+      complex(kind=dbl), intent(in) :: cajml(*)
+      real(kind=dbl)                :: vp
+    end function vectnorm2_c_fn
+    
+    module function vectnorm2_z_fn(np, cajml) result(vp)
+      integer,           intent(in) :: np
+      complex(kind=dbl), intent(in) :: cajml(*)
+      real(kind=dbl)                :: vp
+    end function vectnorm2_z_fn
   end interface
   
 end module sph

@@ -51,7 +51,7 @@ module ocean_parms
   
 #elif defined ( benchmark )
   integer,          parameter :: nd_ocean        = 73
-  integer,          parameter :: jmax_ocean      = 125
+  integer,          parameter :: jmax_ocean      = 77
   integer,          parameter :: n_iter_ocean    = 100
   real(kind=dbl),   parameter :: r_ud_ocean      = 0.60_dbl
   real(kind=dbl),   parameter :: Pr_ocean        = 1._dbl
@@ -59,7 +59,7 @@ module ocean_parms
   real(kind=dbl),   parameter :: Ek_ocean        = 1.0d-4
   character(len=*), parameter :: therm_bnd_ocean = 'basic'
   character(len=*), parameter :: mech_bnd_ocean  = 'noslp'
-  character(len=*), parameter :: diffusion_ocean = 'isotr'
+  character(len=*), parameter :: diffusion_ocean = 'hyper'
   logical,          parameter :: init_through_file_ocean     = .false.
   logical,          parameter :: init_through_file_bnd_ocean = .false.
   integer,          parameter :: nd_init_ocean   = 73

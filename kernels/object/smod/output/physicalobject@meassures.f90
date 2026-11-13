@@ -14,56 +14,70 @@ submodule (physicalobject) meassures
     
   end procedure nuss_fn
   
+  module procedure bnd_flux_fn
+    
+    bnd_flux_fn = real( this%dT_dr_r_fn(this%nd,0,0), kind=dbl ) / real( this%dT_dr_r_fn(1,0,0), kind=dbl ) / this%r_ud**2
+    
+  end procedure bnd_flux_fn
+  
   module procedure reynolds_fn
-    integer                        :: ir, ij, ij01
+    integer                        :: ir
     real(kind=dbl),    allocatable :: field_vals(:)
     complex(kind=dbl), allocatable :: velocity(:)
     
-    allocate( field_vals(this%nd+1) )
+    allocate( field_vals(this%nd+1), velocity(this%jmv) )
     
-    if ( ( present(choice) ) .and. ( choice == 'convective' ) ) then
-      
-      !$omp parallel private (velocity)
-      allocate( velocity(this%jmv) )
-      
-      !$omp do private (ij)
-      do ir = 1, this%nd+1
-        call this%velc_rr_jml_sub( ir, velocity )
-        
-        do ij = 1, this%jmax
-          ij01 = jml(ij,0,-1)
-          
-          velocity( ij01   ) = czero
-          velocity( ij01+1 ) = czero
-          velocity( ij01+2 ) = czero
-        end do
-        
-        field_vals(ir) = vectnorm2_fn( this%jmax, velocity )
-      end do
-      
-      deallocate( velocity )
-      !$omp end parallel
-      
-    else
-      
-      !$omp parallel private (velocity)
-      allocate( velocity(this%jmv) )
-      
-      !$omp do
-      do ir = 1, this%nd+1
-        call this%velc_rr_jml_sub( ir, velocity )
-        field_vals(ir) = vectnorm2_fn( this%jmax, velocity )
-      end do
-      
-      deallocate( velocity )
-      !$omp end parallel
-      
-    end if
+    !$omp parallel do private (velocity)
+    do ir = 1, this%nd+1
+      call this%velc_rr_jml_sub( ir, velocity )
+      field_vals(ir) = vectnorm2_fn( this%jmax, velocity )
+    end do
+    !$omp end parallel do
     
     reynolds_fn = sqrt( this%rad_grid%intV_fn( field_vals ) / this%rad_grid%volume )
     
-    deallocate( field_vals )
+    deallocate( field_vals, velocity )
     
   end procedure reynolds_fn
+  
+  module procedure reynolds_c_fn
+    integer                        :: ir
+    real(kind=dbl),    allocatable :: field_vals(:)
+    complex(kind=dbl), allocatable :: velocity(:)
+    
+    allocate( field_vals(this%nd+1), velocity(this%jmv) )
+    
+    !$omp parallel do private (velocity)
+    do ir = 1, this%nd+1
+      call this%velc_rr_jml_sub( ir, velocity )
+      field_vals(ir) = vectnorm2_c_fn( this%jmax, velocity )
+    end do
+    !$omp end parallel do
+    
+    reynolds_c_fn = sqrt( this%rad_grid%intV_fn( field_vals ) / this%rad_grid%volume )
+    
+    deallocate( field_vals, velocity )
+    
+  end procedure reynolds_c_fn
+  
+  module procedure reynolds_z_fn
+    integer                        :: ir
+    real(kind=dbl),    allocatable :: field_vals(:)
+    complex(kind=dbl), allocatable :: velocity(:)
+    
+    allocate( field_vals(this%nd+1), velocity(this%jmv) )
+    
+    !$omp parallel do private (velocity)
+    do ir = 1, this%nd+1
+      call this%velc_rr_jml_sub( ir, velocity )
+      field_vals(ir) = vectnorm2_z_fn( this%jmax, velocity )
+    end do
+    !$omp end parallel do
+    
+    reynolds_z_fn = sqrt( this%rad_grid%intV_fn( field_vals ) / this%rad_grid%volume )
+    
+    deallocate( field_vals, velocity )
+    
+  end procedure reynolds_z_fn
   
 end submodule meassures

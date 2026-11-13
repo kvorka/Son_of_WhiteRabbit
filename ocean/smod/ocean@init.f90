@@ -9,26 +9,23 @@ submodule (ocean) init
     complex(kind=dbl), allocatable :: velcI(:,:), tempI(:,:), spher1I(:,:), torrI(:,:), spher2I(:,:), &
                                     & temp(:), spher1(:), spher2(:), torr(:)
     
-    !! Initialize the code baseline
-    call this%init_objects_sub( nd = nd_ocean, jmax = jmax_ocean, r_ud = r_ud_ocean )
-    
     !! Set the numerical and physical parameters
     this%cf = 0.6_dbl
     this%ab = 1.5_dbl
     
-    this%Pr = Pr_ocean
-    this%Ra = Ra_ocean
-    this%Ek = Ek_ocean
+    this%vEk  =            Ek_ocean
+    this%tEk  =            Ek_ocean    / Pr_ocean
+    this%Roc2 = Ra_ocean * Ek_ocean**2 / Pr_ocean
     
     this%diffusion_type = diffusion_ocean
     this%thermal_bnd    = therm_bnd_ocean
     this%mechanical_bnd = mech_bnd_ocean
     
-    !! Prepare Nusselt and Energy saving check files if needed
-    if ( .not. speed ) then
-      open(unit=11, file='data/Nuss.dat', status='new', action='write')
-      open(unit=12, file='data/Laws.dat', status='new', action='write')
-    end if
+    !! Initialize the code baseline
+    call this%init_objects_sub( nd = nd_ocean, jmax = jmax_ocean, r_ud = r_ud_ocean )
+    
+    !! Prepare diagnostics files if needed
+    if ( .not. speed ) open( unit=11, file='data/diag.dat', status='new', action='write' )
     
     !! Initialize the equations: right-hand sides, matrices, arrays for solutions
     allocate( this%temp(0:this%jmax) )

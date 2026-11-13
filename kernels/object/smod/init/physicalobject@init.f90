@@ -16,7 +16,7 @@ submodule (physicalobject) init
     
     this%poc = 0
     this%t   = zero
-    this%dt  = 0.49_dbl * ( this%rad_grid%r(2)-this%rad_grid%r(1) )**2
+    this%dt  = 0.49_dbl * ( this%rad_grid%r(2)-this%rad_grid%r(1) )**2 / this%tEk
     
   end procedure init_objects_sub
   

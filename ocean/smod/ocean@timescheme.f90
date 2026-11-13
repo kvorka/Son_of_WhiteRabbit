@@ -76,11 +76,11 @@ submodule (ocean) timescheme
     !$omp do private(ij)
     do ir = 2, this%nd
       !! Get vorticity and temperature gradient with scaling factors
-      call this%curlv_ptp_rr_jm_sub( ir, v, curlv, 1/this%Pr, work2 )
-      call this%gradT_ptp_rr_jm_sub( ir, T, gradT, -1._dbl,   work2 )
+      call this%curlv_ptp_rr_jm_sub( ir, v, curlv, +1._dbl, work2 )
+      call this%gradT_ptp_rr_jm_sub( ir, T, gradT, -1._dbl, work2 )
       
-      !! Add ez for Coriolis force into curlv
-      curlv(2)%re = curlv(2)%re + s4pi * ( 2 / this%Ek )
+      !! Add 2*ez for Coriolis force into curlv
+      curlv(2)%re = curlv(2)%re + s4pi * 2
       
       !! Transpose and shuffle the data into contiguous storage, meaning from
       !! v(l-1), v(l), v(l+1), q(l-1), q(l), ... into v(l-1), q(l-1), curlv(l-1), ...
@@ -117,7 +117,7 @@ submodule (ocean) timescheme
       call this%rxd%scal2vec_mj_to_jm_sub( cr = work3, cjm1 = npol1, cjm2 = ntorr, cjm3 = npol2  )
       
       !! Add the thermal buoyancy force with Newtonian gravity profile.
-      call this%buoy_rr_jml_sub( fac  = this%Ra / ( 1 - this%r_ud )**2 / this%rad_grid%rr(ir)**2, &
+      call this%buoy_rr_jml_sub( fac  = this%Roc2 / ( 1 - this%r_ud )**2 / this%rad_grid%rr(ir)**2, &
                                  src  = T,     &
                                  pol1 = npol1, &
                                  pol2 = npol2  )
@@ -160,13 +160,13 @@ submodule (ocean) timescheme
     !!******************************************************************************************************!!
     !$omp do
     do ik = 0, (this%jmax-1)/2
-      call this%solve_temp_ij_sub(ik)
-      call this%solve_torr_ij_sub(ik)
-      call this%solve_mech_ij_sub(ik)
+      call this%solve_temp_ij_sub( ik )
+      call this%solve_torr_ij_sub( ik )
+      call this%solve_mech_ij_sub( ik )
       
-      call this%solve_temp_ij_sub(this%jmax-ik)
-      call this%solve_torr_ij_sub(this%jmax-ik)
-      call this%solve_mech_ij_sub(this%jmax-ik)
+      call this%solve_temp_ij_sub( this%jmax-ik )
+      call this%solve_torr_ij_sub( this%jmax-ik )
+      call this%solve_mech_ij_sub( this%jmax-ik )
     end do
     !$omp end do
     

@@ -17,7 +17,7 @@ submodule (physicalobject) diffusion
         if ( j < jdiff ) then
           hdiff_fn = one
         else
-          hdiff_fn = 1000._dbl**(  real( j-jdiff, kind=dbl ) / ( this%jmax-jdiff ) )
+          hdiff_fn = 10._dbl**(  real( j-jdiff, kind=dbl ) / ( this%jmax-jdiff ) )
         end if
       
       end select
